@@ -11,6 +11,7 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import CategoriesMegaMenu from "./CategoriesMegaMenu";
+import { link } from "@/lib/asset";
 import { asset } from "@/lib/asset";
 
 export default function Header() {
@@ -22,7 +23,7 @@ export default function Header() {
       {/* Single row — Logo · Search bar · Actions */}
       <div className="container flex h-20 items-center gap-4 lg:gap-6">
         {/* Logo */}
-        <a href="/" className="flex items-center shrink-0">
+        <a href={link("/")} className="flex items-center shrink-0">
           <img
             src={asset("/brand/logo.png")}
             alt="Al-Futtaim FAMCO Used Equipment"
@@ -32,7 +33,7 @@ export default function Header() {
 
         {/* Search bar with category mega-menu trigger */}
         <div className="flex-1 relative hidden md:block">
-          <form action="/stock" method="get">
+          <form action={link("/stock")} method="get">
           <div className="flex items-stretch h-12 rounded-lg border border-line bg-white shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-secondary focus-within:border-secondary">
             <button
               type="button"
@@ -102,7 +103,7 @@ export default function Header() {
             <User className="h-5 w-5 text-ink" />
           </button>
           <a
-            href="/stock?category=sell"
+            href={link("/stock?category=sell")}
             className="hidden lg:inline-flex btn btn-primary h-10 ml-2 whitespace-nowrap"
           >
             Sell your equipment
@@ -143,20 +144,20 @@ export default function Header() {
             </div>
             <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-1">
               <a
-                href="/stock"
+                href={link("/stock")}
                 className="flex items-center gap-3 px-3 py-3.5 rounded-md hover:bg-secondary font-medium"
               >
                 <Heart className="h-5 w-5" /> Browse stock
               </a>
               <a
-                href="/stock?category=sell"
+                href={link("/stock?category=sell")}
                 className="flex items-center gap-3 px-3 py-3.5 rounded-md hover:bg-secondary font-medium"
               >
                 <User className="h-5 w-5" /> Sell your equipment
               </a>
             </nav>
             <div className="p-5 border-t border-white/15 space-y-3">
-              <a href="/stock?category=sell" className="btn btn-primary w-full">
+              <a href={link("/stock?category=sell")} className="btn btn-primary w-full">
                 Sell your equipment
               </a>
               <a

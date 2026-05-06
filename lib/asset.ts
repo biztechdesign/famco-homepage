@@ -15,3 +15,21 @@ export function asset(path: string): string {
   if (!path.startsWith("/")) return path;
   return `${basePath}${path}`;
 }
+
+/**
+ * Prefix an internal route with the configured Next.js basePath.
+ * Use for raw <a href={...}> elements (next/link handles its own prefix).
+ *
+ * Example:
+ *   <a href={link("/stock?category=trucks")}>Trucks</a>
+ *
+ * In dev: returns the path unchanged.
+ * In prod: returns "/famco-homepage/stock?category=trucks".
+ *
+ * Pass-through for absolute URLs (https://...) and non-leading-slash paths
+ * like "tel:80032626", "mailto:...", "#anchor".
+ */
+export function link(path: string): string {
+  if (!path.startsWith("/")) return path;
+  return `${basePath}${path}`;
+}

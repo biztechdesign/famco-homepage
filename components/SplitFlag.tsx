@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import { asset } from "@/lib/asset";
+import { asset, link } from "@/lib/asset";
 
 export default function SplitFlag() {
   return (
@@ -18,7 +18,7 @@ export default function SplitFlag() {
             }
             body="Over 800 brand-new trucks, vans and equipment in stock — financed, registered and delivered."
             cta="View new stock"
-            href="/stock"
+            href={link("/stock")}
             tone="secondary"
             iconClass="fi-rr-gift"
             bgImage="/hero/brand-new.jpg"
@@ -36,7 +36,7 @@ export default function SplitFlag() {
             }
             body="Every used vehicle is inspected by Volvo-certified technicians at TMH, with all customs and documents handled in-house."
             cta="View inspected stock"
-            href="/stock"
+            href={link("/stock")}
             tone="charcoal"
             iconClass="fi-rr-shield-check"
             bgImage="/hero/inspected.jpg"

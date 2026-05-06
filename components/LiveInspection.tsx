@@ -1,5 +1,5 @@
 import { Video } from "lucide-react";
-import { asset } from "@/lib/asset";
+import { asset, link } from "@/lib/asset";
 
 export default function LiveInspection() {
   return (
@@ -136,7 +136,7 @@ export default function LiveInspection() {
 
               {/* CTA pill below the call mock */}
               <a
-                href="/stock/volvo-fh-460-tractor"
+                href={link("/stock/volvo-fh-460-tractor")}
                 className="mt-4 btn btn-primary w-full h-12 px-5 text-[14px] rounded-lg"
               >
                 <Video className="h-4 w-4" />

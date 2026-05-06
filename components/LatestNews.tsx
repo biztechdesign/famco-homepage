@@ -1,5 +1,5 @@
 import { ArrowRight, Calendar } from "lucide-react";
-import { asset } from "@/lib/asset";
+import { asset, link } from "@/lib/asset";
 
 type Post = {
   type: "NEWS" | "OFFER" | "GUIDE";
@@ -80,7 +80,7 @@ export default function LatestNews() {
             </h2>
           </div>
           <a
-            href="/stock"
+            href={link("/stock")}
             className="
               inline-flex items-center gap-2 text-secondary font-semibold
               hover:gap-3 transition-all self-start sm:self-auto
@@ -114,7 +114,7 @@ export default function LatestNews() {
 function FeaturedCard({ post }: { post: Post }) {
   return (
     <a
-      href={post.href}
+      href={link(post.href)}
       className="
         group relative overflow-hidden rounded-2xl
         bg-charcoal text-white
@@ -183,7 +183,7 @@ function FeaturedCard({ post }: { post: Post }) {
 function CompactCard({ post }: { post: Post }) {
   return (
     <a
-      href={post.href}
+      href={link(post.href)}
       className="
         group bg-white rounded-xl overflow-hidden
         border border-line shadow-card

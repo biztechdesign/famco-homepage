@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { asset } from "@/lib/asset";
+import { asset, link } from "@/lib/asset";
 
 const ITEMS = [
   {
@@ -94,7 +94,7 @@ export default function SellShowcase() {
           {ITEMS.map((it) => (
             <a
               key={it.title}
-              href={it.href}
+              href={link(it.href)}
               data-card
               className="
                 group relative shrink-0

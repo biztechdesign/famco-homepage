@@ -1,6 +1,6 @@
 "use client";
 
-import { asset } from "@/lib/asset";
+import { asset, link } from "@/lib/asset";
 
 /**
  * Category strip — 8 lineal Freepik vehicle icons rendered as masked
@@ -36,7 +36,7 @@ export default function CategoryStrip() {
           {CATEGORIES.map((c) => (
             <li key={c.label} className="shrink-0">
               <a
-                href={c.href}
+                href={link(c.href)}
                 className="
                   group relative flex flex-col items-center gap-0.5
                   px-3 py-1 rounded-md

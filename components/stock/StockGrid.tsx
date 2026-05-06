@@ -2,6 +2,7 @@
 
 import StockCard from "./StockCard";
 import { VEHICLES, type Vehicle } from "@/lib/vehicles";
+import { link } from "@/lib/asset";
 
 // Re-export so existing imports keep working
 export { VEHICLES };
@@ -24,7 +25,7 @@ export default function StockGrid({
           moment matching stock arrives.
         </p>
         <a
-          href="/stock"
+          href={link("/stock")}
           className="
             mt-5 inline-flex items-center justify-center
             h-11 px-5 rounded-md

@@ -1,3 +1,5 @@
+import { link } from "@/lib/asset";
+
 type Group = {
   title: string;
   links: { label: string; href: string }[];
@@ -95,7 +97,7 @@ export default function PopularCategories() {
                 {g.links.map((l) => (
                   <li key={l.label}>
                     <a
-                      href={l.href}
+                      href={link(l.href)}
                       className="text-[13.5px] text-ink/75 hover:text-secondary transition-colors"
                     >
                       {l.label}

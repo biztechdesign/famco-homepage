@@ -9,7 +9,7 @@ import {
   ChevronDown,
   ArrowRight,
 } from "lucide-react";
-import { asset } from "@/lib/asset";
+import { asset, link } from "@/lib/asset";
 
 const COLS: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -158,7 +158,7 @@ export default function Footer() {
         <div className="grid lg:grid-cols-[1.5fr_repeat(4,minmax(0,1fr))] gap-10 lg:gap-12">
           {/* Brand block */}
           <div>
-            <a href="/" className="inline-flex items-center mb-5">
+            <a href={link("/")} className="inline-flex items-center mb-5">
               <span className="bg-white inline-block rounded-md p-3">
                 <img
                   src={asset("/brand/logo.png")}
@@ -205,7 +205,7 @@ export default function Footer() {
                 {c.links.map((l) => (
                   <li key={l.label}>
                     <a
-                      href={l.href}
+                      href={link(l.href)}
                       className="text-[13.5px] text-white/65 hover:text-secondary-300 transition-colors"
                     >
                       {l.label}

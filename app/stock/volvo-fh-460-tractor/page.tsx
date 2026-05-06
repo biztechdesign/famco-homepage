@@ -8,6 +8,7 @@ import PdpLiveInspection from "@/components/pdp/PdpLiveInspection";
 import PdpTabs, { type SpecGroup } from "@/components/pdp/PdpTabs";
 import StockCard from "@/components/stock/StockCard";
 import { VEHICLES } from "@/lib/vehicles";
+import { link } from "@/lib/asset";
 import { ChevronRight } from "lucide-react";
 
 export const metadata = {
@@ -120,15 +121,15 @@ export default function VolvoFH500Page() {
         <section className="container py-6 lg:py-8">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-[12.5px] text-muted mb-5 flex-wrap">
-            <a href="/" className="hover:text-secondary">
+            <a href={link("/")} className="hover:text-secondary">
               Home
             </a>
             <ChevronRight className="h-3 w-3" />
-            <a href="/stock" className="hover:text-secondary">
+            <a href={link("/stock")} className="hover:text-secondary">
               Stock
             </a>
             <ChevronRight className="h-3 w-3" />
-            <a href="/stock?category=trucks" className="hover:text-secondary">
+            <a href={link("/stock?category=trucks")} className="hover:text-secondary">
               Trucks
             </a>
             <ChevronRight className="h-3 w-3" />
@@ -187,7 +188,7 @@ export default function VolvoFH500Page() {
                 </h2>
               </div>
               <a
-                href="/stock"
+                href={link("/stock")}
                 className="text-[13px] font-semibold text-secondary hover:underline"
               >
                 View all stock →

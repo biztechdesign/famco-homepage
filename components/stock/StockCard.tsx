@@ -2,7 +2,7 @@
 
 import { Heart, Play, Box, Triangle } from "lucide-react";
 import { useState } from "react";
-import { asset } from "@/lib/asset";
+import { asset, link } from "@/lib/asset";
 import type { Vehicle } from "@/lib/vehicles";
 export type { Vehicle };
 
@@ -39,7 +39,7 @@ export default function StockCard({ v }: { v: Vehicle }) {
     >
       {/* Image */}
       <a
-        href={v.href || "#"}
+        href={v.href ? link(v.href) : "#"}
         className="block relative aspect-[4/3] overflow-hidden bg-bgalt rounded-t-xl"
       >
         <img

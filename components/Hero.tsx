@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import { asset } from "@/lib/asset";
+import { asset, link } from "@/lib/asset";
 
 export default function Hero() {
   return (
@@ -8,7 +8,7 @@ export default function Hero() {
         <div className="grid gap-4 lg:gap-5 lg:grid-cols-[1.6fr_1fr]">
           {/* ─── LEFT — Big hero card (BUY) ───────────────────────── */}
           <a
-            href="/stock"
+            href={link("/stock")}
             className="group relative overflow-hidden rounded-2xl bg-charcoal text-white min-h-[360px] lg:min-h-[440px] flex"
           >
             {/* Background video */}
@@ -57,7 +57,7 @@ export default function Hero() {
               eyebrow="0% Interest finance"
               title="Approved & ready to roll."
               cta="Apply for finance"
-              href="/stock/volvo-fh-460-tractor#finance"
+              href={link("/stock/volvo-fh-460-tractor#finance")}
               variant="primary"
               iconClass="fi-rr-money-bill-wave"
               bgImage="/hero/approved.jpg"
@@ -68,7 +68,7 @@ export default function Hero() {
               eyebrow="Sell with FAMCO"
               title="Get the best price for your fleet."
               cta="Get free valuation"
-              href="/stock?category=sell"
+              href={link("/stock?category=sell")}
               variant="dark"
               iconClass="fi-rr-tags"
               bgImage="/hero/sell.jpg"

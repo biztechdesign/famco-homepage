@@ -1,5 +1,5 @@
 import { Phone, MessageCircle, Mail, ArrowRight } from "lucide-react";
-import { asset } from "@/lib/asset";
+import { asset, link } from "@/lib/asset";
 
 export default function GetInTouch() {
   return (
@@ -34,7 +34,7 @@ export default function GetInTouch() {
 
               {/* Secondary — WhatsApp */}
               <a
-                href="/stock"
+                href={link("/stock")}
                 className="
                   inline-flex items-center justify-center gap-2
                   h-12 px-5 text-[14px] font-semibold rounded-md

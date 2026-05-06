@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import { asset } from "@/lib/asset";
+import { asset, link } from "@/lib/asset";
 
 /**
  * Two big BAS-style cards below LiveInspection.
@@ -23,7 +23,7 @@ export default function FeatureBlocks() {
             }
             body="Apply the value of your existing trucks toward your next purchase. Same-day quote, paperwork handled in-house."
             cta="Get my trade-in value"
-            href="/stock?category=sell"
+            href={link("/stock?category=sell")}
             bgImage="/hero/sell.jpg"
           />
 
@@ -39,7 +39,7 @@ export default function FeatureBlocks() {
             }
             body="Volvo-certified technicians, OEM parts on the shelf, bays sized for everything from light vans to heavy excavators."
             cta="Book a service slot"
-            href="/stock"
+            href={link("/stock")}
             bgImage="/hero/inspected.jpg"
           />
         </div>
