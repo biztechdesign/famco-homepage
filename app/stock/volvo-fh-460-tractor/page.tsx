@@ -4,8 +4,8 @@ import CategoryStrip from "@/components/CategoryStrip";
 import Footer from "@/components/Footer";
 import PdpGallery from "@/components/pdp/PdpGallery";
 import PdpSidebar from "@/components/pdp/PdpSidebar";
-import PdpLiveInspection from "@/components/pdp/PdpLiveInspection";
 import PdpTabs, { type SpecGroup } from "@/components/pdp/PdpTabs";
+import PdpLiveInspection from "@/components/pdp/PdpLiveInspection";
 import StockCard from "@/components/stock/StockCard";
 import { VEHICLES } from "@/lib/vehicles";
 import { link } from "@/lib/asset";
@@ -21,42 +21,19 @@ const SPEC_GROUPS: SpecGroup[] = [
   {
     title: "Engine & Drivetrain",
     rows: [
-      { label: "Engine Model", value: "Volvo D13 Euro 5" },
-      { label: "Power Output", value: "500 HP (368 kW)" },
-      { label: "Torque", value: "2,500 Nm" },
-      { label: "Transmission", value: "Volvo I-Shift 12-speed" },
-      { label: "Drive Configuration", value: "6×4" },
-      { label: "Fuel Type", value: "Diesel" },
+      { label: "Engine", value: "Volvo D13 · 500 HP" },
+      { label: "Transmission", value: "I-Shift 12-speed" },
+      { label: "Drive", value: "6×4" },
+      { label: "Fuel", value: "Diesel · Euro 5" },
     ],
   },
   {
-    title: "Dimensions & Body",
+    title: "Vehicle",
     rows: [
-      { label: "Cab Type", value: "Globetrotter XL" },
-      { label: "Wheelbase", value: "3,800 mm" },
-      { label: "Sleeper", value: "Double bunk" },
-      { label: "Suspension (Front)", value: "Air suspension" },
-      { label: "Suspension (Rear)", value: "Air suspension" },
-      { label: "Axle Ratio", value: "2.79" },
-    ],
-  },
-  {
-    title: "Performance",
-    rows: [
+      { label: "Year", value: "2022" },
       { label: "Odometer", value: "210,000 km" },
-      { label: "Engine Hours", value: "14,200 hrs" },
-      { label: "GVW", value: "26,000 kg" },
-      { label: "GCW", value: "120,000 kg" },
-    ],
-  },
-  {
-    title: "Registration & Compliance",
-    rows: [
-      { label: "Year of Manufacture", value: "2022" },
-      { label: "Country of Origin", value: "Sweden" },
-      { label: "Emission Standard", value: "Euro 5" },
+      { label: "Cab", value: "Globetrotter XL · Double bunk" },
       { label: "Location", value: "Dubai, UAE" },
-      { label: "VIN / Chassis No.", value: "YV2RTDAH***" },
       { label: "FAMCO Grade", value: "A — Excellent", emphasis: true },
     ],
   },
@@ -155,7 +132,7 @@ export default function VolvoFH500Page() {
               <PdpTabs specGroups={SPEC_GROUPS} description={DESCRIPTION} />
             </div>
 
-            {/* RIGHT — sticky sidebar + live inspection */}
+            {/* RIGHT — sticky sidebar + live video inspection */}
             <div className="lg:sticky lg:top-32 self-start space-y-3">
               <PdpSidebar
                 refId="FA-2024-7821"
@@ -171,7 +148,6 @@ export default function VolvoFH500Page() {
                 warrantyText="3-Month FAMCO Drivetrain Warranty included"
                 specs={QUICK_SPECS}
                 buyHref="#buy"
-                compareHref="#compare"
                 inspectionReportHref="#inspection-report"
               />
               <PdpLiveInspection />

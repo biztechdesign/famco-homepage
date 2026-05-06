@@ -93,15 +93,36 @@ const DEFAULT_DESCRIPTION =
 function StockPageInner() {
   const params = useSearchParams();
   const cat = params?.get("category") ?? "";
+  const q = (params?.get("q") ?? "").trim();
 
   const config = CATEGORY_MAP[cat];
-  const filtered = useMemo(() => {
-    if (!config || config.matches.length === 0) return VEHICLES;
-    return VEHICLES.filter((v) => config.matches.includes(v.category));
-  }, [config]);
 
-  const title = config?.title ?? "Used trucks, vans & machinery";
-  const description = config?.description ?? DEFAULT_DESCRIPTION;
+  const filtered = useMemo(() => {
+    // Step 1: category filter
+    let list = VEHICLES;
+    if (config && config.matches.length > 0) {
+      list = list.filter((v) => config.matches.includes(v.category));
+    }
+    // Step 2: free-text search across title / brand / description
+    if (q) {
+      const needle = q.toLowerCase();
+      list = list.filter((v) =>
+        [v.title, v.brand, v.description, v.category]
+          .join(" ")
+          .toLowerCase()
+          .includes(needle)
+      );
+    }
+    return list;
+  }, [config, q]);
+
+  const title = q
+    ? `Search results for "${q}"`
+    : config?.title ?? "Used trucks, vans & machinery";
+
+  const description = q
+    ? config?.description ?? DEFAULT_DESCRIPTION
+    : config?.description ?? DEFAULT_DESCRIPTION;
 
   return (
     <>

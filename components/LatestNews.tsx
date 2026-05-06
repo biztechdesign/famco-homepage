@@ -63,13 +63,13 @@ const POSTS: Post[] = [
 
 const TYPE_STYLES: Record<Post["type"], string> = {
   NEWS: "bg-primary text-white",
-  OFFER: "bg-secondary text-white",
+  OFFER: "bg-secondary text-ink",
   GUIDE: "bg-charcoal text-white",
 };
 
 export default function LatestNews() {
   return (
-    <section className="bg-bgalt">
+    <section className="bg-white">
       <div className="container py-12 lg:py-16">
         {/* ─── Header ──────────────────────────────────────────── */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 lg:mb-10">

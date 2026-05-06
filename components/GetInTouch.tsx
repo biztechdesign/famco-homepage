@@ -66,10 +66,10 @@ export default function GetInTouch() {
 
           {/* ─── RIGHT — Specialist photo with floating chat bubbles ─── */}
           <div className="relative overflow-hidden bg-charcoal">
-            {/* Background image — repurpose finance.jpg (FAMCO yard with specialists) */}
+            {/* Background image — FAMCO call-centre specialists on a customer call */}
             <img
-              src={asset("/hero/finance.jpg")}
-              alt="FAMCO specialists at the Dubai facility"
+              src={asset("/hero/call.jpg")}
+              alt="FAMCO specialists on a customer call"
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-105"
             />
             {/* Subtle left-edge gradient so the join with the charcoal pane is seamless */}
@@ -99,7 +99,7 @@ export default function GetInTouch() {
 
             {/* Floating "phone" chip — bottom-left */}
             <div className="absolute bottom-6 left-6 hidden md:flex items-center gap-3 bg-white rounded-full shadow-lift border border-line pl-2 pr-4 py-2">
-              <span className="h-9 w-9 rounded-full bg-secondary text-white flex items-center justify-center">
+              <span className="h-9 w-9 rounded-full bg-secondary text-ink flex items-center justify-center">
                 <Phone className="h-4 w-4" />
               </span>
               <div className="leading-tight">
@@ -117,9 +117,9 @@ export default function GetInTouch() {
               href="#"
               className="
                 absolute bottom-6 right-6 hidden md:inline-flex items-center gap-2
-                bg-secondary text-white rounded-full
+                bg-secondary text-ink rounded-full
                 px-4 py-2.5 text-[13px] font-semibold
-                shadow-lift hover:bg-secondary-700 transition-colors
+                shadow-lift hover:bg-secondary-600 transition-colors
               "
             >
               Start a chat

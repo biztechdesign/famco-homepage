@@ -39,11 +39,12 @@ export default function CategoryStrip() {
                 href={link(c.href)}
                 className="
                   group relative flex flex-col items-center gap-0.5
-                  px-3 py-1 rounded-md
+                  px-3 py-1.5 rounded-md
                   border border-transparent
                   transition-all duration-200 ease-out
-                  hover:bg-secondary-50
-                  hover:border-secondary
+                  hover:bg-bgalt
+                  hover:border-line
+                  hover:-translate-y-0.5
                 "
               >
                 {/* Masked icon — silhouette filled with current color */}
@@ -63,17 +64,27 @@ export default function CategoryStrip() {
                     block h-9 w-14
                     bg-ink
                     transition-all duration-200 ease-out
-                    group-hover:bg-secondary
+                    group-hover:bg-primary
                     group-hover:scale-110
                   "
                 />
                 {/* Label + count */}
-                <span className="text-[12px] font-semibold text-ink group-hover:text-secondary whitespace-nowrap transition-colors leading-tight">
+                <span className="text-[12px] font-semibold text-ink group-hover:text-primary whitespace-nowrap transition-colors leading-tight">
                   {c.label}{" "}
-                  <span className="text-muted group-hover:text-secondary/80 font-normal">
+                  <span className="text-muted group-hover:text-primary/70 font-normal">
                     ({c.count})
                   </span>
                 </span>
+                {/* Bottom yellow accent — appears on hover */}
+                <span
+                  aria-hidden
+                  className="
+                    absolute left-3 right-3 -bottom-px h-[2px] rounded-full
+                    bg-secondary-500 opacity-0 scale-x-50
+                    transition-all duration-200 ease-out
+                    group-hover:opacity-100 group-hover:scale-x-100
+                  "
+                />
               </a>
             </li>
           ))}

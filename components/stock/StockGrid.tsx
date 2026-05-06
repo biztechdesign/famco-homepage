@@ -29,7 +29,7 @@ export default function StockGrid({
           className="
             mt-5 inline-flex items-center justify-center
             h-11 px-5 rounded-md
-            bg-secondary hover:bg-secondary-700 text-white
+            bg-secondary hover:bg-secondary-600 text-ink
             font-semibold text-[13px]
             transition-colors
           "
@@ -56,7 +56,7 @@ export default function StockGrid({
             h-12 px-6 rounded-md
             bg-white border-2 border-secondary text-secondary
             font-semibold text-[14px]
-            hover:bg-secondary hover:text-white
+            hover:bg-secondary hover:text-ink
             transition-colors
           "
         >

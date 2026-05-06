@@ -58,16 +58,19 @@ const COLS: { title: string; links: { label: string; href: string }[] }[] = [
 const BRANCHES = [
   {
     name: "FAMCO DIP",
+    place: "Dubai Investment Park",
     address: "Dubai Investment Park, Dubai",
     phone: "800 32626",
   },
   {
     name: "FAMCO Umm Ramool",
+    place: "Umm Ramool",
     address: "Umm Ramool, Dubai",
     phone: "800 32626",
   },
   {
     name: "TMH Umm Ramool",
+    place: "Truck & Machinery Hub",
     address: "Truck & Machinery Hub, Dubai",
     phone: "800 32626",
   },
@@ -76,7 +79,36 @@ const BRANCHES = [
 export default function Footer() {
   return (
     <footer className="bg-charcoal text-white">
-      {/* ─── Branches strip — top of footer ──────────────────────── */}
+      {/* ─── Branch map — full-width Google Map with 3 pins ─────── */}
+      <div className="border-b border-white/10 bg-charcoal-900">
+        <div className="py-10 lg:py-14">
+          <div className="container">
+            <div className="text-center mb-8">
+              <div className="text-[11px] uppercase tracking-[0.18em] font-bold text-secondary-300 mb-2">
+                Find us in the UAE
+              </div>
+              <h3 className="font-display text-2xl lg:text-3xl font-bold text-white">
+                3 branches across Dubai
+              </h3>
+            </div>
+          </div>
+
+          {/* Full-width Google Map — pins only, no route line */}
+          <div className="relative w-full aspect-[21/9] sm:aspect-[21/8] lg:aspect-[3/1] bg-charcoal-800 border-y border-white/10 overflow-hidden">
+            <iframe
+              title="FAMCO branches in Dubai — Google Map"
+              src="https://maps.google.com/maps?q=Al-Futtaim+FAMCO+Dubai&t=&z=11&ie=UTF8&iwloc=&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+              className="absolute inset-0 h-full w-full border-0"
+            />
+          </div>
+
+        </div>
+      </div>
+
+      {/* ─── Branches strip — addresses ──────────────────────────── */}
       <div className="border-b border-white/10">
         <div className="container py-8">
           <div className="grid sm:grid-cols-3 gap-5">
@@ -89,8 +121,11 @@ export default function Footer() {
                   <MapPin className="h-4 w-4 text-secondary-300" />
                 </span>
                 <div className="min-w-0">
-                  <div className="text-[14px] font-semibold text-white leading-tight">
-                    {b.name}
+                  <div className="text-[10px] uppercase tracking-[0.14em] text-white/55">
+                    Al Futtaim Famco
+                  </div>
+                  <div className="text-[14px] font-semibold text-white leading-tight mt-0.5">
+                    {b.place}
                   </div>
                   <div className="text-[12.5px] text-white/60 mt-0.5">
                     {b.address}
@@ -108,64 +143,17 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ─── Newsletter band ─────────────────────────────────────── */}
-      <div className="border-b border-white/10">
-        <div className="container py-10 lg:py-12">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.18em] font-bold text-secondary-300 mb-2">
-                Stay in the loop
-              </div>
-              <h3 className="font-display text-2xl lg:text-3xl font-bold leading-tight">
-                Subscribe for new stock,
-                <br className="hidden sm:block" />
-                offers and FAMCO news
-              </h3>
-            </div>
-
-            <form
-              action="#"
-              method="post"
-              className="flex w-full lg:w-auto lg:min-w-[440px] gap-2"
-            >
-              <input
-                type="email"
-                required
-                placeholder="Enter your email"
-                aria-label="Email address"
-                className="
-                  flex-1 h-12 px-4 rounded-md
-                  bg-white/5 border border-white/15
-                  text-[14px] text-white placeholder:text-white/40
-                  outline-none focus:border-secondary focus:bg-white/10
-                  transition-colors
-                "
-              />
-              <button
-                type="submit"
-                className="btn btn-primary h-12 px-5 text-[14px] rounded-md whitespace-nowrap"
-              >
-                Subscribe
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-
       {/* ─── Main link grid ──────────────────────────────────────── */}
       <div className="container py-12 lg:py-16">
         <div className="grid lg:grid-cols-[1.5fr_repeat(4,minmax(0,1fr))] gap-10 lg:gap-12">
           {/* Brand block */}
           <div>
             <a href={link("/")} className="inline-flex items-center mb-5">
-              <span className="bg-white inline-block rounded-md p-3">
-                <img
-                  src={asset("/brand/logo.png")}
-                  alt="Al-Futtaim FAMCO Used Equipment"
-                  className="h-10 w-auto"
-                />
-              </span>
+              <img
+                src={asset("/brand/logo.png")}
+                alt="Al-Futtaim FAMCO Used Equipment"
+                className="h-16 w-auto brightness-0 invert"
+              />
             </a>
             <p className="text-[13.5px] text-white/65 leading-relaxed mb-6 max-w-sm">
               Part of Al-Futtaim Group · UAE · 2026. Sole Volvo distributor —

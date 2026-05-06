@@ -18,14 +18,14 @@ import { Palette, X, RotateCcw } from "lucide-react";
  */
 
 const STORAGE_KEY = "famco-theme-secondary";
-const DEFAULT_HEX = "#00A0E0";
+const DEFAULT_HEX = "#FFD100";
 
 const PRESETS: { hex: string; label: string }[] = [
+  { hex: "#FFD100", label: "FAMCO yellow" },
   { hex: "#00A0E0", label: "FAMCO cyan" },
   { hex: "#0D4F8B", label: "Al-Futtaim navy" },
   { hex: "#E2231A", label: "FAMCO red" },
   { hex: "#00B67A", label: "Trustpilot green" },
-  { hex: "#F59E0B", label: "Construction amber" },
   { hex: "#7C3AED", label: "Premium violet" },
 ];
 
@@ -280,7 +280,7 @@ export default function ThemePicker() {
                         : "border-red-400 focus:border-red-500"
                     }
                   `}
-                  placeholder="#00A0E0"
+                  placeholder="#FFD100"
                 />
               </div>
             </div>

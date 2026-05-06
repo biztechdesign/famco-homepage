@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChevronRight, LayoutGrid, X } from "lucide-react";
+import { link } from "@/lib/asset";
 
 /**
  * 3-level vehicle category tree.
@@ -368,16 +369,27 @@ export default function CategoriesMegaMenu({
 
         {/* Col 3 — leaves */}
         <ul className="py-1.5">
-          {activeGroup?.leaves.map((l) => (
-            <li key={l.label}>
-              <a
-                href={l.href}
-                className="block px-4 py-2 text-[13.5px] text-secondary hover:underline hover:text-secondary-700"
-              >
-                {l.label}
-              </a>
-            </li>
-          ))}
+          {activeGroup?.leaves.map((l) => {
+            // Route every leaf to /stock filtered by the active category +
+            // the active group/leaf as a query param so the megamenu actually navigates.
+            const catSlug = activeCat?.label.toLowerCase().replace(/\s+/g, "-") ?? "";
+            const groupKey = activeGroup?.label.toLowerCase().replace(/\s+/g, "") ?? "filter";
+            const leafSlug = l.label.toLowerCase().replace(/\s+/g, "-");
+            const href =
+              l.href && l.href !== "#"
+                ? link(l.href)
+                : link(`/stock?category=${catSlug}&${groupKey}=${encodeURIComponent(leafSlug)}`);
+            return (
+              <li key={l.label}>
+                <a
+                  href={href}
+                  className="block px-4 py-2 text-[13.5px] text-secondary hover:underline hover:text-secondary-700"
+                >
+                  {l.label}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

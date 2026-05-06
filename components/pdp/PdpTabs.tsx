@@ -1,20 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import PdpConditionReport from "./PdpConditionReport";
-import PdpWarrantyDocs from "./PdpWarrantyDocs";
-import PdpFinanceCalculator from "./PdpFinanceCalculator";
 
 export type SpecRow = { label: string; value: string; emphasis?: boolean };
 export type SpecGroup = { title: string; rows: SpecRow[] };
 
-const TABS = [
-  "Specifications",
-  "Description",
-  "Condition Report",
-  "Warranty & Docs",
-  "Finance Options",
-] as const;
+const TABS = ["Description", "Specifications"] as const;
 type TabId = (typeof TABS)[number];
 
 export default function PdpTabs({
@@ -24,7 +15,7 @@ export default function PdpTabs({
   specGroups: SpecGroup[];
   description: React.ReactNode;
 }) {
-  const [tab, setTab] = useState<TabId>("Specifications");
+  const [tab, setTab] = useState<TabId>("Description");
 
   return (
     <div className="bg-white rounded-xl border border-line shadow-card overflow-hidden">
@@ -62,11 +53,6 @@ export default function PdpTabs({
           <div className="prose-sm max-w-none text-[14px] text-ink/85 leading-relaxed space-y-3">
             {description}
           </div>
-        )}
-        {tab === "Condition Report" && <PdpConditionReport />}
-        {tab === "Warranty & Docs" && <PdpWarrantyDocs />}
-        {tab === "Finance Options" && (
-          <PdpFinanceCalculator defaultPrice={285000} rate={4.5} />
         )}
       </div>
     </div>
@@ -106,25 +92,3 @@ function SpecsView({ groups }: { groups: SpecGroup[] }) {
   );
 }
 
-function Placeholder({
-  title,
-  body,
-  cta,
-}: {
-  title: string;
-  body: string;
-  cta: string;
-}) {
-  return (
-    <div className="text-center py-8">
-      <h4 className="font-display text-lg font-bold text-ink mb-1.5">{title}</h4>
-      <p className="text-[13px] text-muted max-w-md mx-auto mb-5">{body}</p>
-      <a
-        href="#"
-        className="inline-flex items-center justify-center h-10 px-5 rounded-md bg-secondary hover:bg-secondary-700 text-white text-[13px] font-semibold transition-colors"
-      >
-        {cta}
-      </a>
-    </div>
-  );
-}

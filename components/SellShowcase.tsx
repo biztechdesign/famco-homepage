@@ -128,7 +128,7 @@ export default function SellShowcase() {
                   aria-hidden
                   className="
                     h-9 w-9 rounded-full
-                    bg-secondary text-white
+                    bg-secondary text-ink
                     flex items-center justify-center shrink-0
                     transition-all duration-200
                     group-hover:bg-white group-hover:text-primary

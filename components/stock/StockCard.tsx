@@ -8,8 +8,8 @@ export type { Vehicle };
 
 const BADGE_STYLES: Record<string, string> = {
   INSPECTED: "bg-primary text-white",
-  "NEW ARRIVAL": "bg-secondary text-white",
-  SALE: "bg-secondary text-white",
+  "NEW ARRIVAL": "bg-secondary text-ink",
+  SALE: "bg-secondary text-ink",
   "0% FINANCE": "bg-charcoal text-white",
 };
 
@@ -17,7 +17,9 @@ const fmt = (n: number) => new Intl.NumberFormat("en-AE").format(n);
 
 export default function StockCard({ v }: { v: Vehicle }) {
   const [saved, setSaved] = useState(false);
+  const [hover3D, setHover3D] = useState(false);
   const currency = v.currency ?? "AED";
+  const has3DPreview = Boolean(v.sketchfabId);
 
   // Spec row items in display order
   const specs: string[] = [
@@ -39,14 +41,36 @@ export default function StockCard({ v }: { v: Vehicle }) {
     >
       {/* Image */}
       <a
-        href={v.href ? link(v.href) : "#"}
+        href={link(v.href ?? "/stock/volvo-fh-460-tractor")}
+        onMouseEnter={() => has3DPreview && setHover3D(true)}
+        onMouseLeave={() => has3DPreview && setHover3D(false)}
         className="block relative aspect-[4/3] overflow-hidden bg-bgalt rounded-t-xl"
       >
         <img
           src={asset(v.image)}
           alt={v.title}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className={`absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
+            hover3D ? "opacity-0" : "opacity-100"
+          }`}
         />
+
+        {/* 3D hover preview — lazy-mounted only on hover */}
+        {has3DPreview && hover3D && (
+          <>
+            <div className="absolute inset-0 bg-charcoal flex items-center justify-center">
+              <span className="text-white/80 text-[11px] font-semibold tracking-wider uppercase animate-pulse">
+                Loading 3D view…
+              </span>
+            </div>
+            <iframe
+              key={`sf-${v.id}`}
+              title={`${v.title} — 3D view`}
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+              className="absolute inset-0 h-full w-full border-0 pointer-events-none"
+              src={`https://sketchfab.com/models/${v.sketchfabId}/embed?autospin=0.6&autostart=1&transparent=0&ui_hint=0&ui_theme=dark&ui_animations=0&ui_infos=0&ui_inspector=0&ui_settings=0&ui_watermark_link=0&ui_watermark=0&ui_controls=0&ui_stop=0&ui_help=0&ui_ar=0&ui_ar_help=0&ui_fullscreen=0&ui_annotations=0&ui_loading=0`}
+            />
+          </>
+        )}
 
         {/* Badges top-left */}
         {v.badges && v.badges.length > 0 && (
@@ -74,7 +98,7 @@ export default function StockCard({ v }: { v: Vehicle }) {
             {v.has3D && (
               <span className="inline-flex items-center gap-1 bg-charcoal-900/80 backdrop-blur text-white text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded">
                 <Box className="h-3 w-3" />
-                3D Model
+                3D View
               </span>
             )}
           </div>
@@ -106,8 +130,8 @@ export default function StockCard({ v }: { v: Vehicle }) {
       {/* Body */}
       <div className="p-5">
         {/* Title */}
-        <a href={v.href || "#"} className="block">
-          <h3 className="font-display text-[16px] sm:text-[17px] font-bold text-ink leading-tight line-clamp-1 group-hover:text-secondary transition-colors">
+        <a href={link(v.href ?? "/stock/volvo-fh-460-tractor")} className="block">
+          <h3 className="font-display text-[16px] sm:text-[17px] font-bold text-ink leading-tight line-clamp-1">
             {v.title}
           </h3>
         </a>
@@ -127,22 +151,14 @@ export default function StockCard({ v }: { v: Vehicle }) {
           ))}
         </div>
 
-        {/* Dealer + country */}
-        <div className="mt-3 flex items-center justify-between text-[12.5px]">
+        {/* Dealer */}
+        <div className="mt-3 flex items-center text-[12.5px]">
           <span className="inline-flex items-center gap-1.5 text-ink font-semibold">
             <Triangle
               className="h-3 w-3 text-secondary fill-secondary"
               style={{ transform: "rotate(90deg)" }}
             />
             {v.dealer ?? "FAMCO"}
-          </span>
-          <span className="inline-flex items-center gap-1.5 text-ink/80">
-            {v.countryFlag && (
-              <span aria-hidden className="text-base leading-none">
-                {v.countryFlag}
-              </span>
-            )}
-            {v.country}
           </span>
         </div>
 

@@ -6,14 +6,14 @@ export default function SplitFlag() {
     <section className="bg-white">
       <div className="container py-6 lg:py-8">
         <div className="grid gap-4 lg:gap-5 lg:grid-cols-2">
-          {/* ─── LEFT — Brand new, best deal ─── */}
+          {/* ─── LEFT — In stock, ready to roll ─── */}
           <FlagCard
             eyebrow="Directly available"
             title={
               <>
-                Brand new.
-                <br />
                 Best deal.
+                <br />
+                Best buy.
               </>
             }
             body="Over 800 brand-new trucks, vans and equipment in stock — financed, registered and delivered."
@@ -39,7 +39,9 @@ export default function SplitFlag() {
             href={link("/stock")}
             tone="charcoal"
             iconClass="fi-rr-shield-check"
-            bgImage="/hero/inspected.jpg"
+            bgImage="/hero/truck-1.jpg"
+            flipBg
+
           />
         </div>
       </div>
@@ -60,6 +62,7 @@ function FlagCard({
   tone,
   iconClass,
   bgImage,
+  flipBg,
 }: {
   eyebrow: string;
   title: React.ReactNode;
@@ -69,24 +72,39 @@ function FlagCard({
   tone: "secondary" | "charcoal";
   iconClass: string;
   bgImage?: string;
+  flipBg?: boolean;
 }) {
-  const surface =
-    tone === "secondary"
-      ? "bg-secondary text-white"
+  // When a background photo is present we always overlay a dark
+  // gradient on top, so the card reads as dark regardless of tone —
+  // text/eyebrow must be light. Tone only drives the look for the
+  // solid (no-image) variant.
+  const hasImage = Boolean(bgImage);
+
+  const surface = hasImage
+    ? "bg-charcoal text-white"
+    : tone === "secondary"
+      ? "bg-secondary text-ink"
       : "bg-charcoal text-white";
 
-  // CTA pill — unified across both cards (secondary-blue, matches the rest of the site)
-  const ctaClasses = "bg-secondary text-white hover:bg-secondary-700";
+  // CTA pill — bright yellow pill on dark surfaces, dark pill on yellow
+  const ctaClasses = hasImage
+    ? "bg-secondary text-ink hover:bg-secondary-600"
+    : tone === "secondary"
+      ? "bg-charcoal text-white hover:bg-charcoal-700"
+      : "bg-secondary text-ink hover:bg-secondary-600";
 
   // Eyebrow tint
-  const eyebrowColor =
-    tone === "secondary" ? "text-white/85" : "text-secondary-300";
+  const eyebrowColor = hasImage
+    ? "text-secondary-300"
+    : tone === "secondary"
+      ? "text-ink/70"
+      : "text-secondary-300";
 
-  // Decorative icon tint
+  // Decorative icon tint (only used when there is no bgImage)
   const iconColor =
-    tone === "secondary" ? "text-white/20" : "text-secondary/30";
+    tone === "secondary" ? "text-ink/15" : "text-secondary/30";
   const iconHover =
-    tone === "secondary" ? "group-hover:text-white/35" : "group-hover:text-secondary/55";
+    tone === "secondary" ? "group-hover:text-ink/30" : "group-hover:text-secondary/55";
 
   return (
     <a
@@ -107,7 +125,9 @@ function FlagCard({
             src={asset(bgImage)}
             alt=""
             aria-hidden
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className={`absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 ${
+              flipBg ? "scale-x-[-1] group-hover:scale-x-[-1.05]" : ""
+            }`}
           />
           {/* Black gradient — same as hero left video card */}
           <div className="absolute inset-0 bg-gradient-to-r from-charcoal-900 via-charcoal-800/70 to-transparent" />

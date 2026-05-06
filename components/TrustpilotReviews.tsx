@@ -59,7 +59,7 @@ export default function TrustpilotReviews() {
             <div className="flex items-center gap-2">
               {/* Star tile (Trustpilot's star) */}
               <span className="h-7 w-7 rounded-sm bg-secondary flex items-center justify-center">
-                <Star className="h-4 w-4 fill-white text-white" />
+                <Star className="h-4 w-4 fill-ink text-ink" />
               </span>
               <span className="font-semibold text-ink text-[15px] tracking-tight">
                 Trustpilot

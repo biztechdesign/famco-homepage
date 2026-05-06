@@ -5,7 +5,6 @@ import {
   Share2,
   ShieldCheck,
   Send,
-  BarChart3,
   Calendar,
   Gauge,
   MapPin,
@@ -41,7 +40,6 @@ export default function PdpSidebar({
   warrantyText = "3-Month FAMCO Drivetrain Warranty included",
   specs,
   buyHref = "#",
-  compareHref = "#",
   inspectionReportHref = "#",
 }: {
   refId: string;
@@ -57,7 +55,6 @@ export default function PdpSidebar({
   warrantyText?: string;
   specs: SidebarSpec[];
   buyHref?: string;
-  compareHref?: string;
   inspectionReportHref?: string;
 }) {
   const [saved, setSaved] = useState(false);
@@ -137,69 +134,53 @@ export default function PdpSidebar({
           </div>
         </div>
 
+        {/* Compact key spec list — replaces the 2×2 card grid */}
+        <ul className="mt-4 divide-y divide-line border-y border-line">
+          {specs.map((s) => {
+            const Icon = s.iconKey ? ICONS[s.iconKey] : null;
+            return (
+              <li
+                key={s.label}
+                className="flex items-center justify-between gap-3 py-2.5 text-[13px]"
+              >
+                <span className="inline-flex items-center gap-2 text-muted">
+                  {Icon && <Icon className="h-4 w-4 text-secondary" />}
+                  {s.label}
+                </span>
+                <span className="font-semibold text-ink tabular-nums">
+                  {s.value}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+
+        {/* Single primary CTA */}
+        <a
+          href={buyHref}
+          className="
+            mt-5 inline-flex items-center justify-center gap-2
+            w-full h-12 rounded-md
+            bg-[#FFC619] hover:bg-[#FFB800] text-ink
+            font-bold text-[14px]
+            transition-colors
+            shadow-[0_2px_0_rgba(0,0,0,0.05)]
+          "
+        >
+          <Send className="h-4 w-4" />
+          Buy Now
+        </a>
+
         {/* Warranty line */}
         {warrantyText && (
-          <div className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary">
+          <div className="mt-4 pt-4 border-t border-line inline-flex items-center gap-1.5 text-[12.5px] text-secondary">
             <ShieldCheck className="h-4 w-4" />
             {warrantyText}
           </div>
         )}
-
-        {/* Spec grid 2×2 */}
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          {specs.map((s) => {
-            const Icon = s.iconKey ? ICONS[s.iconKey] : null;
-            return (
-              <div
-                key={s.label}
-                className="rounded-lg border border-line bg-white p-3"
-              >
-                <div className="flex items-center gap-1.5 text-[10.5px] uppercase tracking-widest font-bold text-muted mb-1">
-                  {Icon && <Icon className="h-3.5 w-3.5 text-secondary" />}
-                  {s.label}
-                </div>
-                <div className="text-[14px] font-semibold text-ink leading-tight">
-                  {s.value}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* CTAs */}
-        <div className="mt-5 space-y-2.5">
-          <a
-            href={buyHref}
-            className="
-              inline-flex items-center justify-center gap-2
-              w-full h-12 rounded-md
-              bg-[#FFC619] hover:bg-[#FFB800] text-ink
-              font-bold text-[14px]
-              transition-colors
-              shadow-[0_2px_0_rgba(0,0,0,0.05)]
-            "
-          >
-            <Send className="h-4 w-4" />
-            Buy Now
-          </a>
-          <a
-            href={compareHref}
-            className="
-              inline-flex items-center justify-center gap-2
-              w-full h-12 rounded-md
-              bg-white hover:bg-bgalt
-              border border-line text-ink
-              font-semibold text-[13.5px]
-              transition-colors
-            "
-          >
-            <BarChart3 className="h-4 w-4 text-muted" />
-            Compare with Other Units
-          </a>
-        </div>
       </div>
 
-      {/* Inspection report card */}
+      {/* Inspection report download card */}
       <a
         href={inspectionReportHref}
         className="

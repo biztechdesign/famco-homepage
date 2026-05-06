@@ -86,7 +86,7 @@ export default function PdpGallery({
       </div>
 
       {/* Stage */}
-      <div className="relative aspect-[16/10] bg-bgalt overflow-hidden">
+      <div className="relative aspect-[2/1] bg-bgalt overflow-hidden">
         {tab === "gallery" && active && (
           <img
             src={asset(active.src)}
@@ -122,7 +122,7 @@ export default function PdpGallery({
             {/* Top-left: FAMCO Approved + Grade */}
             <div className="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
               {approved && (
-                <span className="inline-flex items-center text-[10.5px] font-bold tracking-wider uppercase px-2.5 py-1 rounded bg-secondary text-white">
+                <span className="inline-flex items-center text-[10.5px] font-bold tracking-wider uppercase px-2.5 py-1 rounded bg-secondary text-ink">
                   FAMCO Approved
                 </span>
               )}

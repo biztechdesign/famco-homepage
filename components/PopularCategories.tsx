@@ -76,7 +76,7 @@ const GROUPS: Group[] = [
 
 export default function PopularCategories() {
   return (
-    <section className="bg-white">
+    <section className="bg-bgalt">
       <div className="container py-14 lg:py-20">
         {/* Header */}
         <div className="text-center mb-10 lg:mb-14">

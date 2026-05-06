@@ -30,7 +30,7 @@ export default function Hero() {
             <div className="relative z-10 flex flex-col justify-between p-7 lg:p-10 w-full">
               <div>
                 <div className="eyebrow text-secondary-300 mb-3">
-                  Al-Futtaim · Since 1978
+                  In the UAE · Since 1978
                 </div>
                 <h1 className="font-display font-bold uppercase tracking-tight leading-[0.95] text-3xl sm:text-5xl lg:text-6xl text-white">
                   Buy used trucks
@@ -167,7 +167,7 @@ function BentoCard({
           className="
             inline-flex items-center justify-center
             h-10 w-10 rounded-full
-            bg-secondary text-white
+            bg-secondary text-ink
             transition-all duration-200
             group-hover:bg-white group-hover:text-primary
             group-hover:scale-110

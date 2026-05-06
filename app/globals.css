@@ -3,22 +3,22 @@
 @tailwind utilities;
 
 :root {
-  --font-display: "Barlow Condensed", "Oswald", system-ui, sans-serif;
-  --font-body: "Inter", "Manrope", system-ui, sans-serif;
+  --font-display: "Asta Sans", "Manrope", system-ui, sans-serif;
+  --font-body: "Public Sans", system-ui, sans-serif;
 
   /* Secondary palette — RGB triplets so Tailwind's <alpha-value> works.
-     Default = Al-Futtaim Famco cyan-blue. The ThemePicker overrides
+     Default = FAMCO CTA yellow (#ffd100). The ThemePicker overrides
      these at runtime to recolor the whole site. */
-  --secondary-50: 230 246 253;
-  --secondary-100: 191 234 250;
-  --secondary-200: 128 213 245;
-  --secondary-300: 64 192 239;
-  --secondary-400: 29 176 232;
-  --secondary-500: 0 160 224;
-  --secondary-600: 0 131 183;
-  --secondary-700: 0 101 140;
-  --secondary-800: 0 72 98;
-  --secondary-900: 0 41 55;
+  --secondary-50: 255 250 230;
+  --secondary-100: 255 245 199;
+  --secondary-200: 255 235 143;
+  --secondary-300: 255 226 92;
+  --secondary-400: 255 216 41;
+  --secondary-500: 255 209 0;
+  --secondary-600: 214 176 0;
+  --secondary-700: 168 138 0;
+  --secondary-800: 112 92 0;
+  --secondary-900: 71 59 0;
 }
 
 html {
@@ -57,14 +57,15 @@ h1, h2, h3, h4, .font-display {
   white-space: nowrap;
 }
 
-/* Primary action — secondary blue (the brighter, click-me color) */
+/* Primary action — secondary yellow (the brighter, click-me color).
+   Uses dark ink on yellow so the CTA stays legible. */
 .btn-primary {
   background: rgb(var(--secondary-500));
-  color: #fff;
+  color: #0F172A;
   padding: 0 1.25rem;
   height: 48px;
 }
-.btn-primary:hover { background: rgb(var(--secondary-700)); transform: translateY(-1px); }
+.btn-primary:hover { background: rgb(var(--secondary-600)); transform: translateY(-1px); }
 
 /* Secondary action — primary deep blue */
 .btn-secondary {
@@ -84,6 +85,32 @@ h1, h2, h3, h4, .font-display {
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ─── Contrast guard ────────────────────────────────────────────────
+   Yellow #ffd100 (--secondary-500) is only legible as a *background*
+   with dark text on top. When the brand color is used as foreground
+   (text / icon / fill / stroke) it gets remapped to the darker
+   --secondary-700 shade so it stays readable on light surfaces.
+   Backgrounds (bg-secondary) keep --secondary-500 (#ffd100).
+   Numbered variants (e.g. text-secondary-300 on dark hero/footer)
+   are intentional and untouched.
+   ─────────────────────────────────────────────────────────────────── */
+.text-secondary,
+.hover\:text-secondary:hover,
+.group:hover .group-hover\:text-secondary,
+.focus\:text-secondary:focus {
+  color: rgb(var(--secondary-700));
+}
+.fill-secondary,
+.hover\:fill-secondary:hover,
+.group:hover .group-hover\:fill-secondary {
+  fill: rgb(var(--secondary-700));
+}
+.stroke-secondary,
+.hover\:stroke-secondary:hover,
+.group:hover .group-hover\:stroke-secondary {
+  stroke: rgb(var(--secondary-700));
+}
 
 /* Wheel rotation — used by category-strip icons on hover */
 @keyframes wheel-spin {

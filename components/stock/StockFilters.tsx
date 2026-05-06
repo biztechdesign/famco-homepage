@@ -144,7 +144,7 @@ export default function StockFilters({
               Filters
             </h3>
             {totalSelected > 0 && (
-              <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-secondary text-white text-[10.5px] font-bold">
+              <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-secondary text-ink text-[10.5px] font-bold">
                 {totalSelected}
               </span>
             )}

@@ -1,4 +1,4 @@
-import { Video } from "lucide-react";
+import { ArrowRight, Video } from "lucide-react";
 import { asset, link } from "@/lib/asset";
 
 export default function LiveInspection() {
@@ -26,9 +26,18 @@ export default function LiveInspection() {
               Schedule a live walkthrough with a FAMCO specialist from our
               Dubai facility. Ask questions in real time before you commit.
             </p>
-            <p className="text-[12px] text-white/55">
+            <p className="text-[12px] text-white/55 mb-6">
               Free · No commitment · Mon–Sat, 9 AM – 6 PM GST
             </p>
+
+            <a
+              href={link("/stock/volvo-fh-460-tractor")}
+              className="group/cta inline-flex items-center gap-2 btn btn-primary h-12 px-6 text-[14px] rounded-lg w-fit shadow-lift"
+            >
+              <Video className="h-4 w-4" />
+              Schedule a call
+              <ArrowRight className="h-4 w-4 group-hover/cta:translate-x-1 transition-transform" />
+            </a>
           </div>
 
           {/* ─── RIGHT — Live video-call mock ─────────────────── */}
@@ -77,7 +86,7 @@ export default function LiveInspection() {
                   >
                     <span className="relative flex h-8 w-8">
                       <span className="absolute inset-0 rounded-full bg-secondary/50 animate-ping" />
-                      <span className="relative inline-flex h-8 w-8 rounded-full bg-secondary border-2 border-white items-center justify-center text-white text-[10px] font-bold">
+                      <span className="relative inline-flex h-8 w-8 rounded-full bg-secondary border-2 border-white items-center justify-center text-ink text-[10px] font-bold">
                         ✓
                       </span>
                     </span>
