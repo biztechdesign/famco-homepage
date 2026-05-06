@@ -173,8 +173,8 @@ export default function Header() {
                 onFocus={() => {
                   if (q.trim()) setOpenSuggest(true);
                 }}
-                placeholder="Search by make, model, or keyword — e.g. Volvo FH 6×4"
-                className="w-full ml-3 bg-transparent text-[14px] text-ink placeholder:text-muted outline-none"
+                placeholder="Search by make, model, or keyword"
+                className="w-full ml-3 bg-transparent text-[14px] text-ink placeholder:text-muted outline-none text-ellipsis"
                 aria-autocomplete="list"
                 aria-expanded={openSuggest}
               />
