@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Wallet / money body -->
+  <rect x="6" y="16" width="46" height="34" rx="4"/>
+  <!-- Card slot -->
+  <path d="M52 28h6v10h-6"/>
+  <circle cx="55" cy="33" r="2" fill="currentColor" stroke="none"/>
+  <!-- Top flap -->
+  <path d="M10 16l28-8 8 8"/>
+  <!-- Currency mark -->
+  <path d="M22 28v10M27 31a3 3 0 1 0 0 6h-5M22 31h5a3 3 0 0 1 0 6"/>
+</svg>

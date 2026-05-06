@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FBF4E5"/><stop offset="100%" stop-color="#EBC97B"/></linearGradient></defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <g fill="#0D4F8B">
+    <rect x="180" y="370" width="280" height="120" rx="10"/>
+    <rect x="260" y="290" width="150" height="90" rx="8"/>
+    <path d="M410 330 L580 240 L600 260 L440 360 Z"/>
+    <path d="M580 240 L640 230 L650 280 L600 290 Z"/>
+    <rect x="160" y="490" width="320" height="40" rx="20" fill="#02101D"/>
+    <circle cx="200" cy="510" r="14" fill="#0D4F8B"/>
+    <circle cx="280" cy="510" r="14" fill="#0D4F8B"/>
+    <circle cx="360" cy="510" r="14" fill="#0D4F8B"/>
+    <circle cx="440" cy="510" r="14" fill="#0D4F8B"/>
+  </g>
+  <text x="400" y="80" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="#0D4F8B" text-anchor="middle">DOOSAN DX340LCA</text>
+</svg>

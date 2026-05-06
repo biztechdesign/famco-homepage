@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Tag body -->
+  <path d="M34 6h22v22L30 54a4 4 0 0 1-5.7 0L8 38a4 4 0 0 1 0-5.7L34 6z"/>
+  <!-- Tag hole -->
+  <circle cx="46" cy="18" r="3.5"/>
+  <!-- Up arrow indicating sell-out -->
+  <path d="M22 36l-6 6M16 42v-6M16 42h6"/>
+</svg>

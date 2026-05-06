@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Barlow Condensed", "Oswald", system-ui, sans-serif;
+  --font-body: "Inter", "Manrope", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: #0f172a;
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #00A0E0; /* secondary */
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 150ms ease-out;
+  white-space: nowrap;
+}
+
+/* Primary action — secondary blue (the brighter, click-me color) */
+.btn-primary {
+  background: #00A0E0;
+  color: #fff;
+  padding: 0 1.25rem;
+  height: 48px;
+}
+.btn-primary:hover { background: #0083B7; transform: translateY(-1px); }
+
+/* Secondary action — primary deep blue */
+.btn-secondary {
+  background: #0D4F8B;
+  color: #fff;
+  padding: 0 1.25rem;
+  height: 48px;
+}
+.btn-secondary:hover { background: #082F52; }
+
+.btn-outline {
+  border: 1.5px solid currentColor;
+  padding: 0 1.25rem;
+  height: 48px;
+  background: transparent;
+}
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Wheel rotation — used by category-strip icons on hover */
+@keyframes wheel-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.wheel { transform-box: fill-box; transform-origin: center; }
+.group:hover .wheel { animation: wheel-spin 0.7s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .wheel { animation: none; }
+}

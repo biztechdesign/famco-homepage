@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E6F6FD"/>
+      <stop offset="100%" stop-color="#40C0EF"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <!-- waves -->
+  <path d="M0 460 Q100 430 200 460 T400 460 T600 460 T800 460 V600 H0 Z" fill="#0083B7" opacity="0.6"/>
+  <path d="M0 500 Q100 470 200 500 T400 500 T600 500 T800 500 V600 H0 Z" fill="#0D4F8B"/>
+  <!-- boat hull -->
+  <path d="M180 420 L620 420 L560 480 L240 480 Z" fill="#0D4F8B"/>
+  <rect x="280" y="340" width="240" height="80" rx="8" fill="#082F52"/>
+  <rect x="320" y="360" width="40" height="40" fill="#BFEAFA"/>
+  <rect x="380" y="360" width="40" height="40" fill="#BFEAFA"/>
+  <rect x="440" y="360" width="40" height="40" fill="#BFEAFA"/>
+  <text x="400" y="105" font-family="Inter, sans-serif" font-size="38" font-weight="700" fill="#0D4F8B" text-anchor="middle" letter-spacing="2">MARINE</text>
+</svg>

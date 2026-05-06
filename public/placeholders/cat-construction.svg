@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F6E6C2"/>
+      <stop offset="100%" stop-color="#D9A441"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <g fill="#0D4F8B">
+    <!-- excavator body -->
+    <rect x="180" y="360" width="280" height="120" rx="10"/>
+    <!-- cab -->
+    <rect x="260" y="280" width="150" height="90" rx="8"/>
+    <!-- arm -->
+    <path d="M410 320 L580 230 L600 250 L440 350 Z"/>
+    <!-- bucket -->
+    <path d="M580 230 L640 220 L650 270 L600 280 Z"/>
+    <!-- tracks -->
+    <rect x="160" y="480" width="320" height="40" rx="20" fill="#02101D"/>
+    <circle cx="200" cy="500" r="14" fill="#0D4F8B"/>
+    <circle cx="280" cy="500" r="14" fill="#0D4F8B"/>
+    <circle cx="360" cy="500" r="14" fill="#0D4F8B"/>
+    <circle cx="440" cy="500" r="14" fill="#0D4F8B"/>
+  </g>
+  <text x="400" y="105" font-family="Inter, sans-serif" font-size="34" font-weight="700" fill="#0D4F8B" text-anchor="middle" letter-spacing="2">CONSTRUCTION</text>
+</svg>
