@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Search,
   Heart,
@@ -51,7 +51,6 @@ export default function Header() {
   // Live-search state — typing on /stock page updates ?q=… in real time
   const router = useRouter();
   const pathname = usePathname();
-  const params = useSearchParams();
   const onListing =
     pathname?.endsWith("/stock") || pathname?.endsWith("/stock/");
 
