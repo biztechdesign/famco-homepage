@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#EAF2FA"/><stop offset="100%" stop-color="#99BAE0"/></linearGradient></defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <g fill="#0D4F8B">
+    <rect x="100" y="350" width="430" height="180" rx="10"/>
+    <rect x="100" y="240" width="220" height="110" rx="8"/>
+    <rect x="540" y="370" width="160" height="160" rx="8"/>
+    <circle cx="180" cy="540" r="32" fill="#02101D"/>
+    <circle cx="380" cy="540" r="32" fill="#02101D"/>
+    <circle cx="600" cy="540" r="32" fill="#02101D"/>
+    <circle cx="180" cy="540" r="12" fill="#5E8FCB"/>
+    <circle cx="380" cy="540" r="12" fill="#5E8FCB"/>
+    <circle cx="600" cy="540" r="12" fill="#5E8FCB"/>
+  </g>
+  <text x="400" y="80" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="#0D4F8B" text-anchor="middle">VOLVO FH 460 6×4</text>
+</svg>

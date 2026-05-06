@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E6F6FD"/><stop offset="100%" stop-color="#1DB0E8"/></linearGradient></defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <g fill="#0D4F8B">
+    <rect x="140" y="220" width="520" height="280" rx="14"/>
+    <g fill="#082F52">
+      <rect x="180" y="260" width="60" height="200" rx="4"/>
+      <rect x="260" y="260" width="60" height="200" rx="4"/>
+      <rect x="340" y="260" width="60" height="200" rx="4"/>
+    </g>
+    <rect x="430" y="260" width="200" height="200" rx="8" fill="#082F52"/>
+    <circle cx="475" cy="320" r="14" fill="#00A0E0"/>
+    <circle cx="525" cy="320" r="14" fill="#D9A441"/>
+    <rect x="450" y="360" width="160" height="10" fill="#5E8FCB"/>
+    <rect x="450" y="385" width="160" height="10" fill="#5E8FCB"/>
+    <rect x="450" y="410" width="120" height="10" fill="#5E8FCB"/>
+  </g>
+  <text x="400" y="80" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="#0D4F8B" text-anchor="middle">HIMOINSA HFW-200</text>
+</svg>

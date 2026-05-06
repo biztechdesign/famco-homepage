@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#CDDDF0"/>
+      <stop offset="100%" stop-color="#99BAE0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <g fill="#0D4F8B">
+    <!-- forklift body -->
+    <rect x="200" y="320" width="220" height="170" rx="10"/>
+    <!-- mast -->
+    <rect x="430" y="160" width="20" height="330"/>
+    <rect x="460" y="160" width="20" height="330"/>
+    <!-- forks -->
+    <rect x="490" y="430" width="180" height="14"/>
+    <rect x="490" y="460" width="180" height="14"/>
+    <!-- pallet -->
+    <rect x="500" y="380" width="160" height="40" fill="#D9A441"/>
+    <!-- wheels -->
+    <circle cx="240" cy="510" r="34" fill="#02101D"/>
+    <circle cx="380" cy="510" r="34" fill="#02101D"/>
+    <circle cx="240" cy="510" r="14" fill="#5E8FCB"/>
+    <circle cx="380" cy="510" r="14" fill="#5E8FCB"/>
+  </g>
+  <text x="400" y="105" font-family="Inter, sans-serif" font-size="32" font-weight="700" fill="#0D4F8B" text-anchor="middle" letter-spacing="2">MATERIAL HANDLING</text>
+</svg>

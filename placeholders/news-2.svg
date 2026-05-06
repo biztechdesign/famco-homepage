@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F6E6C2"/><stop offset="100%" stop-color="#D9A441"/></linearGradient></defs>
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <g fill="#0D4F8B">
+    <rect x="180" y="320" width="280" height="100" rx="10"/>
+    <rect x="260" y="240" width="150" height="80" rx="8"/>
+    <path d="M410 280 L580 200 L600 220 L440 310 Z"/>
+    <rect x="160" y="420" width="320" height="34" rx="17" fill="#02101D"/>
+  </g>
+  <rect x="40" y="40" width="120" height="36" rx="4" fill="#0D4F8B"/>
+  <text x="100" y="65" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">NEWS</text>
+</svg>
