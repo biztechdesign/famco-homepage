@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { asset } from "@/lib/asset";
 
 /**
  * Two big BAS-style cards below LiveInspection.
@@ -81,7 +82,7 @@ function BigCard({
     >
       {/* Background image */}
       <img
-        src={bgImage}
+        src={asset(bgImage)}
         alt=""
         aria-hidden
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"

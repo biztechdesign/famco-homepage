@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { asset } from "@/lib/asset";
 
 export default function Hero() {
   return (
@@ -12,8 +13,8 @@ export default function Hero() {
           >
             {/* Background video */}
             <video
-              src="/placeholders/famco-marketplace3.1-compressed.mp4"
-              poster="/placeholders/hero.svg"
+              src={asset("/placeholders/famco-marketplace3.1-compressed.mp4")}
+              poster={asset("/placeholders/hero.svg")}
               autoPlay
               muted
               loop
@@ -122,7 +123,7 @@ function BentoCard({
       {bgImage && (
         <>
           <img
-            src={bgImage}
+            src={asset(bgImage)}
             alt=""
             aria-hidden
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"

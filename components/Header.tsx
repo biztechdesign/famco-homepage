@@ -11,6 +11,7 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import CategoriesMegaMenu from "./CategoriesMegaMenu";
+import { asset } from "@/lib/asset";
 
 export default function Header() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -23,7 +24,7 @@ export default function Header() {
         {/* Logo */}
         <a href="/" className="flex items-center shrink-0">
           <img
-            src="/brand/logo.png"
+            src={asset("/brand/logo.png")}
             alt="Al-Futtaim FAMCO Used Equipment"
             className="h-10 sm:h-12 w-auto"
           />

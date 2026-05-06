@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { asset } from "@/lib/asset";
 
 const ITEMS = [
   {
@@ -107,7 +108,7 @@ export default function SellShowcase() {
               "
             >
               <img
-                src={it.image}
+                src={asset(it.image)}
                 alt={it.title}
                 className="
                   absolute inset-0 h-full w-full object-cover

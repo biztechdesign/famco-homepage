@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { asset } from "@/lib/asset";
 
 const CATS = [
   { name: "Trucks", sub: "Heavy-duty Volvo, Eicher, Renault", count: 124, img: "/placeholders/cat-trucks.svg" },

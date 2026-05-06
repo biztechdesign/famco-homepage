@@ -9,6 +9,7 @@ import {
   ChevronDown,
   ArrowRight,
 } from "lucide-react";
+import { asset } from "@/lib/asset";
 
 const COLS: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -160,7 +161,7 @@ export default function Footer() {
             <a href="/" className="inline-flex items-center mb-5">
               <span className="bg-white inline-block rounded-md p-3">
                 <img
-                  src="/brand/logo.png"
+                  src={asset("/brand/logo.png")}
                   alt="Al-Futtaim FAMCO Used Equipment"
                   className="h-10 w-auto"
                 />

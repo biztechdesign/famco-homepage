@@ -1,4 +1,5 @@
 import { ArrowRight, Calendar } from "lucide-react";
+import { asset } from "@/lib/asset";
 
 type Post = {
   type: "NEWS" | "OFFER" | "GUIDE";
@@ -124,7 +125,7 @@ function FeaturedCard({ post }: { post: Post }) {
       "
     >
       <img
-        src={post.image}
+        src={asset(post.image)}
         alt=""
         aria-hidden
         className="
@@ -194,7 +195,7 @@ function CompactCard({ post }: { post: Post }) {
       {/* Image — fixed width on desktop */}
       <div className="relative w-32 sm:w-40 lg:w-44 shrink-0 overflow-hidden bg-bgalt">
         <img
-          src={post.image}
+          src={asset(post.image)}
           alt=""
           aria-hidden
           className="

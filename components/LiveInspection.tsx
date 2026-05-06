@@ -1,4 +1,5 @@
 import { Video } from "lucide-react";
+import { asset } from "@/lib/asset";
 
 export default function LiveInspection() {
   return (
@@ -48,7 +49,7 @@ export default function LiveInspection() {
                 {/* Main feed — uses the FAMCO yard image as the "specialist's camera view" */}
                 <div className="relative aspect-[16/9]">
                   <img
-                    src="/hero/inspected.jpg"
+                    src={asset("/hero/inspected.jpg")}
                     alt="Live FAMCO yard view"
                     className="absolute inset-0 h-full w-full object-cover"
                   />

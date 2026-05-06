@@ -1,4 +1,5 @@
 import { Phone, MessageCircle, Mail, ArrowRight } from "lucide-react";
+import { asset } from "@/lib/asset";
 
 export default function GetInTouch() {
   return (
@@ -67,7 +68,7 @@ export default function GetInTouch() {
           <div className="relative overflow-hidden bg-charcoal">
             {/* Background image — repurpose finance.jpg (FAMCO yard with specialists) */}
             <img
-              src="/hero/finance.jpg"
+              src={asset("/hero/finance.jpg")}
               alt="FAMCO specialists at the Dubai facility"
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-105"
             />

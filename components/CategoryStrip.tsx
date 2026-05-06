@@ -1,5 +1,7 @@
 "use client";
 
+import { asset } from "@/lib/asset";
+
 /**
  * Category strip — 8 lineal Freepik vehicle icons rendered as masked
  * spans, so we can recolor them via CSS (currentColor / bg-color).
@@ -48,8 +50,8 @@ export default function CategoryStrip() {
                 <span
                   aria-hidden
                   style={{
-                    WebkitMaskImage: `url(${c.src})`,
-                    maskImage: `url(${c.src})`,
+                    WebkitMaskImage: `url(${asset(c.src)})`,
+                    maskImage: `url(${asset(c.src)})`,
                     WebkitMaskRepeat: "no-repeat",
                     maskRepeat: "no-repeat",
                     WebkitMaskPosition: "center",
