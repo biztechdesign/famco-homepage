@@ -29,7 +29,7 @@ export default function SplitFlag() {
             eyebrow="Inspected & ready"
             title={
               <>
-                25-point check.
+                150-point check.
                 <br />
                 Paperwork done.
               </>

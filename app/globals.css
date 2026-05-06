@@ -5,6 +5,20 @@
 :root {
   --font-display: "Barlow Condensed", "Oswald", system-ui, sans-serif;
   --font-body: "Inter", "Manrope", system-ui, sans-serif;
+
+  /* Secondary palette — RGB triplets so Tailwind's <alpha-value> works.
+     Default = Al-Futtaim Famco cyan-blue. The ThemePicker overrides
+     these at runtime to recolor the whole site. */
+  --secondary-50: 230 246 253;
+  --secondary-100: 191 234 250;
+  --secondary-200: 128 213 245;
+  --secondary-300: 64 192 239;
+  --secondary-400: 29 176 232;
+  --secondary-500: 0 160 224;
+  --secondary-600: 0 131 183;
+  --secondary-700: 0 101 140;
+  --secondary-800: 0 72 98;
+  --secondary-900: 0 41 55;
 }
 
 html {
@@ -29,7 +43,7 @@ h1, h2, h3, h4, .font-display {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #00A0E0; /* secondary */
+  color: rgb(var(--secondary-500));
 }
 
 .btn {
@@ -45,12 +59,12 @@ h1, h2, h3, h4, .font-display {
 
 /* Primary action — secondary blue (the brighter, click-me color) */
 .btn-primary {
-  background: #00A0E0;
+  background: rgb(var(--secondary-500));
   color: #fff;
   padding: 0 1.25rem;
   height: 48px;
 }
-.btn-primary:hover { background: #0083B7; transform: translateY(-1px); }
+.btn-primary:hover { background: rgb(var(--secondary-700)); transform: translateY(-1px); }
 
 /* Secondary action — primary deep blue */
 .btn-secondary {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ThemePicker from "@/components/ThemePicker";
 
 export const metadata: Metadata = {
   title: "FAMCO Used Equipment — Trucks, Buses, Machinery in the UAE",
@@ -23,7 +24,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <ThemePicker />
+      </body>
     </html>
   );
 }

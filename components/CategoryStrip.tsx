@@ -18,14 +18,14 @@ type Cat = {
 };
 
 const CATEGORIES: Cat[] = [
-  { label: "Vans", count: 853, href: "#", src: "/icons/category/_light-commercial-vehicle.svg" },
-  { label: "Trucks", count: 531, href: "#", src: "/icons/category/_truck.svg" },
-  { label: "Tractor", count: 418, href: "#", src: "/icons/category/_tractorhead.svg" },
-  { label: "Semi", count: 263, href: "#", src: "/icons/category/_semi-trailer.svg" },
-  { label: "Construction", count: 262, href: "#", src: "/icons/category/_construction-equipment.svg" },
-  { label: "Trailers", count: 29, href: "#", src: "/icons/category/_trailer.svg" },
-  { label: "Combo", count: 25, href: "#", src: "/icons/category/_combination.svg" },
-  { label: "Various", count: 10, href: "#", src: "/icons/category/_various.svg" },
+  { label: "Trucks", count: 531, href: "/stock?category=trucks", src: "/icons/category/_truck.svg" },
+  { label: "Vans", count: 853, href: "/stock?category=vans", src: "/icons/category/_light-commercial-vehicle.svg" },
+  { label: "Tractor", count: 418, href: "/stock?category=tractor", src: "/icons/category/_tractorhead.svg" },
+  { label: "Semi", count: 263, href: "/stock?category=semi", src: "/icons/category/_semi-trailer.svg" },
+  { label: "Construction", count: 262, href: "/stock?category=construction", src: "/icons/category/_construction-equipment.svg" },
+  { label: "Trailers", count: 29, href: "/stock?category=trailers", src: "/icons/category/_trailer.svg" },
+  { label: "Combo", count: 25, href: "/stock?category=combo", src: "/icons/category/_combination.svg" },
+  { label: "Various", count: 10, href: "/stock?category=various", src: "/icons/category/_various.svg" },
 ];
 
 export default function CategoryStrip() {

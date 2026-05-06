@@ -22,19 +22,21 @@ const config: Config = {
           800: "#051F37",
           900: "#02101D",
         },
-        // SECONDARY — Al-Futtaim Famco cyan-blue (logo light blue)
+        // SECONDARY — driven by CSS variables so a runtime theme picker
+        // can swap the whole site's accent color in one click.
+        // Defaults (cyan-blue #00A0E0) are set on :root in globals.css.
         secondary: {
-          DEFAULT: "#00A0E0",
-          50: "#E6F6FD",
-          100: "#BFEAFA",
-          200: "#80D5F5",
-          300: "#40C0EF",
-          400: "#1DB0E8",
-          500: "#00A0E0",
-          600: "#0083B7",
-          700: "#00658C",
-          800: "#004862",
-          900: "#002937",
+          DEFAULT: "rgb(var(--secondary-500) / <alpha-value>)",
+          50: "rgb(var(--secondary-50) / <alpha-value>)",
+          100: "rgb(var(--secondary-100) / <alpha-value>)",
+          200: "rgb(var(--secondary-200) / <alpha-value>)",
+          300: "rgb(var(--secondary-300) / <alpha-value>)",
+          400: "rgb(var(--secondary-400) / <alpha-value>)",
+          500: "rgb(var(--secondary-500) / <alpha-value>)",
+          600: "rgb(var(--secondary-600) / <alpha-value>)",
+          700: "rgb(var(--secondary-700) / <alpha-value>)",
+          800: "rgb(var(--secondary-800) / <alpha-value>)",
+          900: "rgb(var(--secondary-900) / <alpha-value>)",
         },
         // Black & white-grayscale only for typography / surfaces
         ink: "#0F172A",          // body text on light
@@ -73,7 +75,7 @@ const config: Config = {
       container: {
         center: true,
         padding: { DEFAULT: "1rem", lg: "1.5rem" },
-        screens: { "2xl": "1280px" },
+        screens: { "2xl": "1440px" },
       },
     },
   },

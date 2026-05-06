@@ -168,7 +168,7 @@ export default function Footer() {
               </span>
             </a>
             <p className="text-[13.5px] text-white/65 leading-relaxed mb-6 max-w-sm">
-              Part of Al-Futtaim Group · UAE since 1978. Sole Volvo distributor —
+              Part of Al-Futtaim Group · UAE · 2026. Sole Volvo distributor —
               inspected used trucks, buses and machinery, delivered across the GCC.
             </p>
 
