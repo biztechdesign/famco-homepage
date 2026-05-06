@@ -82,9 +82,9 @@ export default function VolvoFH500Page() {
     { src: "/products/detail-3.jpg", alt: "Volvo FH 500 — rear / driver detail" },
   ];
 
-  // Sketchfab ID extracted from
-  // https://sketchfab.com/3d-models/volvo-fh-series-truck-748a51c9d1034efa896a2c917cad434f
-  const sketchfabId = "748a51c9d1034efa896a2c917cad434f";
+  // Local GLB renders via Google's <model-viewer> custom element (loaded in layout.tsx).
+  // No external embed = no scrollbar, no third-party error pages.
+  const glbModel = "/models/volvo-fh-tractor.glb";
 
   const videoSrc = "/videos/volvo-fh-walkaround.mp4";
 
@@ -125,7 +125,7 @@ export default function VolvoFH500Page() {
                 images={images}
                 videoSrc={videoSrc}
                 videoPoster={images[0].src}
-                sketchfabId={sketchfabId}
+                glbModel={glbModel}
               />
 
               {/* Tabbed spec section */}

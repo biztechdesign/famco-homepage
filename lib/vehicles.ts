@@ -27,6 +27,7 @@ export type Vehicle = {
   hasVideo?: boolean;
   has3D?: boolean;
   sketchfabId?: string;
+  glbModel?: string;
   href?: string;
 };
 
@@ -53,7 +54,7 @@ export const VEHICLES: Vehicle[] = [
     badges: ["NEW ARRIVAL"],
     hasVideo: true,
     has3D: true,
-    sketchfabId: "748a51c9d1034efa896a2c917cad434f",
+    glbModel: "/models/volvo-fh-tractor.glb",
     href: "/stock/volvo-fh-460-tractor",
   },
   {

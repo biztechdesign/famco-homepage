@@ -28,6 +28,7 @@ export default function PdpGallery({
   videoSrc,
   videoPoster,
   sketchfabId,
+  glbModel,
 }: {
   title: string;
   refId: string;
@@ -37,6 +38,7 @@ export default function PdpGallery({
   videoSrc?: string;
   videoPoster?: string;
   sketchfabId?: string;
+  glbModel?: string;
 }) {
   const [tab, setTab] = useState<TabId>("gallery");
   const [idx, setIdx] = useState(0);
@@ -46,6 +48,8 @@ export default function PdpGallery({
   const next = () => setIdx((i) => (i + 1) % total);
   const active = images[idx];
 
+  const has3D = Boolean(glbModel || sketchfabId);
+
   return (
     <div className="bg-white rounded-xl border border-line shadow-card overflow-hidden">
       {/* Tab strip */}
@@ -54,7 +58,7 @@ export default function PdpGallery({
           {TABS.map(({ id, label, Icon }) => {
             const isActive = tab === id;
             const disabled =
-              (id === "360" && !sketchfabId) || (id === "video" && !videoSrc);
+              (id === "360" && !has3D) || (id === "video" && !videoSrc);
             return (
               <button
                 key={id}
@@ -95,12 +99,34 @@ export default function PdpGallery({
           />
         )}
 
-        {tab === "360" && sketchfabId && (
+        {tab === "360" && glbModel && (
+          // @ts-expect-error — <model-viewer> custom element
+          <model-viewer
+            src={asset(glbModel)}
+            camera-controls
+            auto-rotate
+            auto-rotate-delay="0"
+            rotation-per-second="20deg"
+            interaction-prompt="auto"
+            exposure="1"
+            shadow-intensity="0.7"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              background: "#1A1A1F",
+            }}
+          />
+        )}
+
+        {tab === "360" && !glbModel && sketchfabId && (
           <iframe
             title={`${title} — 3D model`}
             allow="autoplay; fullscreen; xr-spatial-tracking"
             allowFullScreen
-            className="absolute inset-0 h-full w-full border-0"
+            scrolling="no"
+            className="absolute inset-0 h-full w-full border-0 overflow-hidden"
             src={`https://sketchfab.com/models/${sketchfabId}/embed?autospin=0.4&autostart=1&ui_hint=2&ui_theme=dark&ui_animations=0&ui_inspector=0&ui_settings=0&ui_watermark_link=0&ui_watermark=0`}
           />
         )}

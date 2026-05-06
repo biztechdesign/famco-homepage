@@ -23,6 +23,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
           href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
         />
+        {/* Google <model-viewer> — renders local GLB models for 3D previews */}
+        <script
+          type="module"
+          src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"
+          async
+        />
       </head>
       <body>
         {children}

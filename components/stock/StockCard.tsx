@@ -19,7 +19,7 @@ export default function StockCard({ v }: { v: Vehicle }) {
   const [saved, setSaved] = useState(false);
   const [hover3D, setHover3D] = useState(false);
   const currency = v.currency ?? "AED";
-  const has3DPreview = Boolean(v.sketchfabId);
+  const has3DPreview = Boolean(v.glbModel || v.sketchfabId);
 
   // Spec row items in display order
   const specs: string[] = [
@@ -54,7 +54,9 @@ export default function StockCard({ v }: { v: Vehicle }) {
           }`}
         />
 
-        {/* 3D hover preview — lazy-mounted only on hover */}
+        {/* 3D hover preview — lazy-mounted only on hover.
+            Prefer local GLB via <model-viewer> (no scrollbar, no external embed).
+            Fall back to Sketchfab iframe only if no GLB is available. */}
         {has3DPreview && hover3D && (
           <>
             <div className="absolute inset-0 bg-charcoal flex items-center justify-center">
@@ -62,13 +64,39 @@ export default function StockCard({ v }: { v: Vehicle }) {
                 Loading 3D view…
               </span>
             </div>
-            <iframe
-              key={`sf-${v.id}`}
-              title={`${v.title} — 3D view`}
-              allow="autoplay; fullscreen; xr-spatial-tracking"
-              className="absolute inset-0 h-full w-full border-0 pointer-events-none"
-              src={`https://sketchfab.com/models/${v.sketchfabId}/embed?autospin=0.6&autostart=1&transparent=0&ui_hint=0&ui_theme=dark&ui_animations=0&ui_infos=0&ui_inspector=0&ui_settings=0&ui_watermark_link=0&ui_watermark=0&ui_controls=0&ui_stop=0&ui_help=0&ui_ar=0&ui_ar_help=0&ui_fullscreen=0&ui_annotations=0&ui_loading=0`}
-            />
+            {v.glbModel ? (
+              // @ts-expect-error — <model-viewer> custom element
+              <model-viewer
+                key={`mv-${v.id}`}
+                src={asset(v.glbModel)}
+                camera-controls
+                auto-rotate
+                auto-rotate-delay="0"
+                rotation-per-second="30deg"
+                interaction-prompt="none"
+                disable-zoom
+                disable-pan
+                exposure="0.9"
+                shadow-intensity="0.6"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: "#1A1A1F",
+                  pointerEvents: "none",
+                }}
+              />
+            ) : (
+              <iframe
+                key={`sf-${v.id}`}
+                title={`${v.title} — 3D view`}
+                allow="autoplay; fullscreen; xr-spatial-tracking"
+                scrolling="no"
+                className="absolute inset-0 h-full w-full border-0 pointer-events-none overflow-hidden"
+                src={`https://sketchfab.com/models/${v.sketchfabId}/embed?autospin=0.6&autostart=1&transparent=0&ui_hint=0&ui_theme=dark&ui_animations=0&ui_infos=0&ui_inspector=0&ui_settings=0&ui_watermark_link=0&ui_watermark=0&ui_controls=0&ui_stop=0&ui_help=0&ui_ar=0&ui_ar_help=0&ui_fullscreen=0&ui_annotations=0&ui_loading=0`}
+              />
+            )}
           </>
         )}
 
@@ -122,7 +150,7 @@ export default function StockCard({ v }: { v: Vehicle }) {
       >
         <Heart
           className={`h-4 w-4 ${
-            saved ? "fill-secondary text-secondary" : ""
+            saved ? "fill-secondary-500 text-secondary-500" : ""
           }`}
         />
       </button>

@@ -30,6 +30,7 @@ body {
   color: #0f172a;
   background: #ffffff;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, .font-display {
@@ -87,30 +88,21 @@ h1, h2, h3, h4, .font-display {
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* ─── Contrast guard ────────────────────────────────────────────────
-   Yellow #ffd100 (--secondary-500) is only legible as a *background*
-   with dark text on top. When the brand color is used as foreground
-   (text / icon / fill / stroke) it gets remapped to the darker
-   --secondary-700 shade so it stays readable on light surfaces.
-   Backgrounds (bg-secondary) keep --secondary-500 (#ffd100).
-   Numbered variants (e.g. text-secondary-300 on dark hero/footer)
-   are intentional and untouched.
+   Yellow #ffd100 (--secondary-500) is only legible as a *background*.
+   When the brand color is used as foreground (text/icon/fill/stroke)
+   we remap it to the darker --secondary-700 shade so it stays readable
+   on light surfaces. Backgrounds (bg-secondary) keep --secondary-500.
+   Numbered variants (e.g. text-secondary-300 on dark hero/footer) are
+   intentional and untouched.
+
+   NOTE: only bare class selectors are overridden here. We intentionally
+   skip the hover:/group-hover: variants because writing those raw
+   selectors with backslash-escaped colons in source CSS breaks the
+   Next.js / PostCSS pipeline and wipes the whole stylesheet.
    ─────────────────────────────────────────────────────────────────── */
-.text-secondary,
-.hover\:text-secondary:hover,
-.group:hover .group-hover\:text-secondary,
-.focus\:text-secondary:focus {
-  color: rgb(var(--secondary-700));
-}
-.fill-secondary,
-.hover\:fill-secondary:hover,
-.group:hover .group-hover\:fill-secondary {
-  fill: rgb(var(--secondary-700));
-}
-.stroke-secondary,
-.hover\:stroke-secondary:hover,
-.group:hover .group-hover\:stroke-secondary {
-  stroke: rgb(var(--secondary-700));
-}
+.text-secondary { color: rgb(var(--secondary-700)); }
+.fill-secondary { fill: rgb(var(--secondary-700)); }
+.stroke-secondary { stroke: rgb(var(--secondary-700)); }
 
 /* Wheel rotation — used by category-strip icons on hover */
 @keyframes wheel-spin {
