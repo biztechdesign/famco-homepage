@@ -22,7 +22,7 @@ const FEATURED: Post = {
   date: "May 02, 2026",
   readTime: "6 min read",
   image: "/hero/sell.jpg",
-  href: "#",
+  href: "/stock",
 };
 
 const POSTS: Post[] = [
@@ -35,7 +35,7 @@ const POSTS: Post[] = [
     date: "Apr 28, 2026",
     readTime: "3 min read",
     image: "/hero/finance.jpg",
-    href: "#",
+    href: "/stock",
   },
   {
     type: "NEWS",
@@ -46,7 +46,7 @@ const POSTS: Post[] = [
     date: "Apr 18, 2026",
     readTime: "4 min read",
     image: "/hero/inspected.jpg",
-    href: "#",
+    href: "/stock",
   },
   {
     type: "GUIDE",
@@ -57,7 +57,7 @@ const POSTS: Post[] = [
     date: "Apr 03, 2026",
     readTime: "8 min read",
     image: "/hero/brand-new.jpg",
-    href: "#",
+    href: "/stock",
   },
 ];
 
@@ -80,7 +80,7 @@ export default function LatestNews() {
             </h2>
           </div>
           <a
-            href="#"
+            href="/stock"
             className="
               inline-flex items-center gap-2 text-secondary font-semibold
               hover:gap-3 transition-all self-start sm:self-auto

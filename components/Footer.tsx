@@ -15,22 +15,22 @@ const COLS: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: "Inventory",
     links: [
-      { label: "View all stock", href: "#" },
-      { label: "Trucks", href: "#" },
-      { label: "Buses", href: "#" },
-      { label: "Construction equipment", href: "#" },
-      { label: "Material handling", href: "#" },
-      { label: "Power & industrial", href: "#" },
+      { label: "View all stock", href: "/stock" },
+      { label: "Trucks", href: "/stock?category=trucks" },
+      { label: "Buses", href: "/stock?category=buses" },
+      { label: "Construction equipment", href: "/stock?category=construction" },
+      { label: "Material handling", href: "/stock?category=material-handling" },
+      { label: "Power & industrial", href: "/stock?category=power" },
     ],
   },
   {
     title: "Buy & sell",
     links: [
-      { label: "How to buy", href: "#" },
-      { label: "0% interest finance", href: "#" },
-      { label: "Trade in & trade up", href: "#" },
-      { label: "Get free valuation", href: "#" },
-      { label: "Live video inspection", href: "#" },
+      { label: "How to buy", href: "/stock" },
+      { label: "0% interest finance", href: "/stock/volvo-fh-460-tractor#finance" },
+      { label: "Trade in & trade up", href: "/stock?category=sell" },
+      { label: "Get free valuation", href: "/stock?category=sell" },
+      { label: "Live video inspection", href: "/stock/volvo-fh-460-tractor" },
     ],
   },
   {

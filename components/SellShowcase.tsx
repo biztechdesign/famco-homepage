@@ -7,22 +7,22 @@ import { asset } from "@/lib/asset";
 const ITEMS = [
   {
     title: "Sell your truck",
-    href: "#",
+    href: "/stock?category=sell&type=truck",
     image: "/hero/sell.jpg",
   },
   {
     title: "Sell your bus or van",
-    href: "#",
+    href: "/stock?category=sell&type=bus",
     image: "/hero/finance.jpg",
   },
   {
     title: "Sell your machine",
-    href: "#",
+    href: "/stock?category=sell&type=machine",
     image: "/hero/brand-new.jpg",
   },
   {
     title: "Sell your forklift",
-    href: "#",
+    href: "/stock?category=sell&type=forklift",
     image: "/hero/inspected.jpg",
   },
 ];

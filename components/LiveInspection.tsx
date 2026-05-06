@@ -136,7 +136,7 @@ export default function LiveInspection() {
 
               {/* CTA pill below the call mock */}
               <a
-                href="#"
+                href="/stock/volvo-fh-460-tractor"
                 className="mt-4 btn btn-primary w-full h-12 px-5 text-[14px] rounded-lg"
               >
                 <Video className="h-4 w-4" />

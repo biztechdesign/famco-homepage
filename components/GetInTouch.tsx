@@ -34,7 +34,7 @@ export default function GetInTouch() {
 
               {/* Secondary — WhatsApp */}
               <a
-                href="#"
+                href="/stock"
                 className="
                   inline-flex items-center justify-center gap-2
                   h-12 px-5 text-[14px] font-semibold rounded-md

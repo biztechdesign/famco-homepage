@@ -32,8 +32,10 @@ export default function Header() {
 
         {/* Search bar with category mega-menu trigger */}
         <div className="flex-1 relative hidden md:block">
+          <form action="/stock" method="get">
           <div className="flex items-stretch h-12 rounded-lg border border-line bg-white shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-secondary focus-within:border-secondary">
             <button
+              type="button"
               onClick={() => setMegaOpen((v) => !v)}
               aria-expanded={megaOpen}
               aria-haspopup="dialog"
@@ -61,16 +63,18 @@ export default function Header() {
               <Search className="h-5 w-5 text-muted shrink-0" />
               <input
                 type="search"
+                name="q"
                 placeholder="Search by make, model, or keyword — e.g. Volvo FH 6×4"
                 className="w-full ml-3 bg-transparent text-[14px] text-ink placeholder:text-muted outline-none"
               />
             </div>
 
-            <button className="bg-secondary hover:bg-secondary-700 text-white px-5 lg:px-7 font-semibold flex items-center gap-2 transition-colors">
+            <button type="submit" className="bg-secondary hover:bg-secondary-700 text-white px-5 lg:px-7 font-semibold flex items-center gap-2 transition-colors">
               <Search className="h-4 w-4" />
               <span className="hidden lg:inline">Search</span>
             </button>
           </div>
+          </form>
 
           <CategoriesMegaMenu
             open={megaOpen}
@@ -98,7 +102,7 @@ export default function Header() {
             <User className="h-5 w-5 text-ink" />
           </button>
           <a
-            href="#"
+            href="/stock?category=sell"
             className="hidden lg:inline-flex btn btn-primary h-10 ml-2 whitespace-nowrap"
           >
             Sell your equipment
@@ -139,20 +143,20 @@ export default function Header() {
             </div>
             <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-1">
               <a
-                href="#"
+                href="/stock"
                 className="flex items-center gap-3 px-3 py-3.5 rounded-md hover:bg-secondary font-medium"
               >
-                <Heart className="h-5 w-5" /> Favorites (3)
+                <Heart className="h-5 w-5" /> Browse stock
               </a>
               <a
-                href="#"
+                href="/stock?category=sell"
                 className="flex items-center gap-3 px-3 py-3.5 rounded-md hover:bg-secondary font-medium"
               >
-                <User className="h-5 w-5" /> Sign in
+                <User className="h-5 w-5" /> Sell your equipment
               </a>
             </nav>
             <div className="p-5 border-t border-white/15 space-y-3">
-              <a href="#" className="btn btn-primary w-full">
+              <a href="/stock?category=sell" className="btn btn-primary w-full">
                 Sell your equipment
               </a>
               <a
