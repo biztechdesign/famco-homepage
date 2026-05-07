@@ -193,8 +193,10 @@ const pdpTitle = `${v.title} — Used | FAMCO`;
               </div>
             </div>
 
-            {/* Stage */}
-            <div class="img-skeleton relative w-full h-[58vh] min-h-[360px] max-h-[600px] bg-bgalt overflow-hidden">
+            {/* Stage — object-contain on a light-gray plate so the
+                entire truck is visible (no cropping); aspect of the
+                source photo is preserved with neutral fill. */}
+            <div class="img-skeleton relative w-full h-[58vh] min-h-[360px] max-h-[600px] bg-line/40 overflow-hidden">
               {/* Gallery stage */}
               <div data-stage="gallery" class="absolute inset-0">
                 {images.map((img, i) => (
@@ -203,7 +205,7 @@ const pdpTitle = `${v.title} — Used | FAMCO`;
                     alt={img.alt}
                     data-stage-img
                     data-idx={i}
-                    class={`absolute inset-0 h-full w-full object-cover transition-opacity duration-200 ${
+                    class={`absolute inset-0 h-full w-full object-contain transition-opacity duration-200 ${
                       i === 0 ? "opacity-100" : "opacity-0"
                     }`}
                   />
