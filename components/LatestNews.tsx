@@ -1,71 +1,36 @@
-import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { asset, link } from "@/lib/asset";
 
 type Post = {
-  type: "NEWS" | "OFFER" | "GUIDE";
-  category: string;
   title: string;
-  excerpt: string;
-  date: string;
-  readTime: string;
   image: string;
   href: string;
 };
 
 const FEATURED: Post = {
-  type: "NEWS",
-  category: "Industry",
   title:
     "Volvo FH Aero arrives in the UAE — what fleet operators need to know",
-  excerpt:
-    "Lower drag, improved fuel economy and a redesigned cab. We break down what the new FH Aero means for UAE long-haul operations and when it lands at FAMCO showrooms.",
-  date: "May 02, 2026",
-  readTime: "6 min read",
   image: "/hero/sell.jpg",
   href: "/stock",
 };
 
 const POSTS: Post[] = [
   {
-    type: "OFFER",
-    category: "Offer",
     title: "Save AED 25,000 on selected Volvo FH tractors this quarter",
-    excerpt:
-      "End-of-quarter clearance. Inspected, financed and ready to roll.",
-    date: "Apr 28, 2026",
-    readTime: "3 min read",
     image: "/hero/finance.jpg",
     href: "/stock",
   },
   {
-    type: "NEWS",
-    category: "Workshop",
     title: "FAMCO expands TMH workshop bays for heavy excavators",
-    excerpt:
-      "Two new bays at Umm Ramool now support faster turnaround on Volvo CE and Doosan service.",
-    date: "Apr 18, 2026",
-    readTime: "4 min read",
     image: "/hero/inspected.jpg",
     href: "/stock",
   },
   {
-    type: "GUIDE",
-    category: "Buyers guide",
     title: "Used vs. new trucks in the UAE — which one is right for you?",
-    excerpt:
-      "A practical breakdown of total cost, financing options and resale value.",
-    date: "Apr 03, 2026",
-    readTime: "8 min read",
     image: "/hero/brand-new.jpg",
     href: "/stock",
   },
 ];
-
-const TYPE_STYLES: Record<Post["type"], string> = {
-  NEWS: "bg-primary text-white",
-  OFFER: "bg-secondary text-ink",
-  GUIDE: "bg-charcoal text-white",
-};
 
 export default function LatestNews() {
   return (
@@ -74,7 +39,6 @@ export default function LatestNews() {
         {/* ─── Header ──────────────────────────────────────────── */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 lg:mb-10">
           <div>
-            <div className="eyebrow mb-2">News & Articles</div>
             <h2 className="font-display text-3xl lg:text-4xl font-bold text-ink">
               Latest from FAMCO
             </h2>
@@ -135,38 +99,11 @@ function FeaturedCard({ post }: { post: Post }) {
       />
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900 via-charcoal-900/55 to-transparent" />
 
-      {/* Type badge — top-left */}
-      <span
-        className={`
-          absolute top-5 left-5
-          text-[10.5px] font-bold uppercase tracking-wider
-          px-2.5 py-1 rounded
-          ${TYPE_STYLES[post.type]}
-        `}
-      >
-        {post.type}
-      </span>
-
       {/* Content — bottom */}
       <div className="relative p-6 lg:p-8">
-        <div className="flex items-center gap-3 text-[12px] text-white/70 mb-3">
-          <span className="inline-flex items-center gap-1.5">
-            <Calendar className="h-3 w-3" />
-            {post.date}
-          </span>
-          <span className="h-1 w-1 rounded-full bg-white/40" />
-          <span>{post.readTime}</span>
-          <span className="h-1 w-1 rounded-full bg-white/40" />
-          <span className="text-secondary-300 font-semibold">
-            {post.category}
-          </span>
-        </div>
-        <h3 className="font-display text-2xl lg:text-3xl font-bold leading-tight max-w-xl mb-3">
+        <h3 className="font-display text-2xl lg:text-3xl font-bold leading-tight max-w-xl mb-4">
           {post.title}
         </h3>
-        <p className="text-[14px] text-white/80 leading-relaxed max-w-xl mb-5 line-clamp-2">
-          {post.excerpt}
-        </p>
         <span className="inline-flex items-center gap-2 text-[14px] font-semibold text-secondary-300 group-hover:gap-3 transition-all">
           Read article
           <ArrowRight className="h-4 w-4" />
@@ -203,31 +140,17 @@ function CompactCard({ post }: { post: Post }) {
             transition-transform duration-500 group-hover:scale-105
           "
         />
-        <span
-          className={`
-            absolute top-2 left-2
-            text-[9.5px] font-bold uppercase tracking-wider
-            px-2 py-0.5 rounded
-            ${TYPE_STYLES[post.type]}
-          `}
-        >
-          {post.type}
-        </span>
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0 p-4 lg:p-5 flex flex-col justify-center">
-        <div className="flex items-center gap-2 text-[11px] text-muted mb-1.5">
-          <span>{post.date}</span>
-          <span className="h-1 w-1 rounded-full bg-line" />
-          <span>{post.readTime}</span>
-        </div>
-        <h3 className="font-display text-[15px] lg:text-base font-bold text-ink leading-snug mb-1.5 line-clamp-2 group-hover:text-secondary transition-colors">
+      <div className="flex-1 min-w-0 p-4 lg:p-5 flex flex-col justify-center gap-3">
+        <h3 className="font-display text-[15px] lg:text-base font-bold text-ink leading-snug line-clamp-2">
           {post.title}
         </h3>
-        <p className="text-[12.5px] text-muted leading-snug line-clamp-2">
-          {post.excerpt}
-        </p>
+        <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary group-hover:gap-2 transition-all">
+          Read article
+          <ArrowRight className="h-3.5 w-3.5" />
+        </span>
       </div>
     </a>
   );

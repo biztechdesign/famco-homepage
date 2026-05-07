@@ -7,7 +7,7 @@ import SaveSearchModal from "./SaveSearchModal";
 type Group = {
   id: string;
   label: string;
-  options: { value: string; label: string; count: number }[];
+  options: { value: string; label: string; count: number; flag?: string }[];
 };
 
 const GROUPS: Group[] = [
@@ -24,6 +24,18 @@ const GROUPS: Group[] = [
     ],
   },
   {
+    id: "country",
+    label: "Country",
+    options: [
+      { value: "uae", label: "United Arab Emirates", count: 9, flag: "ae" },
+      { value: "saudi", label: "Saudi Arabia", count: 3, flag: "sa" },
+      { value: "oman", label: "Oman", count: 1, flag: "om" },
+      { value: "qatar", label: "Qatar", count: 1, flag: "qa" },
+      { value: "bahrain", label: "Bahrain", count: 1, flag: "bh" },
+      { value: "kuwait", label: "Kuwait", count: 1, flag: "kw" },
+    ],
+  },
+  {
     id: "brand",
     label: "Brand",
     options: [
@@ -34,6 +46,7 @@ const GROUPS: Group[] = [
       { value: "renault", label: "Renault", count: 21 },
       { value: "mercedes", label: "Mercedes-Benz", count: 18 },
       { value: "man", label: "MAN", count: 14 },
+      { value: "scania", label: "Scania", count: 11 },
       { value: "himoinsa", label: "Himoinsa", count: 12 },
     ],
   },
@@ -79,24 +92,30 @@ const GROUPS: Group[] = [
 
 export default function StockFilters({
   resultCount = 312,
+  selected,
+  onChange,
+  priceMin,
+  priceMax,
+  onPriceMinChange,
+  onPriceMaxChange,
 }: {
   resultCount?: number;
+  selected: Record<string, string[]>;
+  onChange: (next: Record<string, string[]>) => void;
+  priceMin: number;
+  priceMax: number;
+  onPriceMinChange: (n: number) => void;
+  onPriceMaxChange: (n: number) => void;
 }) {
-  const [selected, setSelected] = useState<Record<string, Set<string>>>({});
   const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
-  const [priceMin, setPriceMin] = useState(0);
-  const [priceMax, setPriceMax] = useState(500000);
   const [saveOpen, setSaveOpen] = useState(false);
 
   const toggle = (groupId: string, value: string) => {
-    setSelected((prev) => {
-      const next = { ...prev };
-      const set = new Set(prev[groupId] ?? []);
-      if (set.has(value)) set.delete(value);
-      else set.add(value);
-      next[groupId] = set;
-      return next;
-    });
+    const current = selected[groupId] ?? [];
+    const next = current.includes(value)
+      ? current.filter((v) => v !== value)
+      : [...current, value];
+    onChange({ ...selected, [groupId]: next });
   };
 
   const toggleGroup = (groupId: string) => {
@@ -109,20 +128,20 @@ export default function StockFilters({
   };
 
   const totalSelected = Object.values(selected).reduce(
-    (sum, set) => sum + set.size,
-    0
+    (sum, arr) => sum + arr.length,
+    0,
   );
   const hasFilters = totalSelected > 0;
 
-  const clearAll = () => setSelected({});
+  const clearAll = () => onChange({});
 
   // Human-readable summary of the current filter for the email-alerts modal
   const filterSummary = useMemo(() => {
     const parts: string[] = [];
     for (const g of GROUPS) {
-      const set = selected[g.id];
-      if (!set || set.size === 0) continue;
-      const labels = [...set]
+      const arr = selected[g.id];
+      if (!arr || arr.length === 0) continue;
+      const labels = arr
         .map((v) => g.options.find((o) => o.value === v)?.label)
         .filter(Boolean);
       if (labels.length) parts.push(`${g.label}: ${labels.join(", ")}`);
@@ -162,8 +181,8 @@ export default function StockFilters({
         {/* Active filter chips */}
         {hasFilters && (
           <div className="px-5 pt-4 pb-1 flex flex-wrap gap-1.5">
-            {Object.entries(selected).flatMap(([gid, set]) =>
-              [...set].map((v) => {
+            {Object.entries(selected).flatMap(([gid, arr]) =>
+              arr.map((v) => {
                 const group = GROUPS.find((g) => g.id === gid);
                 const opt = group?.options.find((o) => o.value === v);
                 if (!opt) return null;
@@ -183,7 +202,7 @@ export default function StockFilters({
                     <X className="h-3 w-3" />
                   </button>
                 );
-              })
+              }),
             )}
           </div>
         )}
@@ -197,7 +216,7 @@ export default function StockFilters({
             <input
               type="number"
               value={priceMin}
-              onChange={(e) => setPriceMin(Number(e.target.value))}
+              onChange={(e) => onPriceMinChange(Number(e.target.value))}
               placeholder="Min"
               className="w-full h-9 px-2.5 rounded-md border border-line text-[12.5px] text-ink outline-none focus:border-secondary"
             />
@@ -205,7 +224,7 @@ export default function StockFilters({
             <input
               type="number"
               value={priceMax}
-              onChange={(e) => setPriceMax(Number(e.target.value))}
+              onChange={(e) => onPriceMaxChange(Number(e.target.value))}
               placeholder="Max"
               className="w-full h-9 px-2.5 rounded-md border border-line text-[12.5px] text-ink outline-none focus:border-secondary"
             />
@@ -216,7 +235,7 @@ export default function StockFilters({
             max={500000}
             step={5000}
             value={priceMax}
-            onChange={(e) => setPriceMax(Number(e.target.value))}
+            onChange={(e) => onPriceMaxChange(Number(e.target.value))}
             className="w-full accent-secondary"
           />
           <div className="flex justify-between text-[11px] text-muted mt-1.5">
@@ -228,7 +247,7 @@ export default function StockFilters({
         {/* Filter groups */}
         {GROUPS.map((g) => {
           const isOpen = openGroups.has(g.id);
-          const groupSelected = selected[g.id] ?? new Set();
+          const groupSelected = selected[g.id] ?? [];
           return (
             <div key={g.id} className="border-t border-line">
               <button
@@ -237,9 +256,9 @@ export default function StockFilters({
               >
                 <span className="text-[12px] uppercase tracking-widest font-bold text-ink">
                   {g.label}
-                  {groupSelected.size > 0 && (
+                  {groupSelected.length > 0 && (
                     <span className="ml-2 text-secondary">
-                      ({groupSelected.size})
+                      ({groupSelected.length})
                     </span>
                   )}
                 </span>
@@ -252,7 +271,7 @@ export default function StockFilters({
               {isOpen && (
                 <ul className="px-5 pb-4 space-y-1">
                   {g.options.map((o) => {
-                    const checked = groupSelected.has(o.value);
+                    const checked = groupSelected.includes(o.value);
                     return (
                       <li key={o.value}>
                         <label
@@ -297,6 +316,13 @@ export default function StockFilters({
                             onChange={() => toggle(g.id, o.value)}
                             className="sr-only"
                           />
+                          {o.flag && (
+                            <span
+                              aria-hidden
+                              className={`fi fi-${o.flag} rounded-sm shadow-[0_0_0_0.5px_rgba(0,0,0,0.08)] shrink-0`}
+                              style={{ width: "1.25em", height: "0.95em" }}
+                            />
+                          )}
                           <span className="flex-1 text-[13px] font-medium">
                             {o.label}
                           </span>

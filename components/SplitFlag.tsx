@@ -8,15 +8,13 @@ export default function SplitFlag() {
         <div className="grid gap-4 lg:gap-5 lg:grid-cols-2">
           {/* ─── LEFT — In stock, ready to roll ─── */}
           <FlagCard
-            eyebrow="Directly available"
             title={
               <>
-                Best deal.
+                Best <span className="text-secondary-300">deal</span>.
                 <br />
-                Best buy.
+                Best <span className="text-secondary-300">buy</span>.
               </>
             }
-            body="Over 800 brand-new trucks, vans and equipment in stock — financed, registered and delivered."
             cta="View new stock"
             href={link("/stock")}
             tone="secondary"
@@ -26,15 +24,13 @@ export default function SplitFlag() {
 
           {/* ─── RIGHT — Inspected & ready ─── */}
           <FlagCard
-            eyebrow="Inspected & ready"
             title={
               <>
-                150-point check.
+                <span className="text-secondary-300">150-point</span> check.
                 <br />
                 Paperwork done.
               </>
             }
-            body="Every used vehicle is inspected by Volvo-certified technicians at TMH, with all customs and documents handled in-house."
             cta="View inspected stock"
             href={link("/stock")}
             tone="charcoal"
@@ -54,9 +50,7 @@ export default function SplitFlag() {
    ───────────────────────────────────────────────────────────── */
 
 function FlagCard({
-  eyebrow,
   title,
-  body,
   cta,
   href,
   tone,
@@ -64,9 +58,7 @@ function FlagCard({
   bgImage,
   flipBg,
 }: {
-  eyebrow: string;
   title: React.ReactNode;
-  body: string;
   cta: string;
   href: string;
   tone: "secondary" | "charcoal";
@@ -75,9 +67,8 @@ function FlagCard({
   flipBg?: boolean;
 }) {
   // When a background photo is present we always overlay a dark
-  // gradient on top, so the card reads as dark regardless of tone —
-  // text/eyebrow must be light. Tone only drives the look for the
-  // solid (no-image) variant.
+  // gradient on top, so the card reads as dark regardless of tone.
+  // Tone only drives the look for the solid (no-image) variant.
   const hasImage = Boolean(bgImage);
 
   const surface = hasImage
@@ -92,13 +83,6 @@ function FlagCard({
     : tone === "secondary"
       ? "bg-charcoal text-white hover:bg-charcoal-700"
       : "bg-secondary text-ink hover:bg-secondary-600";
-
-  // Eyebrow tint
-  const eyebrowColor = hasImage
-    ? "text-secondary-300"
-    : tone === "secondary"
-      ? "text-ink/70"
-      : "text-secondary-300";
 
   // Decorative icon tint (only used when there is no bgImage)
   const iconColor =
@@ -152,17 +136,9 @@ function FlagCard({
       )}
 
       <div className={`relative ${bgImage ? "" : "pr-24 lg:pr-36"}`}>
-        <div
-          className={`text-[11px] uppercase tracking-[0.18em] font-bold ${eyebrowColor} mb-3`}
-        >
-          {eyebrow}
-        </div>
         <h2 className="font-display font-bold uppercase tracking-tight leading-[0.95] text-3xl sm:text-4xl lg:text-5xl">
           {title}
         </h2>
-        <p className="mt-5 text-[15px] max-w-md opacity-90 leading-relaxed">
-          {body}
-        </p>
       </div>
 
       <div className="relative mt-8">

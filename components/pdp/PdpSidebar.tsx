@@ -1,34 +1,12 @@
 "use client";
 
-import {
-  Heart,
-  Share2,
-  ShieldCheck,
-  Send,
-  Calendar,
-  Gauge,
-  MapPin,
-  FileDown,
-} from "lucide-react";
+import { Heart, Share2, ShieldCheck, Send } from "lucide-react";
 import { useState } from "react";
 
 const fmt = (n: number) => new Intl.NumberFormat("en-AE").format(n);
 
-type SidebarSpec = {
-  iconKey?: "calendar" | "gauge" | "map";
-  label: string;
-  value: string;
-};
-
-const ICONS = {
-  calendar: Calendar,
-  gauge: Gauge,
-  map: MapPin,
-} as const;
-
 export default function PdpSidebar({
   refId,
-  category,
   title,
   approved = true,
   grade = "A — Excellent",
@@ -38,12 +16,9 @@ export default function PdpSidebar({
   usdEquivalent,
   monthlyFinance,
   warrantyText = "3-Month FAMCO Drivetrain Warranty included",
-  specs,
   buyHref = "#",
-  inspectionReportHref = "#",
 }: {
   refId: string;
-  category: string;
   title: string;
   approved?: boolean;
   grade?: string;
@@ -53,9 +28,7 @@ export default function PdpSidebar({
   usdEquivalent?: number;
   monthlyFinance?: number;
   warrantyText?: string;
-  specs: SidebarSpec[];
   buyHref?: string;
-  inspectionReportHref?: string;
 }) {
   const [saved, setSaved] = useState(false);
 
@@ -63,13 +36,11 @@ export default function PdpSidebar({
     <aside className="space-y-3">
       {/* Main info card */}
       <div className="bg-white rounded-xl border border-line shadow-card p-5">
-        {/* Top row — ref + breadcrumb + actions */}
+        {/* Top row — ref + actions */}
         <div className="flex items-start justify-between gap-3">
           <div className="text-[12px] text-muted leading-snug">
             <span className="text-muted">Ref: </span>
             <span className="text-ink font-semibold tabular-nums">{refId}</span>
-            <span className="mx-1.5 text-line">·</span>
-            <span>{category}</span>
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
             <button
@@ -134,27 +105,6 @@ export default function PdpSidebar({
           </div>
         </div>
 
-        {/* Compact key spec list — replaces the 2×2 card grid */}
-        <ul className="mt-4 divide-y divide-line border-y border-line">
-          {specs.map((s) => {
-            const Icon = s.iconKey ? ICONS[s.iconKey] : null;
-            return (
-              <li
-                key={s.label}
-                className="flex items-center justify-between gap-3 py-2.5 text-[13px]"
-              >
-                <span className="inline-flex items-center gap-2 text-muted">
-                  {Icon && <Icon className="h-4 w-4 text-secondary" />}
-                  {s.label}
-                </span>
-                <span className="font-semibold text-ink tabular-nums">
-                  {s.value}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-
         {/* Single primary CTA */}
         <a
           href={buyHref}
@@ -179,21 +129,6 @@ export default function PdpSidebar({
           </div>
         )}
       </div>
-
-      {/* Inspection report download card */}
-      <a
-        href={inspectionReportHref}
-        className="
-          flex items-center justify-center gap-2
-          bg-white rounded-xl border border-line shadow-card
-          py-4 px-5 text-[13.5px] font-semibold text-ink
-          hover:border-secondary hover:text-secondary
-          transition-colors
-        "
-      >
-        <FileDown className="h-4 w-4" />
-        Download Inspection Report
-      </a>
     </aside>
   );
 }

@@ -29,9 +29,6 @@ export default function Hero() {
             {/* Content */}
             <div className="relative z-10 flex flex-col justify-between p-7 lg:p-10 w-full">
               <div>
-                <div className="eyebrow text-secondary-300 mb-3">
-                  In the UAE · Since 1978
-                </div>
                 <h1 className="font-display font-bold uppercase tracking-tight leading-[0.95] text-3xl sm:text-5xl lg:text-6xl text-white">
                   Buy used trucks
                   <br />
@@ -54,8 +51,13 @@ export default function Hero() {
           <div className="grid gap-4 lg:gap-5">
             {/* TOP: Finance — uses the FAMCO-approved 0% finance image */}
             <BentoCard
-              eyebrow="0% Interest finance"
-              title="Approved & ready to roll."
+              title={
+                <>
+                  Finance <span className="text-secondary-300">approved</span> &
+                  <br />
+                  ready to <span className="text-secondary-300">roll</span>.
+                </>
+              }
               cta="Apply for finance"
               href={link("/stock/volvo-fh-460-tractor#finance")}
               variant="primary"
@@ -65,8 +67,11 @@ export default function Hero() {
 
             {/* BOTTOM: Sell */}
             <BentoCard
-              eyebrow="Sell with FAMCO"
-              title="Get the best price for your fleet."
+              title={
+                <>
+                  <span className="text-secondary-300">Sell</span> to FAMCO.
+                </>
+              }
               cta="Get free valuation"
               href={link("/stock?category=sell")}
               variant="dark"
@@ -85,7 +90,6 @@ export default function Hero() {
    ───────────────────────────────────────────────────────────── */
 
 function BentoCard({
-  eyebrow,
   title,
   cta,
   href,
@@ -93,8 +97,7 @@ function BentoCard({
   iconClass,
   bgImage,
 }: {
-  eyebrow: string;
-  title: string;
+  title: React.ReactNode;
   cta: string;
   href: string;
   variant: "primary" | "dark";
@@ -104,7 +107,6 @@ function BentoCard({
   // Literal classes so Tailwind's JIT sees them at build-time
   const bgClass =
     variant === "dark" ? "bg-charcoal-800" : "bg-charcoal";
-  const eyebrowColor = "text-secondary-300";
 
   return (
     <a
@@ -151,12 +153,7 @@ function BentoCard({
       )}
 
       <div className={`relative ${bgImage ? "" : "pr-20 lg:pr-24"}`}>
-        <div
-          className={`text-[11px] uppercase tracking-[0.18em] font-bold ${eyebrowColor} mb-2`}
-        >
-          {eyebrow}
-        </div>
-        <h2 className="font-display text-2xl lg:text-3xl font-bold leading-tight max-w-md">
+        <h2 className="font-display text-2xl lg:text-3xl font-bold uppercase tracking-tight leading-tight max-w-md">
           {title}
         </h2>
       </div>

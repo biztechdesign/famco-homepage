@@ -22,7 +22,9 @@ const fmtNum = (n: number) => new Intl.NumberFormat("en-AE").format(n);
 
 function matchVehicles(query: string, limit = 6): Vehicle[] {
   const q = query.trim().toLowerCase();
-  if (!q) return [];
+  // Empty query → seed the dropdown with the first N vehicles so users
+  // see something to click the moment they focus the search bar.
+  if (!q) return VEHICLES.slice(0, limit);
   const tokens = q.split(/\s+/).filter(Boolean);
   return VEHICLES.filter((v) => {
     const hay = [
@@ -80,10 +82,11 @@ export default function Header() {
 
   // Typing updates local state. On /stock we ALSO update ?q= live so the
   // listing filters in the background; on every other page we just show
-  // the dropdown (no auto-navigation).
+  // the dropdown (no auto-navigation). Dropdown stays open even on empty
+  // query so the user gets a starter list of equipment to browse.
   const setQuery = (value: string) => {
     setQ(value);
-    setOpenSuggest(value.trim().length > 0);
+    setOpenSuggest(true);
 
     if (!onListing) return;
     const trimmed = value.trim();
@@ -170,9 +173,7 @@ export default function Header() {
                 name="q"
                 value={q}
                 onChange={(e) => setQuery(e.target.value)}
-                onFocus={() => {
-                  if (q.trim()) setOpenSuggest(true);
-                }}
+                onFocus={() => setOpenSuggest(true)}
                 placeholder="Search by make, model, or keyword"
                 className="w-full ml-3 bg-transparent text-[14px] text-ink placeholder:text-muted outline-none text-ellipsis"
                 aria-autocomplete="list"
@@ -189,12 +190,18 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Live results dropdown */}
-          {openSuggest && q.trim() && (
+          {/* Live results dropdown — opens on focus and seeds with a
+              default list, then narrows as the user types. */}
+          {openSuggest && (
             <div
               role="listbox"
               className="absolute left-0 right-0 top-full mt-2 bg-white border border-line rounded-lg shadow-lift z-50 overflow-hidden"
             >
+              {!q.trim() && (
+                <div className="px-4 py-2 border-b border-line bg-bgalt/60 text-[10.5px] uppercase tracking-widest font-bold text-muted">
+                  Featured equipment
+                </div>
+              )}
               {matches.length === 0 ? (
                 <div className="px-4 py-6 text-center text-[13px] text-muted">
                   No matching equipment for{" "}
@@ -296,11 +303,17 @@ export default function Header() {
               )}
 
               <a
-                href={link(`/stock?q=${encodeURIComponent(q.trim())}`)}
+                href={
+                  q.trim()
+                    ? link(`/stock?q=${encodeURIComponent(q.trim())}`)
+                    : link("/stock")
+                }
                 onClick={() => setOpenSuggest(false)}
                 className="block px-4 py-2.5 text-center text-[12.5px] font-semibold text-secondary border-t border-line hover:bg-bgalt"
               >
-                See all results for “{q.trim()}” →
+                {q.trim()
+                  ? `See all results for “${q.trim()}” →`
+                  : "Browse all stock →"}
               </a>
             </div>
           )}

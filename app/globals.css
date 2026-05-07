@@ -19,6 +19,11 @@
   --secondary-700: 168 138 0;
   --secondary-800: 112 92 0;
   --secondary-900: 71 59 0;
+
+  /* Foreground that sits on top of bg-secondary. ThemePicker recomputes
+     this whenever the accent changes — picks white or dark-ink based on
+     WCAG contrast ratio so CTAs stay legible on any chosen color. */
+  --secondary-fg: 15 23 42;
 }
 
 html {
@@ -59,10 +64,11 @@ h1, h2, h3, h4, .font-display {
 }
 
 /* Primary action — secondary yellow (the brighter, click-me color).
-   Uses dark ink on yellow so the CTA stays legible. */
+   Foreground auto-flips between white and dark ink via --secondary-fg
+   so the CTA stays legible no matter what accent the picker chooses. */
 .btn-primary {
   background: rgb(var(--secondary-500));
-  color: #0F172A;
+  color: rgb(var(--secondary-fg));
   padding: 0 1.25rem;
   height: 48px;
 }
@@ -103,6 +109,12 @@ h1, h2, h3, h4, .font-display {
 .text-secondary { color: rgb(var(--secondary-700)); }
 .fill-secondary { fill: rgb(var(--secondary-700)); }
 .stroke-secondary { stroke: rgb(var(--secondary-700)); }
+
+/* When bg-secondary and text-ink land on the same element (chips, pills,
+   badges, mobile-nav buttons), auto-flip the text to whichever of
+   white / dark-ink has the better WCAG contrast against the picked
+   accent. ThemePicker writes that choice into --secondary-fg. */
+.bg-secondary.text-ink { color: rgb(var(--secondary-fg)); }
 
 /* Wheel rotation — used by category-strip icons on hover */
 @keyframes wheel-spin {

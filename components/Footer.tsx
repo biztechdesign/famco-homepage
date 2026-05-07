@@ -59,19 +59,31 @@ const BRANCHES = [
   {
     name: "FAMCO DIP",
     place: "Dubai Investment Park",
-    address: "Dubai Investment Park, Dubai",
+    address: "Dubai Investment Park 1, Sheikh Zayed Bin Hamdan Al Nahyan St, Dubai",
     phone: "800 32626",
   },
   {
     name: "FAMCO Umm Ramool",
     place: "Umm Ramool",
-    address: "Umm Ramool, Dubai",
+    address: "Sheikh Rashid Rd, Umm Ramool, Dubai",
     phone: "800 32626",
   },
   {
     name: "TMH Umm Ramool",
     place: "Truck & Machinery Hub",
-    address: "Truck & Machinery Hub, Dubai",
+    address: "Truck & Machinery Hub, Umm Ramool, Dubai",
+    phone: "800 32626",
+  },
+  {
+    name: "FAMCO Jebel Ali",
+    place: "Jebel Ali",
+    address: "Jebel Ali Free Zone, Jebel Ali, Dubai",
+    phone: "800 32626",
+  },
+  {
+    name: "FAMCO Al Quoz",
+    place: "Al Quoz",
+    address: "Al Quoz Industrial Area 3, Al Quoz, Dubai",
     phone: "800 32626",
   },
 ];
@@ -79,39 +91,30 @@ const BRANCHES = [
 export default function Footer() {
   return (
     <footer className="bg-charcoal text-white">
-      {/* ─── Branch map — full-width Google Map with 3 pins ─────── */}
+      {/* ─── Branch map — heading sits above, full-width map below ── */}
       <div className="border-b border-white/10 bg-charcoal-900">
-        <div className="py-10 lg:py-14">
-          <div className="container">
-            <div className="text-center mb-8">
-              <div className="text-[11px] uppercase tracking-[0.18em] font-bold text-secondary-300 mb-2">
-                Find us in the UAE
-              </div>
-              <h3 className="font-display text-2xl lg:text-3xl font-bold text-white">
-                3 branches across Dubai
-              </h3>
-            </div>
-          </div>
+        <div className="py-5 lg:py-6 text-center">
+          <h3 className="font-display text-xl lg:text-2xl font-bold text-white">
+            5 branches across Dubai
+          </h3>
+        </div>
 
-          {/* Full-width Google Map — pins only, no route line */}
-          <div className="relative w-full aspect-[21/9] sm:aspect-[21/8] lg:aspect-[3/1] bg-charcoal-800 border-y border-white/10 overflow-hidden">
-            <iframe
-              title="FAMCO branches in Dubai — Google Map"
-              src="https://maps.google.com/maps?q=Al-Futtaim+FAMCO+Dubai&t=&z=11&ie=UTF8&iwloc=&output=embed"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-              className="absolute inset-0 h-full w-full border-0"
-            />
-          </div>
-
+        <div className="relative w-full aspect-[21/10] sm:aspect-[21/8] lg:aspect-[3/1] bg-charcoal-800 border-t border-white/10 overflow-hidden">
+          <iframe
+            title="FAMCO branches in Dubai — Google Map"
+            src="https://maps.google.com/maps?q=Al-Futtaim+FAMCO+branches+Dubai&t=&z=10&ie=UTF8&iwloc=&output=embed"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+            className="absolute inset-0 h-full w-full border-0"
+          />
         </div>
       </div>
 
       {/* ─── Branches strip — addresses ──────────────────────────── */}
       <div className="border-b border-white/10">
         <div className="container py-8">
-          <div className="grid sm:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
             {BRANCHES.map((b) => (
               <div
                 key={b.name}
@@ -139,6 +142,48 @@ export default function Footer() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ─── Newsletter band ─────────────────────────────────────── */}
+      <div className="border-b border-white/10">
+        <div className="container py-10 lg:py-12">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div>
+              <h3 className="font-display text-2xl lg:text-3xl font-bold leading-tight">
+                Subscribe for new stock
+                <br className="hidden sm:block" />
+                {" "}and offers
+              </h3>
+            </div>
+
+            <form
+              action="#"
+              method="post"
+              className="flex w-full lg:w-auto lg:min-w-[440px] gap-2"
+            >
+              <input
+                type="email"
+                required
+                placeholder="Enter your email"
+                aria-label="Email address"
+                className="
+                  flex-1 h-12 px-4 rounded-md
+                  bg-white/5 border border-white/15
+                  text-[14px] text-white placeholder:text-white/40
+                  outline-none focus:border-secondary focus:bg-white/10
+                  transition-colors
+                "
+              />
+              <button
+                type="submit"
+                className="btn btn-primary h-12 px-5 text-[14px] rounded-md whitespace-nowrap"
+              >
+                Subscribe
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </form>
           </div>
         </div>
       </div>

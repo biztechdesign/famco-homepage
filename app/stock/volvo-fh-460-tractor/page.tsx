@@ -4,12 +4,15 @@ import CategoryStrip from "@/components/CategoryStrip";
 import Footer from "@/components/Footer";
 import PdpGallery from "@/components/pdp/PdpGallery";
 import PdpSidebar from "@/components/pdp/PdpSidebar";
-import PdpTabs, { type SpecGroup } from "@/components/pdp/PdpTabs";
+import PdpTabs, { type SpecGroup, Tick } from "@/components/pdp/PdpTabs";
 import PdpLiveInspection from "@/components/pdp/PdpLiveInspection";
+import PdpTransportCosts from "@/components/pdp/PdpTransportCosts";
+import PdpThingsToKnow from "@/components/pdp/PdpThingsToKnow";
+import PdpStateOfVehicle from "@/components/pdp/PdpStateOfVehicle";
 import StockCard from "@/components/stock/StockCard";
 import { VEHICLES } from "@/lib/vehicles";
 import { link } from "@/lib/asset";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, FileDown } from "lucide-react";
 
 export const metadata = {
   title: "Volvo FH 500 6×4 Tractor Head — Globetrotter XL · Used | FAMCO",
@@ -19,56 +22,100 @@ export const metadata = {
 
 const SPEC_GROUPS: SpecGroup[] = [
   {
-    title: "Engine & Drivetrain",
+    title: "General",
     rows: [
-      { label: "Engine", value: "Volvo D13 · 500 HP" },
-      { label: "Transmission", value: "I-Shift 12-speed" },
-      { label: "Drive", value: "6×4" },
-      { label: "Fuel", value: "Diesel · Euro 5" },
+      { label: "Product Group", value: "Tractor Head" },
+      { label: "Brand", value: "Volvo" },
+      { label: "Model", value: "FH 500" },
+      { label: "Colour", value: "White" },
+      { label: "Gross Vehicle Weight (GVW)", value: "26,000 kg" },
+      { label: "Power", value: "500 HP" },
+      { label: "Year", value: "2022" },
+      { label: "Mileage", value: "210,000 km" },
     ],
   },
   {
-    title: "Vehicle",
+    title: "Engine & Drivetrain",
     rows: [
-      { label: "Year", value: "2022" },
-      { label: "Odometer", value: "210,000 km" },
-      { label: "Cab", value: "Globetrotter XL · Double bunk" },
-      { label: "Location", value: "Dubai, UAE" },
+      { label: "Engine", value: "Volvo D13 · 13L" },
+      { label: "Transmission", value: "I-Shift 12-speed AMT" },
+      { label: "Drive", value: "6×4" },
+      { label: "Fuel", value: "Diesel" },
+      { label: "Emissions", value: "Euro 5" },
+      { label: "Axle ratio", value: "2.79" },
+    ],
+  },
+  {
+    title: "Cab",
+    rows: [
+      { label: "Cab type", value: "Globetrotter XL" },
+      { label: "Beds", value: "Double bunk" },
+      { label: "Air conditioning", value: <Tick /> },
+      { label: "Cruise control", value: <Tick /> },
+      { label: "Leather interior", value: <Tick /> },
+      { label: "Refrigerator", value: <Tick /> },
+    ],
+  },
+  {
+    title: "Safety",
+    rows: [
+      { label: "ABS", value: <Tick /> },
+      { label: "EBS", value: <Tick /> },
+      { label: "Lane departure warning", value: <Tick /> },
+      { label: "Driver airbag", value: <Tick /> },
+    ],
+  },
+  {
+    title: "Vehicle dimensions",
+    rows: [
+      { label: "Vehicle height", value: "380 cm" },
+      { label: "Vehicle length", value: "580 cm" },
+      { label: "Vehicle width", value: "250 cm" },
+      { label: "Wheelbase", value: "380 cm" },
+    ],
+  },
+  {
+    title: "Axle 1 — Steering",
+    rows: [
+      { label: "Axle capacity", value: "7,500 kg" },
+      { label: "Brakes Axle 1", value: "Disc" },
+      { label: "Type of suspension axle 1", value: "Air" },
+      { label: "Type of tyres axle 1", value: "Single" },
+      { label: "Tyre brand Axle 1", value: "Michelin" },
+      { label: "Tyre size Axle 1", value: "315/80R22.5" },
+    ],
+  },
+  {
+    title: "Axle 2 — Drive",
+    rows: [
+      { label: "Axle capacity", value: "11,500 kg" },
+      { label: "Brakes Axle 2", value: "Disc" },
+      { label: "Type of suspension axle 2", value: "Air" },
+      { label: "Type of tyres axle 2", value: "Twin" },
+      { label: "Tyre brand Axle 2", value: "Michelin" },
+      { label: "Tyre size Axle 2", value: "315/80R22.5" },
+    ],
+  },
+  {
+    title: "Axle 3 — Drive",
+    rows: [
+      { label: "Axle capacity", value: "11,500 kg" },
+      { label: "Brakes Axle 3", value: "Disc" },
+      { label: "Type of suspension axle 3", value: "Air" },
+      { label: "Type of tyres axle 3", value: "Twin" },
+      { label: "Tyre brand Axle 3", value: "Michelin" },
+      { label: "Tyre size Axle 3", value: "315/80R22.5" },
+    ],
+  },
+  {
+    title: "Documents",
+    rows: [
+      { label: "Registration date", value: "06-2022" },
+      { label: "Mulkiya", value: "Transferable" },
+      { label: "Customs paperwork", value: <Tick /> },
       { label: "FAMCO Grade", value: "A — Excellent", emphasis: true },
     ],
   },
-];
-
-const DESCRIPTION = (
-  <>
-    <p>
-      A flagship Volvo FH 500 Globetrotter XL tractor head, registered in 2022
-      and operated by a single owner in the UAE since new. Maintained on the
-      Volvo recommended service schedule at the FAMCO TMH workshop, with full
-      digital service records on file.
-    </p>
-    <p>
-      The Volvo D13 500 hp engine paired with the I-Shift 12-speed AMT
-      delivers efficient long-haul performance — twin-bunk Globetrotter XL
-      cab, full air suspension front and rear, and a 2.79 axle ratio for
-      open-road economy. Spec'd for GCC distribution work with twin 600 L
-      aluminium fuel tanks and a hydraulic 5th wheel.
-    </p>
-    <p>
-      <strong>FAMCO Approved · Grade A — Excellent.</strong> Passes the
-      150-point inspection with flying colours. Includes a 3-month FAMCO
-      drivetrain warranty, transferable Mulkiya, and full customs paperwork.
-      0% finance pre-approved through Al-Futtaim Finance; GCC-wide delivery
-      arranged on request.
-    </p>
-  </>
-);
-
-const QUICK_SPECS = [
-  { iconKey: "calendar" as const, label: "Year", value: "2022" },
-  { iconKey: "gauge" as const, label: "Mileage", value: "210,000 km" },
-  { iconKey: "map" as const, label: "Location", value: "Dubai, UAE" },
-  { label: "Power", value: "500 HP" },
 ];
 
 export default function VolvoFH500Page() {
@@ -113,8 +160,8 @@ export default function VolvoFH500Page() {
             <span className="text-ink font-medium truncate">{v.title}</span>
           </nav>
 
-          {/* Top — gallery + sidebar */}
-          <div className="grid lg:grid-cols-[1fr_380px] gap-6 lg:gap-7 items-start">
+          {/* Top — gallery + sidebar (55% left, 45% right) */}
+          <div className="grid lg:grid-cols-[55fr_45fr] gap-6 lg:gap-7 items-start">
             {/* LEFT — gallery + tabs */}
             <div className="space-y-5">
               <PdpGallery
@@ -128,15 +175,17 @@ export default function VolvoFH500Page() {
                 glbModel={glbModel}
               />
 
-              {/* Tabbed spec section */}
-              <PdpTabs specGroups={SPEC_GROUPS} description={DESCRIPTION} />
+              {/* Spec section */}
+              <PdpTabs specGroups={SPEC_GROUPS} />
+
+              {/* Transport / delivery cost estimator */}
+              <PdpTransportCosts />
             </div>
 
             {/* RIGHT — sticky sidebar + live video inspection */}
             <div className="lg:sticky lg:top-32 self-start space-y-3">
               <PdpSidebar
                 refId="FA-2024-7821"
-                category="Truck / Tractor Head"
                 title={v.title}
                 approved
                 grade="A — Excellent"
@@ -146,13 +195,46 @@ export default function VolvoFH500Page() {
                 usdEquivalent={77600}
                 monthlyFinance={4200}
                 warrantyText="3-Month FAMCO Drivetrain Warranty included"
-                specs={QUICK_SPECS}
                 buyHref="#buy"
-                inspectionReportHref="#inspection-report"
               />
-              <PdpLiveInspection />
+
+              {/* Two equal CTAs — Download report (left) + Live
+                  inspection (right) — share the same h-14 / rounded-xl
+                  shape so they read as a paired action row. */}
+              <div className="grid grid-cols-2 gap-3">
+                <a
+                  href="#inspection-report"
+                  className="
+                    group flex items-center gap-3
+                    h-14 px-4 rounded-xl
+                    bg-white border border-line shadow-card text-ink
+                    hover:border-charcoal hover:bg-bgalt
+                    transition-colors
+                  "
+                >
+                  <span className="inline-flex h-9 w-9 rounded-lg bg-bgalt items-center justify-center shrink-0 group-hover:bg-white">
+                    <FileDown className="h-4 w-4 text-secondary-700" />
+                  </span>
+                  <span className="flex-1 text-left leading-tight min-w-0">
+                    <span className="block text-[14px] font-bold">
+                      Download
+                    </span>
+                    <span className="block text-[11px] font-bold uppercase tracking-wider opacity-70 mt-0.5">
+                      Inspection report
+                    </span>
+                  </span>
+                </a>
+
+                <PdpLiveInspection />
+              </div>
             </div>
           </div>
+
+          {/* State of this vehicle */}
+          <PdpStateOfVehicle />
+
+          {/* Things to know */}
+          <PdpThingsToKnow />
 
           {/* Similar vehicles */}
           <div className="mt-14 lg:mt-20">

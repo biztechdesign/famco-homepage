@@ -40,7 +40,6 @@ export default function TrustpilotReviews() {
         {/* ─── Header ──────────────────────────────────────────── */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-8">
           <div>
-            <div className="eyebrow mb-2">Trusted by fleets across the GCC</div>
             <h2 className="font-display text-3xl lg:text-4xl font-bold text-ink">
               What our customers say
             </h2>

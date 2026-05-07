@@ -3,22 +3,40 @@
 import { useState } from "react";
 import { ChevronDown, Grid3x3, List } from "lucide-react";
 
-const SORTS = [
-  "Newest first",
-  "Price: low to high",
-  "Price: high to low",
-  "Year: newest",
-  "Year: oldest",
-  "Mileage: low to high",
+export type SortKey =
+  | "newest"
+  | "price-asc"
+  | "price-desc"
+  | "year-desc"
+  | "year-asc"
+  | "mileage-asc";
+
+const SORTS: { key: SortKey; label: string }[] = [
+  { key: "newest", label: "Newest first" },
+  { key: "price-asc", label: "Price: low to high" },
+  { key: "price-desc", label: "Price: high to low" },
+  { key: "year-desc", label: "Year: newest" },
+  { key: "year-asc", label: "Year: oldest" },
+  { key: "mileage-asc", label: "Mileage: low to high" },
 ];
 
 /**
  * Sort dropdown + grid/list view toggle. Sits between title and grid.
+ * `sort` is controlled by the parent so the listing actually re-orders.
  */
-export default function StockSortBar({ count }: { count: number }) {
-  const [sort, setSort] = useState(SORTS[0]);
+export default function StockSortBar({
+  count,
+  sort,
+  onSortChange,
+}: {
+  count: number;
+  sort: SortKey;
+  onSortChange: (s: SortKey) => void;
+}) {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [open, setOpen] = useState(false);
+  const currentLabel =
+    SORTS.find((s) => s.key === sort)?.label ?? SORTS[0].label;
 
   return (
     <div className="bg-white rounded-lg border border-line shadow-card px-4 py-3 flex items-center justify-between gap-3">
@@ -47,7 +65,7 @@ export default function StockSortBar({ count }: { count: number }) {
             <span className="text-muted text-[11.5px] hidden sm:inline">
               Sort:
             </span>
-            {sort}
+            {currentLabel}
             <ChevronDown
               className={`h-3.5 w-3.5 text-muted transition-transform ${
                 open ? "rotate-180" : ""
@@ -70,23 +88,23 @@ export default function StockSortBar({ count }: { count: number }) {
                 "
               >
                 {SORTS.map((s) => (
-                  <li key={s}>
+                  <li key={s.key}>
                     <button
                       onClick={() => {
-                        setSort(s);
+                        onSortChange(s.key);
                         setOpen(false);
                       }}
                       className={`
                         w-full text-left px-3.5 py-2 text-[12.5px]
                         hover:bg-bgalt
                         ${
-                          s === sort
+                          s.key === sort
                             ? "text-secondary font-semibold"
                             : "text-ink"
                         }
                       `}
                     >
-                      {s}
+                      {s.label}
                     </button>
                   </li>
                 ))}

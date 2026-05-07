@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Phone,
   ChevronDown,
@@ -8,6 +9,7 @@ import {
   ChevronRight,
   Star,
 } from "lucide-react";
+import { link } from "@/lib/asset";
 
 const ANNOUNCEMENTS = [
   "Eid Al Adha offers — save up to AED 25,000 on selected Volvo FH tractors",
@@ -91,7 +93,7 @@ export default function UtilityBar() {
           </button>
         </div>
 
-        {/* RIGHT — Phone + Language switcher */}
+        {/* RIGHT — Phone + Inventory country + Language switcher */}
         <div className="flex items-center gap-5 shrink-0">
           <a
             href="tel:80032626"
@@ -101,6 +103,7 @@ export default function UtilityBar() {
             <span className="font-semibold">800 32626</span>
           </a>
 
+          <CountrySwitcher />
           <LanguageSwitcher />
         </div>
       </div>
@@ -211,6 +214,122 @@ function LanguageSwitcher() {
                     {l.country}
                   </span>
                   <span className="block text-xs text-muted">{l.label}</span>
+                </span>
+                {active && (
+                  <span className="text-secondary text-xs font-bold">✓</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Country / inventory switcher — UAE vs Saudi Arabia. Drives the
+   stock-listing filter via the ?country= URL param so the user only
+   sees inventory available in the market they pick.
+   ───────────────────────────────────────────────────────────── */
+
+const COUNTRIES = [
+  { code: "UAE", label: "UAE", flag: "🇦🇪" },
+  { code: "SA", label: "Saudi Arabia", flag: "🇸🇦" },
+] as const;
+
+type Country = (typeof COUNTRIES)[number];
+
+const COUNTRY_STORAGE_KEY = "famco-country";
+
+function CountrySwitcher() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const [current, setCurrent] = useState<Country>(COUNTRIES[0]);
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+
+  // Hydrate the dropdown's current value: URL param first (so deep
+  // links stay consistent), then localStorage, else default UAE.
+  useEffect(() => {
+    const fromUrl = new URLSearchParams(window.location.search).get("country");
+    const saved = fromUrl ?? localStorage.getItem(COUNTRY_STORAGE_KEY);
+    const found = COUNTRIES.find((c) => c.code === saved);
+    if (found) setCurrent(found);
+  }, []);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [open]);
+
+  const choose = (c: Country) => {
+    setCurrent(c);
+    setOpen(false);
+    localStorage.setItem(COUNTRY_STORAGE_KEY, c.code);
+
+    // If the user is already browsing stock, update the listing in
+    // place via ?country=. Otherwise send them straight to the listing
+    // pre-filtered by the country they just picked.
+    if (pathname?.startsWith("/stock")) {
+      const next = new URLSearchParams(window.location.search);
+      next.set("country", c.code);
+      const qs = next.toString();
+      router.replace(`${pathname}${qs ? "?" + qs : ""}`, { scroll: false });
+    } else {
+      router.push(link(`/stock?country=${c.code}`));
+    }
+  };
+
+  return (
+    <div ref={wrapRef} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="flex items-center gap-1.5 hover:text-secondary-300"
+      >
+        <span aria-hidden className="text-base leading-none">
+          {current.flag}
+        </span>
+        <span className="font-semibold">{current.label}</span>
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {open && (
+        <div
+          role="listbox"
+          className="absolute right-0 top-full mt-2 w-56 bg-white text-ink rounded-lg shadow-lift border border-line py-2 z-50"
+        >
+          <div className="px-4 pb-1.5 text-[10px] uppercase tracking-widest font-bold text-muted">
+            Browse inventory in
+          </div>
+          {COUNTRIES.map((c) => {
+            const active = c.code === current.code;
+            return (
+              <button
+                key={c.code}
+                role="option"
+                aria-selected={active}
+                onClick={() => choose(c)}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-bgalt ${
+                  active ? "bg-bgalt" : ""
+                }`}
+              >
+                <span aria-hidden className="text-lg leading-none">
+                  {c.flag}
+                </span>
+                <span className="flex-1 text-sm font-medium text-ink">
+                  {c.label}
                 </span>
                 {active && (
                   <span className="text-secondary text-xs font-bold">✓</span>

@@ -13,7 +13,6 @@ export default function FeatureBlocks() {
         <div className="grid gap-4 lg:gap-5 lg:grid-cols-2">
           {/* ─── LEFT — Trade in. Trade up. ─── */}
           <BigCard
-            eyebrow="Got an old fleet?"
             title={
               <>
                 Trade in.
@@ -21,7 +20,6 @@ export default function FeatureBlocks() {
                 Trade up.
               </>
             }
-            body="Apply the value of your existing trucks toward your next purchase. Same-day quote, paperwork handled in-house."
             cta="Get my trade-in value"
             href={link("/stock?category=sell")}
             bgImage="/hero/sell.jpg"
@@ -29,7 +27,6 @@ export default function FeatureBlocks() {
 
           {/* ─── RIGHT — TMH Workshop & Parts ─── */}
           <BigCard
-            eyebrow="After-sales · TMH"
             title={
               <>
                 Workshop.
@@ -37,7 +34,6 @@ export default function FeatureBlocks() {
                 Genuine parts.
               </>
             }
-            body="Volvo-certified technicians, OEM parts on the shelf, bays sized for everything from light vans to heavy excavators."
             cta="Book a service slot"
             href={link("/stock")}
             bgImage="/hero/inspected.jpg"
@@ -54,16 +50,12 @@ export default function FeatureBlocks() {
    ───────────────────────────────────────────────────────────── */
 
 function BigCard({
-  eyebrow,
   title,
-  body,
   cta,
   href,
   bgImage,
 }: {
-  eyebrow: string;
   title: React.ReactNode;
-  body: string;
   cta: string;
   href: string;
   bgImage: string;
@@ -93,15 +85,9 @@ function BigCard({
 
       {/* Content */}
       <div className="relative">
-        <div className="text-[11px] uppercase tracking-[0.18em] font-bold text-secondary-300 mb-3">
-          {eyebrow}
-        </div>
         <h2 className="font-display font-bold uppercase tracking-tight leading-[0.95] text-3xl sm:text-4xl lg:text-5xl">
           {title}
         </h2>
-        <p className="mt-5 text-[15px] max-w-md text-white/85 leading-relaxed">
-          {body}
-        </p>
       </div>
 
       <div className="relative mt-8">

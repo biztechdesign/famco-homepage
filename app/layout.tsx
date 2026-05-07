@@ -23,6 +23,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
           href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
         />
+        {/* lipis/flag-icons — flat SVG country flags via .fi.fi-{iso2} classes */}
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"
+        />
         {/* Google <model-viewer> — renders local GLB models for 3D previews */}
         <script
           type="module"

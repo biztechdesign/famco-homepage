@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Image as ImageIcon,
   Box,
@@ -89,13 +89,15 @@ export default function PdpGallery({
         </div>
       </div>
 
-      {/* Stage */}
-      <div className="relative aspect-[2/1] bg-bgalt overflow-hidden">
+      {/* Stage — 16:9 box capped by viewport height so the thumbnail
+          rail stays in the first fold. object-contain keeps the full
+          truck visible without cropping. */}
+      <div className="relative aspect-[16/9] max-h-[55vh] bg-bgalt overflow-hidden">
         {tab === "gallery" && active && (
           <img
             src={asset(active.src)}
             alt={active.alt ?? `${title} — view ${idx + 1}`}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-contain"
           />
         )}
 
@@ -187,36 +189,103 @@ export default function PdpGallery({
         )}
       </div>
 
-      {/* Thumbnail rail (gallery only) */}
+      {/* Thumbnail rail (gallery only) — fixed h-16 w-24 tiles, but the
+          rail repeats the image set so the row reaches the full width
+          of the gallery card instead of leaving blank space on the
+          right when the source set is short (e.g. only 3 photos). */}
       {tab === "gallery" && total > 0 && (
-        <div className="px-3 sm:px-4 py-3 border-t border-line">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-            {images.map((m, i) => (
-              <button
-                key={i}
-                onClick={() => setIdx(i)}
-                aria-label={`Show photo ${i + 1}`}
-                className={`
-                  shrink-0 h-16 w-24 rounded-md overflow-hidden border-2
-                  transition-all
-                  ${
-                    i === idx
-                      ? "border-secondary ring-2 ring-secondary/30"
-                      : "border-line hover:border-secondary/50"
-                  }
-                `}
-              >
-                <img
-                  src={asset(m.src)}
-                  alt=""
-                  aria-hidden
-                  className="h-full w-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
-        </div>
+        <ThumbnailRail
+          images={images}
+          activeIdx={idx}
+          onSelect={setIdx}
+        />
       )}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Thumbnail rail — measures its own width and renders enough
+   cycled copies of the source images to span the full row at the
+   original tile size (h-16 w-24, gap-2). Tiles past the first
+   pass are non-interactive duplicates so the active state still
+   tracks the real index in the source `images` array.
+   ───────────────────────────────────────────────────────────── */
+
+function ThumbnailRail({
+  images,
+  activeIdx,
+  onSelect,
+}: {
+  images: GalleryImage[];
+  activeIdx: number;
+  onSelect: (i: number) => void;
+}) {
+  const TILE_W = 96; // h-16 w-24 → 96px
+  const GAP = 8; // gap-2 → 8px
+  const railRef = useRef<HTMLDivElement | null>(null);
+  const [count, setCount] = useState(images.length);
+
+  useEffect(() => {
+    const el = railRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.clientWidth;
+      // tile + gap pairs, then add one tile worth of width
+      const fits = Math.max(
+        images.length,
+        Math.floor((w + GAP) / (TILE_W + GAP)),
+      );
+      setCount(fits);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [images.length]);
+
+  return (
+    <div className="px-3 sm:px-4 py-3 border-t border-line">
+      <div ref={railRef} className="flex gap-2 overflow-hidden">
+        {Array.from({ length: count }).map((_, i) => {
+          const sourceIdx = i % images.length;
+          const m = images[sourceIdx];
+          const isActive = sourceIdx === activeIdx && i < images.length;
+          // Only the first pass through the source set is the "real"
+          // selectable thumbnail. Repeats past that point are filler so
+          // we don't have multiple highlighted copies of the same photo.
+          const isFiller = i >= images.length;
+          return (
+            <button
+              key={i}
+              onClick={() => onSelect(sourceIdx)}
+              aria-label={
+                isFiller ? undefined : `Show photo ${sourceIdx + 1}`
+              }
+              aria-hidden={isFiller || undefined}
+              tabIndex={isFiller ? -1 : 0}
+              className={`
+                shrink-0 h-16 w-24 rounded-md overflow-hidden border-2
+                transition-all
+                ${
+                  isActive
+                    ? "border-secondary ring-2 ring-secondary/30"
+                    : isFiller
+                      ? "border-line/60 opacity-70 hover:opacity-100"
+                      : "border-line hover:border-secondary/50"
+                }
+              `}
+            >
+              <img
+                src={asset(m.src)}
+                alt=""
+                aria-hidden
+                className="h-full w-full object-cover"
+              />
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

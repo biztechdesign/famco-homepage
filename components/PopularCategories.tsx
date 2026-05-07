@@ -80,7 +80,6 @@ export default function PopularCategories() {
       <div className="container py-14 lg:py-20">
         {/* Header */}
         <div className="text-center mb-10 lg:mb-14">
-          <div className="eyebrow mb-2">Browse all</div>
           <h2 className="font-display text-3xl lg:text-4xl font-bold text-ink">
             Popular categories
           </h2>

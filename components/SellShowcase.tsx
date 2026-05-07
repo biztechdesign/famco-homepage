@@ -45,7 +45,6 @@ export default function SellShowcase() {
         {/* ─── Header row ──────────────────────────────────────── */}
         <div className="flex items-end justify-between gap-4 mb-6 lg:mb-8">
           <div>
-            <div className="eyebrow mb-2">Sell with FAMCO</div>
             <h2 className="font-display text-3xl lg:text-4xl font-bold text-ink">
               Sell your current vehicle or machine
             </h2>

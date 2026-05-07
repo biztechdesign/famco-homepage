@@ -1,7 +1,7 @@
 "use client";
 
-import { Heart, Play, Box, Triangle } from "lucide-react";
-import { useState } from "react";
+import { Heart, Triangle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { asset, link } from "@/lib/asset";
 import type { Vehicle } from "@/lib/vehicles";
 export type { Vehicle };
@@ -13,13 +13,37 @@ const BADGE_STYLES: Record<string, string> = {
   "0% FINANCE": "bg-charcoal text-white",
 };
 
+// vehicle.country (display name) → ISO 2-letter lowercase used by the
+// lipis/flag-icons CSS classes (e.g. "ae" → fi fi-ae).
+const FLAG_ISO: Record<string, string> = {
+  UAE: "ae",
+  "Saudi Arabia": "sa",
+  "United Arab Emirates": "ae",
+  Oman: "om",
+  Qatar: "qa",
+  "United Kingdom": "gb",
+};
+
 const fmt = (n: number) => new Intl.NumberFormat("en-AE").format(n);
 
 export default function StockCard({ v }: { v: Vehicle }) {
   const [saved, setSaved] = useState(false);
-  const [hover3D, setHover3D] = useState(false);
+  const [hoverVideo, setHoverVideo] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const currency = v.currency ?? "AED";
-  const has3DPreview = Boolean(v.glbModel || v.sketchfabId);
+  const hasVideoPreview = Boolean(v.video);
+
+  // Restart the clip from frame 0 every time the user re-enters the card
+  // so the preview always plays the intro, not wherever it last paused.
+  useEffect(() => {
+    if (!hoverVideo) return;
+    const el = videoRef.current;
+    if (!el) return;
+    el.currentTime = 0;
+    el.play().catch(() => {
+      /* autoplay may be blocked — silent no-op */
+    });
+  }, [hoverVideo]);
 
   // Spec row items in display order
   const specs: string[] = [
@@ -42,95 +66,62 @@ export default function StockCard({ v }: { v: Vehicle }) {
       {/* Image */}
       <a
         href={link(v.href ?? "/stock/volvo-fh-460-tractor")}
-        onMouseEnter={() => has3DPreview && setHover3D(true)}
-        onMouseLeave={() => has3DPreview && setHover3D(false)}
+        onMouseEnter={() => hasVideoPreview && setHoverVideo(true)}
+        onMouseLeave={() => hasVideoPreview && setHoverVideo(false)}
         className="block relative aspect-[4/3] overflow-hidden bg-bgalt rounded-t-xl"
       >
         <img
           src={asset(v.image)}
           alt={v.title}
           className={`absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
-            hover3D ? "opacity-0" : "opacity-100"
+            hoverVideo ? "opacity-0" : "opacity-100"
           }`}
         />
 
-        {/* 3D hover preview — lazy-mounted only on hover.
-            Prefer local GLB via <model-viewer> (no scrollbar, no external embed).
-            Fall back to Sketchfab iframe only if no GLB is available. */}
-        {has3DPreview && hover3D && (
-          <>
-            <div className="absolute inset-0 bg-charcoal flex items-center justify-center">
-              <span className="text-white/80 text-[11px] font-semibold tracking-wider uppercase animate-pulse">
-                Loading 3D view…
-              </span>
+        {/* Video hover preview — lazy-mounted on first hover, then kept
+            in the DOM (with display toggled via opacity) so subsequent
+            hovers don't re-download. Mirrors the walk-around the PDP
+            shows in its Video tab. 3D model previews are intentionally
+            NOT rendered here — listing stays light. */}
+        {hasVideoPreview && hoverVideo && (
+          <video
+            ref={videoRef}
+            src={asset(v.video!)}
+            poster={asset(v.image)}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+
+        {/* "FAMCO Approved" chip — top-left, on every card */}
+        <span className="absolute top-3 left-3 inline-flex items-center gap-1 bg-white/95 backdrop-blur text-ink text-[10px] font-bold tracking-wider px-2 py-1 rounded shadow-card">
+          <span className="h-3.5 w-3.5 rounded-full bg-secondary text-ink flex items-center justify-center text-[9px] leading-none">
+            ✓
+          </span>
+          FAMCO APPROVED
+        </span>
+
+        {/* Per-vehicle badges (NEW ARRIVAL / INSPECTED) — bottom-left */}
+        {v.badges &&
+          v.badges.filter((b) => b !== "SALE" && b !== "0% FINANCE").length >
+            0 && (
+            <div className="absolute bottom-3 left-3 flex flex-col gap-1.5">
+              {v.badges
+                .filter((b) => b !== "SALE" && b !== "0% FINANCE")
+                .map((b) => (
+                  <span
+                    key={b}
+                    className={`text-[10px] font-bold tracking-wider px-2 py-1 rounded ${BADGE_STYLES[b]}`}
+                  >
+                    {b}
+                  </span>
+                ))}
             </div>
-            {v.glbModel ? (
-              // @ts-expect-error — <model-viewer> custom element
-              <model-viewer
-                key={`mv-${v.id}`}
-                src={asset(v.glbModel)}
-                camera-controls
-                auto-rotate
-                auto-rotate-delay="0"
-                rotation-per-second="30deg"
-                interaction-prompt="none"
-                disable-zoom
-                disable-pan
-                exposure="0.9"
-                shadow-intensity="0.6"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                  background: "#1A1A1F",
-                  pointerEvents: "none",
-                }}
-              />
-            ) : (
-              <iframe
-                key={`sf-${v.id}`}
-                title={`${v.title} — 3D view`}
-                allow="autoplay; fullscreen; xr-spatial-tracking"
-                scrolling="no"
-                className="absolute inset-0 h-full w-full border-0 pointer-events-none overflow-hidden"
-                src={`https://sketchfab.com/models/${v.sketchfabId}/embed?autospin=0.6&autostart=1&transparent=0&ui_hint=0&ui_theme=dark&ui_animations=0&ui_infos=0&ui_inspector=0&ui_settings=0&ui_watermark_link=0&ui_watermark=0&ui_controls=0&ui_stop=0&ui_help=0&ui_ar=0&ui_ar_help=0&ui_fullscreen=0&ui_annotations=0&ui_loading=0`}
-              />
-            )}
-          </>
-        )}
-
-        {/* Badges top-left */}
-        {v.badges && v.badges.length > 0 && (
-          <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-            {v.badges.map((b) => (
-              <span
-                key={b}
-                className={`text-[10px] font-bold tracking-wider px-2 py-1 rounded ${BADGE_STYLES[b]}`}
-              >
-                {b}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Media tags bottom-left */}
-        {(v.hasVideo || v.has3D) && (
-          <div className="absolute bottom-3 left-3 flex items-center gap-1.5">
-            {v.hasVideo && (
-              <span className="inline-flex items-center gap-1 bg-charcoal-900/80 backdrop-blur text-white text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded">
-                <Play className="h-3 w-3 fill-white" />
-                Video
-              </span>
-            )}
-            {v.has3D && (
-              <span className="inline-flex items-center gap-1 bg-charcoal-900/80 backdrop-blur text-white text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded">
-                <Box className="h-3 w-3" />
-                3D View
-              </span>
-            )}
-          </div>
-        )}
+          )}
       </a>
 
       {/* Save button (square, top-right — matches reference) */}
@@ -164,10 +155,12 @@ export default function StockCard({ v }: { v: Vehicle }) {
           </h3>
         </a>
 
-        {/* Description */}
-        <p className="mt-1 text-[12.5px] text-muted line-clamp-1">
-          {v.description}
-        </p>
+        {/* Subtitle / short description — single line */}
+        {v.description && (
+          <p className="mt-1 text-[13px] text-muted line-clamp-1">
+            {v.description}
+          </p>
+        )}
 
         {/* Spec row — pipe-separated, wraps */}
         <div className="mt-3 text-[12.5px] text-ink/85 leading-relaxed">
@@ -179,8 +172,8 @@ export default function StockCard({ v }: { v: Vehicle }) {
           ))}
         </div>
 
-        {/* Dealer */}
-        <div className="mt-3 flex items-center text-[12.5px]">
+        {/* Dealer (left) + country flag (right) */}
+        <div className="mt-3 flex items-center justify-between text-[12.5px] gap-3">
           <span className="inline-flex items-center gap-1.5 text-ink font-semibold">
             <Triangle
               className="h-3 w-3 text-secondary fill-secondary"
@@ -188,20 +181,30 @@ export default function StockCard({ v }: { v: Vehicle }) {
             />
             {v.dealer ?? "FAMCO"}
           </span>
+          {v.country && (
+            <span className="inline-flex items-center gap-1.5 text-ink/85">
+              {FLAG_ISO[v.country] && (
+                <span
+                  aria-hidden
+                  className={`fi fi-${FLAG_ISO[v.country]} rounded-sm shadow-[0_0_0_0.5px_rgba(0,0,0,0.08)]`}
+                  style={{ width: "1.2em", height: "0.9em" }}
+                />
+              )}
+              {v.country}
+            </span>
+          )}
         </div>
 
-        {/* Price block */}
-        <div className="mt-4 pt-3 border-t border-line flex items-baseline justify-between gap-3">
-          <span className="text-[12.5px] text-muted">Buy</span>
-          <div className="text-right">
-            {v.oldPrice && v.oldPrice > v.price && (
-              <div className="text-[12.5px] text-muted line-through tabular-nums">
-                {currency} {fmt(v.oldPrice)}
-              </div>
-            )}
-            <div className="font-display text-[18px] font-bold text-secondary leading-none tabular-nums">
-              {currency} {fmt(v.price)}
+        {/* Price block — centered "Buy" label with price stacked below */}
+        <div className="mt-4 pt-3 border-t border-line text-center">
+          <div className="text-[13px] text-muted">Buy</div>
+          {v.oldPrice && v.oldPrice > v.price && (
+            <div className="text-[12.5px] text-muted line-through tabular-nums">
+              {currency} {fmt(v.oldPrice)}
             </div>
+          )}
+          <div className="font-display text-[20px] font-bold text-ink leading-none tabular-nums mt-0.5">
+            {currency} {fmt(v.price)}
           </div>
         </div>
       </div>

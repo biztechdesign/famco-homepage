@@ -93,6 +93,50 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
   ];
 }
 
+/* WCAG 2.1 contrast — used to pick the best foreground (white vs dark
+   ink) for whatever accent color the user lands on, so CTA text stays
+   legible whether the bg is yellow, navy, red, etc. */
+function srgbToLinear(c: number): number {
+  const v = c / 255;
+  return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+}
+
+function relativeLuminance([r, g, b]: [number, number, number]): number {
+  return (
+    0.2126 * srgbToLinear(r) +
+    0.7152 * srgbToLinear(g) +
+    0.0722 * srgbToLinear(b)
+  );
+}
+
+function contrastRatio(
+  a: [number, number, number],
+  b: [number, number, number],
+): number {
+  const la = relativeLuminance(a);
+  const lb = relativeLuminance(b);
+  const [hi, lo] = la > lb ? [la, lb] : [lb, la];
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+/* Foreground options: site dark-ink (#0F172A) and white. Picking
+   between just these two is the standard accessibility approach —
+   trying to grade arbitrary mid-tones almost always loses contrast. */
+const INK_RGB: [number, number, number] = [15, 23, 42];
+const WHITE_RGB: [number, number, number] = [255, 255, 255];
+
+function bestForeground(bg: [number, number, number]): {
+  rgb: [number, number, number];
+  ratio: number;
+  isWhite: boolean;
+} {
+  const ratioWhite = contrastRatio(bg, WHITE_RGB);
+  const ratioInk = contrastRatio(bg, INK_RGB);
+  return ratioWhite >= ratioInk
+    ? { rgb: WHITE_RGB, ratio: ratioWhite, isWhite: true }
+    : { rgb: INK_RGB, ratio: ratioInk, isWhite: false };
+}
+
 /**
  * Build the 10-shade palette by holding hue + saturation steady and
  * sliding lightness. Targets approximate Tailwind's defaults.
@@ -126,6 +170,14 @@ function applyHex(hex: string) {
   Object.entries(palette).forEach(([k, v]) => {
     root.style.setProperty(`--secondary-${k}`, v);
   });
+  // Pick the most-readable foreground for the new accent and write it
+  // into --secondary-fg. .btn-primary and .bg-secondary.text-ink read
+  // this var, so every CTA flips its text color in the same paint.
+  const fg = bestForeground(hexToRgb(hex));
+  root.style.setProperty(
+    "--secondary-fg",
+    `${fg.rgb[0]} ${fg.rgb[1]} ${fg.rgb[2]}`,
+  );
 }
 
 function isValidHex(s: string): boolean {
@@ -284,6 +336,56 @@ export default function ThemePicker() {
                 />
               </div>
             </div>
+
+            {/* CTA contrast preview — shows the foreground color the
+                picker auto-selected (white vs dark ink) for the chosen
+                accent, plus the WCAG contrast ratio it scored. */}
+            {(() => {
+              const fg = bestForeground(hexToRgb(color));
+              const ratio = fg.ratio;
+              const grade =
+                ratio >= 7
+                  ? "AAA"
+                  : ratio >= 4.5
+                    ? "AA"
+                    : ratio >= 3
+                      ? "AA Large"
+                      : "Fail";
+              const gradeColor =
+                ratio >= 4.5
+                  ? "text-emerald-600"
+                  : ratio >= 3
+                    ? "text-amber-600"
+                    : "text-red-600";
+              return (
+                <div>
+                  <label className="block text-[10.5px] uppercase tracking-widest font-bold text-muted mb-1.5">
+                    CTA preview
+                  </label>
+                  <div
+                    className="flex items-center justify-between gap-3 h-12 rounded-md border border-line px-3"
+                    style={{
+                      backgroundColor: color,
+                      color: fg.isWhite ? "#FFFFFF" : "#0F172A",
+                    }}
+                  >
+                    <span className="text-[15px] font-bold tracking-tight">
+                      Aa — Get a quote
+                    </span>
+                    <span className="text-[10.5px] font-mono opacity-90">
+                      {fg.isWhite ? "WHITE" : "INK"}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-[10.5px] text-muted">
+                    Contrast{" "}
+                    <span className="font-mono font-semibold text-ink">
+                      {ratio.toFixed(2)}:1
+                    </span>{" "}
+                    <span className={`font-bold ${gradeColor}`}>· {grade}</span>
+                  </p>
+                </div>
+              );
+            })()}
 
             {/* Preview row — 5 generated shades */}
             <div>
