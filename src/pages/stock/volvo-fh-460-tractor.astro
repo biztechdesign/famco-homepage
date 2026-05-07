@@ -664,13 +664,6 @@ const pdpTitle = `${v.title} — Used | FAMCO`;
                   <span class="h-3.5 w-3.5 rounded-full bg-secondary text-ink flex items-center justify-center text-[9px] leading-none">✓</span>
                   FAMCO APPROVED
                 </span>
-                {s.badges && s.badges.filter((b) => b !== "NEW ARRIVAL" && b !== "0% FINANCE" && b !== "SALE").length > 0 && (
-                  <div class="absolute top-3 right-14 flex flex-col gap-1 items-end">
-                    {s.badges.filter((b) => b !== "NEW ARRIVAL" && b !== "0% FINANCE" && b !== "SALE").map((b) => (
-                      <span class={`text-[10px] font-bold tracking-wider px-2 py-1 rounded ${BADGE_STYLES[b] ?? "bg-charcoal text-white"}`}>{b}</span>
-                    ))}
-                  </div>
-                )}
               </a>
               <div class="p-5">
                 <a href={link(s.href ?? "/stock")} class="block">
