@@ -17,7 +17,7 @@ export default function FeatureBlocks() {
               <>
                 Trade in.
                 <br />
-                Trade up.
+                Trade <span className="text-secondary-300">up.</span>
               </>
             }
             cta="Get my trade-in value"
@@ -31,7 +31,7 @@ export default function FeatureBlocks() {
               <>
                 Workshop.
                 <br />
-                Genuine parts.
+                Genuine <span className="text-secondary-300">parts.</span>
               </>
             }
             cta="Book a service slot"

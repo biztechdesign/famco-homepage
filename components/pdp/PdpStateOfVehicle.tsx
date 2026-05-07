@@ -58,7 +58,7 @@ export default function PdpStateOfVehicle() {
               State of this vehicle
             </span>
             <h3 className="font-display text-2xl lg:text-3xl font-bold leading-tight mb-3">
-              Fully inspected
+              Fully <span className="text-secondary-300">inspected</span>
             </h3>
             <p className="text-[14px] text-white/85 leading-relaxed mb-5">
               Knowing the condition of a vehicle or machine is essential. Every

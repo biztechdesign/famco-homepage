@@ -29,7 +29,7 @@ export default function PdpTabs({
     <div className="bg-white rounded-xl border border-line shadow-card p-5 lg:p-7">
       <header className="flex items-center justify-between gap-3 mb-6">
         <h2 className="font-display text-[20px] lg:text-[22px] font-bold text-ink">
-          About this vehicle
+          About this <span className="text-secondary-300">vehicle</span>
         </h2>
         {status && (
           <span className="inline-flex items-center gap-1.5 bg-emerald-600 text-white text-[11.5px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-md">

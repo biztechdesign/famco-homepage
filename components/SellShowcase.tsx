@@ -46,7 +46,8 @@ export default function SellShowcase() {
         <div className="flex items-end justify-between gap-4 mb-6 lg:mb-8">
           <div>
             <h2 className="font-display text-3xl lg:text-4xl font-bold text-ink">
-              Sell your current vehicle or machine
+              Sell your current vehicle or{" "}
+              <span className="text-secondary-300">machine</span>
             </h2>
           </div>
 

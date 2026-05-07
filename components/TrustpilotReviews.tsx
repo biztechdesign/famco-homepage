@@ -41,7 +41,7 @@ export default function TrustpilotReviews() {
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-8">
           <div>
             <h2 className="font-display text-3xl lg:text-4xl font-bold text-ink">
-              What our customers say
+              What our <span className="text-secondary-300">customers</span> say
             </h2>
           </div>
 

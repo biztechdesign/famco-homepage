@@ -77,11 +77,11 @@ const GROUPS: Group[] = [
 export default function PopularCategories() {
   return (
     <section className="bg-bgalt">
-      <div className="container py-14 lg:py-20">
+      <div className="container py-12 lg:py-16">
         {/* Header */}
         <div className="text-center mb-10 lg:mb-14">
           <h2 className="font-display text-3xl lg:text-4xl font-bold text-ink">
-            Popular categories
+            Popular <span className="text-secondary-300">categories</span>
           </h2>
         </div>
 

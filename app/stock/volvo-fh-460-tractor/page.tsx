@@ -238,7 +238,7 @@ export default function VolvoFH500Page() {
               <div>
                 <div className="eyebrow mb-1">More like this</div>
                 <h2 className="font-display text-2xl lg:text-3xl font-bold text-ink">
-                  Similar vehicles
+                  Similar <span className="text-secondary-300">vehicles</span>
                 </h2>
               </div>
               <a
