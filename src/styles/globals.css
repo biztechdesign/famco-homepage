@@ -102,3 +102,26 @@ h1, h2, h3, h4, .font-display {
 @media (prefers-reduced-motion: reduce) {
   .group:hover .wheel { animation: none; }
 }
+
+/* ─── Image skeleton placeholder ─────────────────────────────
+   Apply to the wrapper around an <img>. While the wrapped image
+   loads, a soft shimmer plays so the empty box doesn't flash
+   white. Once the image fires its `load` event, the global
+   handler in Layout.astro adds `.is-loaded`, which both hides the
+   shimmer background and stops the animation cheaply. */
+.img-skeleton {
+  background-image: linear-gradient(90deg, #E5E7EB 0%, #F1F2F4 50%, #E5E7EB 100%);
+  background-size: 200% 100%;
+  animation: img-shimmer 1.4s ease-in-out infinite;
+}
+.img-skeleton.is-loaded {
+  background-image: none;
+  animation: none;
+}
+@keyframes img-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .img-skeleton { animation: none; }
+}

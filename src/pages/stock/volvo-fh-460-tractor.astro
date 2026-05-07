@@ -194,7 +194,7 @@ const pdpTitle = `${v.title} — Used | FAMCO`;
             </div>
 
             {/* Stage */}
-            <div class="relative aspect-[16/9] max-h-[55vh] bg-bgalt overflow-hidden">
+            <div class="img-skeleton relative aspect-[16/9] max-h-[55vh] bg-bgalt overflow-hidden">
               {/* Gallery stage */}
               <div data-stage="gallery" class="absolute inset-0">
                 {images.map((img, i) => (
@@ -594,7 +594,7 @@ const pdpTitle = `${v.title} — Used | FAMCO`;
       {/* ─── State of vehicle + Things to know ─── */}
       <section class="mt-14 lg:mt-20">
         <div class="grid lg:grid-cols-[60fr_40fr] gap-4 lg:gap-5">
-          <article id="inspection-report" class="group relative overflow-hidden rounded-2xl bg-charcoal min-h-[420px] lg:min-h-[520px]">
+          <article id="inspection-report" class="img-skeleton group relative overflow-hidden rounded-2xl bg-charcoal min-h-[420px] lg:min-h-[520px]">
             <img
               src={asset("/placeholders/get-car-inspected.jpg")}
               alt="FAMCO technician inspecting the underside of a truck"
@@ -624,7 +624,7 @@ const pdpTitle = `${v.title} — Used | FAMCO`;
               { title: "Finance & warranty at FAMCO", body: "Flexible finance, warranty cover and in-house workshop service on every used vehicle.", cta: "Explore options", href: "/stock", image: "/placeholders/cat-construction.jpg" },
               { title: "Sell your current vehicle", body: "Get a free price proposal — our experts handle valuation, paperwork and pickup for you.", cta: "Start selling", href: "/stock?category=sell", image: "/placeholders/sell-current-vehicle.png" },
             ].map((s) => (
-              <a href={link(s.href)} class="group relative overflow-hidden rounded-2xl bg-charcoal block">
+              <a href={link(s.href)} class="img-skeleton group relative overflow-hidden rounded-2xl bg-charcoal block">
                 <img src={asset(s.image)} alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 <div class="absolute inset-0 bg-gradient-to-r from-charcoal-900 via-charcoal-800/70 to-transparent"></div>
                 <div class="relative h-full p-5 lg:p-6 flex flex-col justify-start text-white">
@@ -658,7 +658,7 @@ const pdpTitle = `${v.title} — Used | FAMCO`;
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {similar.map((s) => (
             <article class="group relative bg-white rounded-xl overflow-hidden border border-line shadow-card hover:shadow-lift hover:-translate-y-0.5 hover:border-secondary transition-all duration-300">
-              <a href={link(s.href ?? "/stock")} class="block relative aspect-[4/3] overflow-hidden bg-bgalt rounded-t-xl">
+              <a href={link(s.href ?? "/stock")} class="img-skeleton block relative aspect-[4/3] overflow-hidden bg-bgalt rounded-t-xl">
                 <img src={asset(s.image)} alt={s.title} class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <span class="absolute top-3 left-3 inline-flex items-center gap-1 bg-white/95 backdrop-blur text-ink text-[10px] font-bold tracking-wider px-2 py-1 rounded shadow-card">
                   <span class="h-3.5 w-3.5 rounded-full bg-secondary text-ink flex items-center justify-center text-[9px] leading-none">✓</span>

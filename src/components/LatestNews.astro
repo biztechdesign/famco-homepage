@@ -34,7 +34,7 @@ const POSTS = [
     <div class="grid lg:grid-cols-2 gap-5 lg:gap-6">
       <a
         href={link(FEATURED.href)}
-        class="group relative overflow-hidden rounded-2xl bg-charcoal text-white min-h-[360px] lg:min-h-[520px] flex flex-col justify-end transition-all duration-300 hover:shadow-lift"
+        class="img-skeleton group relative overflow-hidden rounded-2xl bg-charcoal text-white min-h-[360px] lg:min-h-[520px] flex flex-col justify-end transition-all duration-300 hover:shadow-lift"
       >
         <img
           src={asset(FEATURED.image)}
@@ -60,7 +60,7 @@ const POSTS = [
             href={link(p.href)}
             class="group bg-white rounded-xl overflow-hidden border border-line shadow-card flex transition-all duration-300 hover:shadow-lift hover:-translate-y-0.5"
           >
-            <div class="relative w-32 sm:w-40 lg:w-44 shrink-0 overflow-hidden bg-bgalt">
+            <div class="img-skeleton relative w-32 sm:w-40 lg:w-44 shrink-0 overflow-hidden bg-bgalt">
               <img
                 src={asset(p.image)}
                 alt=""

@@ -116,3 +116,41 @@ const {
   // links / asset URLs without re-importing the Astro env.
   window.__FAMCO_BASE__ = BASE;
 </script>
+
+<script is:inline>
+  // Skeleton-placeholder hand-off. Any element with `.img-skeleton` that
+  // contains an <img> stops shimmering once that image finishes loading.
+  // Runs once on page load + observes future DOM (gallery thumb swap,
+  // listing filter re-renders, etc.) via a MutationObserver.
+  (function () {
+    function settle(node) {
+      var img = node.querySelector ? node.querySelector("img") : null;
+      if (!img) return;
+      if (img.complete && img.naturalWidth > 0) {
+        node.classList.add("is-loaded");
+      } else {
+        img.addEventListener("load", function () { node.classList.add("is-loaded"); }, { once: true });
+        img.addEventListener("error", function () { node.classList.add("is-loaded"); }, { once: true });
+      }
+    }
+    function scan(root) {
+      (root || document).querySelectorAll(".img-skeleton:not(.is-loaded)").forEach(settle);
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () { scan(); });
+    } else {
+      scan();
+    }
+    // Catch dynamically-mounted nodes (filter results, tab swaps, etc.)
+    var mo = new MutationObserver(function (records) {
+      records.forEach(function (r) {
+        r.addedNodes.forEach(function (n) {
+          if (n.nodeType !== 1) return;
+          if (n.classList && n.classList.contains("img-skeleton")) settle(n);
+          else if (n.querySelectorAll) scan(n);
+        });
+      });
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+  })();
+</script>
