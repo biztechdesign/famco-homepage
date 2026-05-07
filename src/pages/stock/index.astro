@@ -906,4 +906,25 @@ const BADGE_STYLES: Record<string, string> = {
     media.addEventListener("focusin", enter);
     media.addEventListener("focusout", leave);
   });
+
+  // ─── Whole-card click → vehicle PDP ────────────────────────────
+  // The article carries `data-card-href` (already SSR'd). Any click
+  // outside an interactive element (existing <a>, the save button,
+  // any nested <button>) navigates to that href, so the entire card
+  // surface — body text, specs, dealer row, price block — becomes a
+  // pointer-cursor link without breaking the save toggle.
+  document.querySelectorAll<HTMLElement>("[data-card]").forEach((card) => {
+    const href = card.getAttribute("data-card-href");
+    if (!href) return;
+    card.addEventListener("click", (e) => {
+      const t = e.target as HTMLElement;
+      if (t.closest("a") || t.closest("button")) return;
+      // Allow Cmd/Ctrl-click + middle-click to open in a new tab.
+      if (e.metaKey || e.ctrlKey || (e as MouseEvent).button === 1) {
+        window.open(href, "_blank", "noopener");
+      } else {
+        window.location.href = href;
+      }
+    });
+  });
 </script>
