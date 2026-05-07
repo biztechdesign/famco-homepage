@@ -7,7 +7,6 @@ import PdpSidebar from "@/components/pdp/PdpSidebar";
 import PdpTabs, { type SpecGroup, Tick } from "@/components/pdp/PdpTabs";
 import PdpLiveInspection from "@/components/pdp/PdpLiveInspection";
 import PdpTransportCosts from "@/components/pdp/PdpTransportCosts";
-import PdpThingsToKnow from "@/components/pdp/PdpThingsToKnow";
 import PdpStateOfVehicle from "@/components/pdp/PdpStateOfVehicle";
 import StockCard from "@/components/stock/StockCard";
 import { VEHICLES } from "@/lib/vehicles";
@@ -230,11 +229,8 @@ export default function VolvoFH500Page() {
             </div>
           </div>
 
-          {/* State of this vehicle */}
+          {/* State of this vehicle + Things to know */}
           <PdpStateOfVehicle />
-
-          {/* Things to know */}
-          <PdpThingsToKnow />
 
           {/* Similar vehicles */}
           <div className="mt-14 lg:mt-20">

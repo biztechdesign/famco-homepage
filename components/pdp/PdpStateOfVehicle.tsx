@@ -1,66 +1,113 @@
 import { ArrowRight } from "lucide-react";
-import { asset } from "@/lib/asset";
+import { asset, link } from "@/lib/asset";
 
 /**
- * Mirrors the Latest-from-FAMCO featured-card pattern: a large rounded
- * card with a full-bleed photo, dark gradient, and the headline + body
- * pinned to the bottom. Used to introduce the vehicle's inspection state
- * before the inspection report download.
+ * Combined block: "State of this vehicle" inspection card on the left,
+ * two stacked "Things to know" cards on the right. All three cards share
+ * the home-page charcoal sweep gradient (Hero / LiveInspection /
+ * SplitFlag etc.) so the section reads as one consistent system.
  */
+
+type Side = {
+  title: string;
+  body: string;
+  cta: string;
+  href: string;
+  image: string;
+  alt: string;
+};
+
+const SIDES: Side[] = [
+  {
+    title: "Choose brand-new at FAMCO",
+    body: "Factory-fresh trucks, buses and machinery — full warranty, finance and customisation in-house.",
+    cta: "More about brand-new",
+    href: link("/stock"),
+    image: asset("/hero/brand-new.jpg"),
+    alt: "Brand-new FAMCO truck on the showroom floor",
+  },
+  {
+    title: "Sell your current vehicle",
+    body: "Get a free price proposal — our experts handle valuation, paperwork and pickup for you.",
+    cta: "Start selling",
+    href: link("/stock?category=sell"),
+    image: asset("/hero/sell.jpg"),
+    alt: "FAMCO buyer inspecting a customer vehicle",
+  },
+];
+
 export default function PdpStateOfVehicle() {
   return (
     <section className="mt-14 lg:mt-20">
-      <div className="flex items-end justify-between gap-4 mb-6 lg:mb-8">
-        <h2 className="font-display text-2xl lg:text-3xl font-bold text-ink">
-          State of this vehicle
-        </h2>
-        <a
-          href="#inspection-report"
-          className="inline-flex items-center gap-2 text-secondary font-semibold hover:gap-3 transition-all self-start sm:self-auto"
+      <div className="grid lg:grid-cols-[60fr_40fr] gap-4 lg:gap-5">
+        {/* LEFT — State of this vehicle (large inspection card) */}
+        <article
+          id="inspection-report"
+          className="group relative overflow-hidden rounded-2xl bg-charcoal min-h-[420px] lg:min-h-[520px]"
         >
-          View inspection report <ArrowRight className="h-4 w-4" />
-        </a>
-      </div>
+          <img
+            src={asset("/hero/inspected.jpg")}
+            alt="FAMCO technician inspecting the underside of a truck"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-charcoal-900 via-charcoal-800/70 to-transparent" />
 
-      <article
-        className="
-          group relative overflow-hidden rounded-2xl
-          bg-charcoal text-white
-          min-h-[280px] lg:min-h-[360px]
-          flex flex-col justify-end
-        "
-      >
-        <img
-          src={asset("/hero/inspected.jpg")}
-          alt="FAMCO technician inspecting the underside of a truck"
-          loading="lazy"
-          className="
-            absolute inset-0 h-full w-full object-cover
-            transition-transform duration-700 group-hover:scale-105
-          "
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900 via-charcoal-900/55 to-transparent" />
+          <div className="relative h-full p-7 lg:p-10 flex flex-col justify-end text-white max-w-xl">
+            <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-secondary-300 mb-3">
+              State of this vehicle
+            </span>
+            <h3 className="font-display text-2xl lg:text-3xl font-bold leading-tight mb-3">
+              Fully inspected
+            </h3>
+            <p className="text-[14px] text-white/85 leading-relaxed mb-5">
+              Knowing the condition of a vehicle or machine is essential. Every
+              vehicle on FAMCO is pre-inspected by our experts — what you see
+              is truly what you get, giving you the confidence to make the
+              right decision.
+            </p>
+            <a
+              href="#inspection-report"
+              className="inline-flex items-center gap-2 text-[14px] font-semibold text-secondary-300 hover:gap-3 transition-all w-fit"
+            >
+              See the full report
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+        </article>
 
-        <div className="relative p-6 lg:p-8 max-w-3xl">
-          <h3 className="font-display text-2xl lg:text-3xl font-bold leading-tight mb-3">
-            Fully inspected
-          </h3>
-          <p className="text-[14px] text-white/85 leading-relaxed mb-4">
-            Knowing the condition of a vehicle or machine is essential. Every
-            vehicle or machine listed on FAMCO is pre-inspected by our experts.
-            This walk-around gives you a clear view of its current state, so
-            you know exactly what to expect — what you see is truly what you
-            get, giving you the confidence to make the right decision.
-          </p>
-          <a
-            href="#inspection-report"
-            className="inline-flex items-center gap-2 text-[14px] font-semibold text-secondary-300 group-hover:gap-3 transition-all"
-          >
-            See the full report
-            <ArrowRight className="h-4 w-4" />
-          </a>
+        {/* RIGHT — Things to know (two stacked cards) */}
+        <div className="grid grid-rows-2 gap-4 lg:gap-5 min-h-[420px] lg:min-h-[520px]">
+          {SIDES.map((s) => (
+            <a
+              key={s.title}
+              href={s.href}
+              className="group relative overflow-hidden rounded-2xl bg-charcoal block"
+            >
+              <img
+                src={s.image}
+                alt={s.alt}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-charcoal-900 via-charcoal-800/70 to-transparent" />
+
+              <div className="relative h-full p-5 lg:p-6 flex flex-col justify-end text-white">
+                <h3 className="font-display text-lg lg:text-xl font-bold leading-tight mb-1.5">
+                  {s.title}
+                </h3>
+                <p className="text-[12.5px] text-white/80 leading-snug mb-3 max-w-md">
+                  {s.body}
+                </p>
+                <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary-300 group-hover:gap-2.5 transition-all w-fit">
+                  {s.cta}
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+              </div>
+            </a>
+          ))}
         </div>
-      </article>
+      </div>
     </section>
   );
 }
