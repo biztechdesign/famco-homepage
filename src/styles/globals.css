@@ -103,6 +103,29 @@ h1, h2, h3, h4, .font-display {
   .group:hover .wheel { animation: none; }
 }
 
+/* Whole-card click affordance — make every descendant inherit the
+   parent <article>'s `cursor-pointer` so dead zones like the spec row
+   wrapper, price block, and stand-alone <span>s also show the hand
+   cursor (not just the inner <a>/<button> elements that already do). */
+[data-stock-card],
+[data-card],
+[data-similar-card] {
+  cursor: pointer;
+}
+[data-stock-card] *,
+[data-card] *,
+[data-similar-card] * {
+  cursor: inherit;
+}
+[data-stock-card] a,
+[data-stock-card] button,
+[data-card] a,
+[data-card] button,
+[data-similar-card] a,
+[data-similar-card] button {
+  cursor: pointer;
+}
+
 /* ─── Image skeleton placeholder ─────────────────────────────
    Apply to the wrapper around an <img>. While the wrapped image
    loads, a soft shimmer plays so the empty box doesn't flash
