@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ssh-add -l)",
+      "Bash(ssh -i ~/.ssh/id_ed25519_work -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -T git@github.com)",
+      "Bash(ssh-keygen -c -f ~/.ssh/id_ed25519_work -C \"chirag.t@biztechcs.com\")",
+      "Bash(ssh-keygen -lf ~/.ssh/id_ed25519_work.pub)",
+      "Bash(ssh -i ~/.ssh/id_ed25519_work -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -vT git@github.com)"
+    ]
+  }
+}
