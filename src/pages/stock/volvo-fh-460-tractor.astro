@@ -657,7 +657,11 @@ const pdpTitle = `${v.title} — Used | FAMCO`;
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {similar.map((s) => (
-            <article class="group relative bg-white rounded-xl overflow-hidden border border-line shadow-card hover:shadow-lift hover:-translate-y-0.5 hover:border-secondary transition-all duration-300">
+            <article
+              data-similar-card
+              data-card-href={link(s.href ?? "/stock")}
+              class="group relative bg-white rounded-xl overflow-hidden border border-line shadow-card hover:shadow-lift hover:-translate-y-0.5 hover:border-secondary transition-all duration-300 cursor-pointer"
+            >
               <a href={link(s.href ?? "/stock")} class="img-skeleton block relative aspect-[4/3] overflow-hidden bg-bgalt rounded-t-xl">
                 <img src={asset(s.image)} alt={s.title} class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <span class="absolute top-3 left-3 inline-flex items-center gap-1 bg-white/95 backdrop-blur text-ink text-[10px] font-bold tracking-wider px-2 py-1 rounded shadow-card">
@@ -835,6 +839,17 @@ const pdpTitle = `${v.title} — Used | FAMCO`;
       heart.classList.toggle("text-secondary", saved);
     }
     saveBtn.setAttribute("aria-label", saved ? "Remove from favorites" : "Save to favorites");
+  });
+
+  /* ─── Similar cards: whole-card click → detail page ─── */
+  document.querySelectorAll<HTMLElement>("[data-similar-card]").forEach((card) => {
+    const href = card.dataset.cardHref;
+    if (!href) return;
+    card.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("a, button, video")) return;
+      window.location.href = href;
+    });
   });
 </script>
 

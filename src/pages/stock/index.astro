@@ -353,6 +353,7 @@ const BADGE_STYLES: Record<string, string> = {
               <article
                 data-card
                 data-id={v.id}
+                data-card-href={link(v.href ?? "/stock")}
                 data-category={v.category}
                 data-country={v.country}
                 data-brand={v.brand.toLowerCase()}
@@ -368,7 +369,7 @@ const BADGE_STYLES: Record<string, string> = {
                   v.dealer ?? "", v.transmission ?? "", v.fuel ?? "",
                   v.euro ?? "", v.drive ?? "", String(v.year),
                 ].join(" ").toLowerCase()}
-                class="group relative bg-white rounded-xl overflow-hidden border border-line shadow-card hover:shadow-lift hover:-translate-y-0.5 hover:border-secondary transition-all duration-300"
+                class="group relative bg-white rounded-xl overflow-hidden border border-line shadow-card hover:shadow-lift hover:-translate-y-0.5 hover:border-secondary transition-all duration-300 cursor-pointer"
               >
                 <a
                   href={link(v.href ?? "/stock")}
@@ -537,6 +538,17 @@ const BADGE_STYLES: Record<string, string> = {
 
   const grid = document.querySelector<HTMLDivElement>("[data-grid]");
   const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-card]"));
+
+  // Whole-card click → detail page. Inner <a>/<button>/<video> handle their own clicks.
+  cards.forEach((card) => {
+    const href = card.dataset.cardHref;
+    if (!href) return;
+    card.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("a, button, video")) return;
+      window.location.href = href;
+    });
+  });
   const empty = document.querySelector<HTMLDivElement>("[data-empty]");
   const resultCountEls = document.querySelectorAll<HTMLElement>("[data-result-count], [data-result-count-2]");
   const filterCountEl = document.querySelector<HTMLElement>("[data-filter-count]");

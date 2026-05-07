@@ -38,8 +38,9 @@ const hasVideo = Boolean(v.video);
 ---
 
 <article
-  class="group relative bg-white rounded-xl overflow-hidden border border-line shadow-card hover:shadow-lift hover:-translate-y-0.5 hover:border-secondary transition-all duration-300"
+  class="group relative bg-white rounded-xl overflow-hidden border border-line shadow-card hover:shadow-lift hover:-translate-y-0.5 hover:border-secondary transition-all duration-300 cursor-pointer"
   data-stock-card
+  data-card-href={href}
   data-has-video={hasVideo ? "1" : "0"}
 >
   <a href={href} class="img-skeleton block relative aspect-[4/3] overflow-hidden bg-bgalt rounded-t-xl">
@@ -138,10 +139,21 @@ const hasVideo = Boolean(v.video);
   // page in one pass so a listing of N cards needs no per-card script.
   document.querySelectorAll<HTMLElement>("[data-stock-card]").forEach((card) => {
     const hasVideo = card.dataset.hasVideo === "1";
+    const cardHref = card.dataset.cardHref;
     const img = card.querySelector<HTMLImageElement>("[data-card-image]");
     const video = card.querySelector<HTMLVideoElement>("[data-card-video]");
     const saveBtn = card.querySelector<HTMLButtonElement>("[data-card-save]");
     const heart = card.querySelector<SVGElement>("[data-card-heart]");
+
+    // Whole-card click → navigate, but let inner links/buttons handle
+    // their own clicks (e.g. save button, image/title <a>).
+    if (cardHref) {
+      card.addEventListener("click", (e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest("a, button, video")) return;
+        window.location.href = cardHref;
+      });
+    }
 
     if (hasVideo && img && video) {
       const enter = () => {
