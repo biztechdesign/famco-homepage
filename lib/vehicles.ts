@@ -109,7 +109,7 @@ export const VEHICLES: Vehicle[] = [
     id: "4",
     title: "Volvo FH 460 4×2 Globetrotter",
     description:
-      "Globetrotter cab, sleeper, lane-keep assist, single owner since new",
+      "Globetrotter cab, sleeper, lane-keep assist, single owner from day one",
     brand: "Volvo",
     country: "UAE",
     countryFlag: "🇦🇪",
@@ -175,7 +175,7 @@ export const VEHICLES: Vehicle[] = [
     id: "7",
     title: "MAN TGX 18.540 4×2 Long-Haul",
     description:
-      "Hydraulic 5th wheel, twin tanks, LED lighting, factory-fresh interior",
+      "Hydraulic 5th wheel, twin tanks, LED lighting, well-kept interior",
     brand: "MAN",
     country: "UAE",
     countryFlag: "🇦🇪",

@@ -6,13 +6,6 @@ import { asset, link } from "@/lib/asset";
 import type { Vehicle } from "@/lib/vehicles";
 export type { Vehicle };
 
-const BADGE_STYLES: Record<string, string> = {
-  INSPECTED: "bg-primary text-white",
-  "NEW ARRIVAL": "bg-secondary text-ink",
-  SALE: "bg-secondary text-ink",
-  "0% FINANCE": "bg-charcoal text-white",
-};
-
 // vehicle.country (display name) → ISO 2-letter lowercase used by the
 // lipis/flag-icons CSS classes (e.g. "ae" → fi fi-ae).
 const FLAG_ISO: Record<string, string> = {
@@ -21,6 +14,8 @@ const FLAG_ISO: Record<string, string> = {
   "United Arab Emirates": "ae",
   Oman: "om",
   Qatar: "qa",
+  Bahrain: "bh",
+  Kuwait: "kw",
   "United Kingdom": "gb",
 };
 
@@ -30,7 +25,9 @@ export default function StockCard({ v }: { v: Vehicle }) {
   const [saved, setSaved] = useState(false);
   const [hoverVideo, setHoverVideo] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const currency = v.currency ?? "AED";
+  // Site-wide currency display is locked to AED across all pages —
+  // foreign-market vehicle prices are shown in AED for consistency.
+  const currency = "AED";
   const hasVideoPreview = Boolean(v.video);
 
   // Restart the clip from frame 0 every time the user re-enters the card
@@ -105,23 +102,6 @@ export default function StockCard({ v }: { v: Vehicle }) {
           FAMCO APPROVED
         </span>
 
-        {/* Per-vehicle badges (NEW ARRIVAL / INSPECTED) — bottom-left */}
-        {v.badges &&
-          v.badges.filter((b) => b !== "SALE" && b !== "0% FINANCE").length >
-            0 && (
-            <div className="absolute bottom-3 left-3 flex flex-col gap-1.5">
-              {v.badges
-                .filter((b) => b !== "SALE" && b !== "0% FINANCE")
-                .map((b) => (
-                  <span
-                    key={b}
-                    className={`text-[10px] font-bold tracking-wider px-2 py-1 rounded ${BADGE_STYLES[b]}`}
-                  >
-                    {b}
-                  </span>
-                ))}
-            </div>
-          )}
       </a>
 
       {/* Save button (square, top-right — matches reference) */}

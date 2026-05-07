@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Asta Sans", "Manrope", system-ui, sans-serif;
+  --font-body: "Public Sans", system-ui, sans-serif;
+
+  /* Secondary palette — RGB triplets so Tailwind's <alpha-value> works.
+     Default = FAMCO CTA yellow (#ffd100). The ThemePicker overrides
+     these at runtime to recolor the whole site. */
+  --secondary-50: 255 250 230;
+  --secondary-100: 255 245 199;
+  --secondary-200: 255 235 143;
+  --secondary-300: 255 226 92;
+  --secondary-400: 255 216 41;
+  --secondary-500: 255 209 0;
+  --secondary-600: 214 176 0;
+  --secondary-700: 168 138 0;
+  --secondary-800: 112 92 0;
+  --secondary-900: 71 59 0;
+
+  /* Foreground that sits on top of bg-secondary. ThemePicker recomputes
+     this whenever the accent changes — picks white or dark-ink based on
+     WCAG contrast ratio so CTAs stay legible on any chosen color. */
+  --secondary-fg: 15 23 42;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: #0f172a;
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(var(--secondary-500));
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 150ms ease-out;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: rgb(var(--secondary-500));
+  color: rgb(var(--secondary-fg));
+  padding: 0 1.25rem;
+  height: 48px;
+}
+.btn-primary:hover { background: rgb(var(--secondary-600)); transform: translateY(-1px); }
+
+.btn-secondary {
+  background: #0D4F8B;
+  color: #fff;
+  padding: 0 1.25rem;
+  height: 48px;
+}
+.btn-secondary:hover { background: #082F52; }
+
+.btn-outline {
+  border: 1.5px solid currentColor;
+  padding: 0 1.25rem;
+  height: 48px;
+  background: transparent;
+}
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+.text-secondary { color: rgb(var(--secondary-700)); }
+.fill-secondary { fill: rgb(var(--secondary-700)); }
+.stroke-secondary { stroke: rgb(var(--secondary-700)); }
+
+.bg-secondary.text-ink { color: rgb(var(--secondary-fg)); }
+
+@keyframes wheel-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.wheel { transform-box: fill-box; transform-origin: center; }
+.group:hover .wheel { animation: wheel-spin 0.7s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .wheel { animation: none; }
+}

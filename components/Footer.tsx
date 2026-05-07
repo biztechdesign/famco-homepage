@@ -152,7 +152,7 @@ export default function Footer() {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
               <h3 className="font-display text-2xl lg:text-3xl font-bold leading-tight">
-                Subscribe for new stock
+                Subscribe for latest stock
                 <br className="hidden sm:block" />
                 {" "}and offers
               </h3>

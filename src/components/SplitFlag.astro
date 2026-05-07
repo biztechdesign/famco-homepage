@@ -1,0 +1,56 @@
+---
+import { Icon } from "astro-icon/components";
+import { asset, link } from "@/lib/asset";
+
+const cards = [
+  {
+    titleHtml: `Best <span class="text-secondary-300">deal</span>.<br />Best <span class="text-secondary-300">buy</span>.`,
+    cta: "View stock",
+    href: link("/stock"),
+    bgImage: "/hero/brand-new.jpg",
+    flipBg: false,
+  },
+  {
+    titleHtml: `<span class="text-secondary-300">150-point</span> check.<br />Paperwork done.`,
+    cta: "View inspected stock",
+    href: link("/stock"),
+    bgImage: "/hero/truck-1.jpg",
+    flipBg: true,
+  },
+];
+---
+
+<section class="bg-white">
+  <div class="container py-6 lg:py-8">
+    <div class="grid gap-4 lg:gap-5 lg:grid-cols-2">
+      {cards.map((c) => (
+        <a
+          href={c.href}
+          class="group relative overflow-hidden rounded-2xl bg-charcoal text-white p-8 lg:p-12 min-h-[320px] lg:min-h-[400px] flex flex-col justify-between transition-all duration-300 hover:shadow-lift hover:-translate-y-0.5"
+        >
+          <img
+            src={asset(c.bgImage)}
+            alt=""
+            aria-hidden="true"
+            class={`absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 ${c.flipBg ? "scale-x-[-1] group-hover:scale-x-[-1.05]" : ""}`}
+          />
+          <div class="absolute inset-0 bg-gradient-to-r from-charcoal-900 via-charcoal-800/70 to-transparent"></div>
+
+          <div class="relative">
+            <h2
+              class="font-display font-bold uppercase tracking-tight leading-[0.95] text-3xl sm:text-4xl lg:text-5xl"
+              set:html={c.titleHtml}
+            />
+          </div>
+
+          <div class="relative mt-8">
+            <span class="inline-flex items-center gap-2 bg-secondary text-ink hover:bg-secondary-600 font-semibold rounded-md h-11 px-5 text-[14px] transition-colors">
+              {c.cta}
+              <Icon name="lucide:arrow-right" class="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

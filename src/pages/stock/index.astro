@@ -1,0 +1,904 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import UtilityBar from "@/components/UtilityBar.astro";
+import Header from "@/components/Header.astro";
+import CategoryStrip from "@/components/CategoryStrip.astro";
+import Footer from "@/components/Footer.astro";
+import ThemePicker from "@/components/ThemePicker.astro";
+import { Icon } from "astro-icon/components";
+import { asset, link } from "@/lib/asset";
+import { VEHICLES, type Vehicle } from "@/lib/vehicles";
+
+/* ────────────────────────────────────────────────────────────
+   Static counts derived from the dataset so the sidebar shows
+   real numbers without an extra fetch.
+   ──────────────────────────────────────────────────────────── */
+const FLAG_ISO: Record<string, string> = {
+  UAE: "ae",
+  "Saudi Arabia": "sa",
+  Oman: "om",
+  Qatar: "qa",
+  Bahrain: "bh",
+  Kuwait: "kw",
+};
+
+const fmt = (n: number) => new Intl.NumberFormat("en-AE").format(n);
+
+function count<T>(list: T[], pred: (x: T) => boolean) {
+  return list.reduce((n, x) => n + (pred(x) ? 1 : 0), 0);
+}
+
+const CATEGORIES = [
+  { value: "trucks", label: "Trucks", match: "Trucks" },
+  { value: "buses", label: "Buses", match: "Buses" },
+  { value: "construction", label: "Construction equipment", match: "Construction" },
+  { value: "material-handling", label: "Material handling", match: "Material handling" },
+  { value: "power", label: "Power & industrial", match: "Power" },
+  { value: "trailers", label: "Trailers", match: "Trailers" },
+];
+
+const COUNTRIES = [
+  { value: "uae", label: "United Arab Emirates", match: "UAE", flag: "ae" },
+  { value: "saudi", label: "Saudi Arabia", match: "Saudi Arabia", flag: "sa" },
+];
+
+const BRANDS = [
+  { value: "volvo", label: "Volvo" },
+  { value: "scania", label: "Scania" },
+  { value: "man", label: "MAN" },
+  { value: "linde", label: "Linde" },
+];
+
+const YEAR_GROUPS = [
+  { value: "2024", label: "2024+", min: 2024, max: 9999 },
+  { value: "2020-2023", label: "2020 – 2023", min: 2020, max: 2023 },
+  { value: "2015-2019", label: "2015 – 2019", min: 2015, max: 2019 },
+  { value: "before-2015", label: "Before 2015", min: 0, max: 2014 },
+];
+
+const FUELS = [
+  { value: "diesel", label: "Diesel", match: "Diesel" },
+  { value: "electric", label: "Electric", match: "Electric" },
+  { value: "lpg", label: "LPG", match: "LPG" },
+];
+
+const DRIVES = [
+  { value: "4x2", label: "4×2", match: "4×2" },
+  { value: "6x2", label: "6×2", match: "6×2" },
+  { value: "6x4", label: "6×4", match: "6×4" },
+  { value: "8x4", label: "8×4", match: "8×4" },
+];
+
+const CONDITIONS = [
+  { value: "inspected", label: "Inspected" },
+  { value: "new-arrival", label: "New arrival" },
+  { value: "sale", label: "On sale" },
+];
+
+const SORTS = [
+  { key: "newest", label: "Newest first" },
+  { key: "price-asc", label: "Price: low to high" },
+  { key: "price-desc", label: "Price: high to low" },
+  { key: "year-desc", label: "Year: newest" },
+  { key: "year-asc", label: "Year: oldest" },
+  { key: "mileage-asc", label: "Mileage: low to high" },
+];
+
+/* Per-row counts for sidebar groups */
+const categoryCounts = Object.fromEntries(
+  CATEGORIES.map((c) => [c.value, count(VEHICLES, (v) => v.category === c.match)]),
+);
+const countryCounts = Object.fromEntries(
+  COUNTRIES.map((c) => [c.value, count(VEHICLES, (v) => v.country === c.match)]),
+);
+const brandCounts = Object.fromEntries(
+  BRANDS.map((b) => [
+    b.value,
+    count(VEHICLES, (v) => v.brand.toLowerCase().includes(b.value)),
+  ]),
+);
+const yearCounts = Object.fromEntries(
+  YEAR_GROUPS.map((y) => [
+    y.value,
+    count(VEHICLES, (v) => v.year >= y.min && v.year <= y.max),
+  ]),
+);
+const fuelCounts = Object.fromEntries(
+  FUELS.map((f) => [f.value, count(VEHICLES, (v) => v.fuel === f.match)]),
+);
+const driveCounts = Object.fromEntries(
+  DRIVES.map((d) => [d.value, count(VEHICLES, (v) => v.drive === d.match)]),
+);
+const conditionCounts = {
+  inspected: count(VEHICLES, (v) => Boolean(v.badges?.includes("INSPECTED"))),
+  "new-arrival": count(VEHICLES, (v) => Boolean(v.badges?.includes("NEW ARRIVAL"))),
+  sale: count(
+    VEHICLES,
+    (v) =>
+      (v.oldPrice !== undefined && v.oldPrice > v.price) ||
+      Boolean(v.badges?.includes("SALE")),
+  ),
+};
+
+const total = VEHICLES.length;
+
+/* ────────────────────────────────────────────────────────────
+   Build per-card flat data so client JS doesn't recompute.
+   `cards` mirrors VEHICLES but with normalized filterable
+   strings on each item.
+   ──────────────────────────────────────────────────────────── */
+type Card = Vehicle & {
+  _drive: string; // normalized for filter ("4×2" → "4x2")
+  _badges: string; // CSV
+  _onSale: boolean;
+  _mileageOrHours: number;
+};
+
+const cards: Card[] = VEHICLES.map((v) => ({
+  ...v,
+  _drive: (v.drive ?? "").toLowerCase().replace("×", "x"),
+  _badges: (v.badges ?? []).join(","),
+  _onSale:
+    (v.oldPrice !== undefined && v.oldPrice > v.price) ||
+    Boolean(v.badges?.includes("SALE")),
+  _mileageOrHours: v.km ?? v.hours ?? Number.MAX_SAFE_INTEGER,
+}));
+
+const BADGE_STYLES: Record<string, string> = {
+  INSPECTED: "bg-primary text-white",
+  "NEW ARRIVAL": "bg-secondary text-ink",
+  SALE: "bg-secondary text-ink",
+  "0% FINANCE": "bg-charcoal text-white",
+};
+---
+
+<Layout title="Used trucks, vans & machinery — FAMCO">
+  <UtilityBar />
+  <Header />
+  <CategoryStrip />
+
+  <main class="bg-bgalt min-h-screen">
+    <section class="container py-6 lg:py-8">
+      <div class="grid lg:grid-cols-[280px_1fr] gap-6 lg:gap-8 items-start">
+        {/* ─── LEFT — sidebar filters ─────────────────────────── */}
+        <aside class="lg:sticky lg:top-32">
+          <div class="bg-white rounded-xl border border-line shadow-card overflow-hidden">
+            <div class="flex items-center justify-between gap-2 px-5 py-4 border-b border-line">
+              <div class="flex items-center gap-2">
+                <Icon name="lucide:sliders-horizontal" class="h-4 w-4 text-secondary" />
+                <h3 class="font-display text-[15px] font-bold text-ink">Filters</h3>
+                <span
+                  data-filter-count
+                  class="hidden inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-secondary text-ink text-[10.5px] font-bold"
+                >0</span>
+              </div>
+              <button
+                data-clear-all
+                class="hidden text-[12px] text-muted hover:text-secondary transition-colors"
+              >Clear all</button>
+            </div>
+
+            {/* Active chips */}
+            <div data-active-chips class="hidden px-5 pt-4 pb-1 flex-wrap gap-1.5 flex"></div>
+
+            {/* Price range */}
+            <div class="px-5 py-4 border-t border-line">
+              <h4 class="text-[12px] uppercase tracking-widest font-bold text-ink mb-3">
+                Price (AED)
+              </h4>
+              <div class="flex items-center gap-2 mb-3">
+                <input
+                  type="number"
+                  data-price-min
+                  value="0"
+                  placeholder="Min"
+                  class="w-full h-9 px-2.5 rounded-md border border-line text-[12.5px] text-ink outline-none focus:border-secondary"
+                />
+                <span class="text-muted text-[12px]">–</span>
+                <input
+                  type="number"
+                  data-price-max
+                  value="500000"
+                  placeholder="Max"
+                  class="w-full h-9 px-2.5 rounded-md border border-line text-[12.5px] text-ink outline-none focus:border-secondary"
+                />
+              </div>
+              <input
+                type="range"
+                data-price-range
+                min="0"
+                max="500000"
+                step="5000"
+                value="500000"
+                class="w-full accent-secondary"
+              />
+              <div class="flex justify-between text-[11px] text-muted mt-1.5">
+                <span>AED 0</span>
+                <span>AED 500k+</span>
+              </div>
+            </div>
+
+            {/* Filter groups */}
+            {[
+              { id: "category", label: "Category", opts: CATEGORIES, counts: categoryCounts },
+              { id: "country", label: "Country", opts: COUNTRIES, counts: countryCounts },
+              { id: "brand", label: "Brand", opts: BRANDS, counts: brandCounts },
+              { id: "year", label: "Year", opts: YEAR_GROUPS, counts: yearCounts },
+              { id: "fuel", label: "Fuel type", opts: FUELS, counts: fuelCounts },
+              { id: "drive", label: "Drive configuration", opts: DRIVES, counts: driveCounts },
+              { id: "condition", label: "Condition", opts: CONDITIONS, counts: conditionCounts },
+            ].map((g) => (
+              <div class="border-t border-line" data-group={g.id}>
+                <button
+                  data-group-toggle
+                  class="w-full flex items-center justify-between gap-3 px-5 py-3.5 text-left"
+                >
+                  <span class="text-[12px] uppercase tracking-widest font-bold text-ink">
+                    {g.label}
+                    <span data-group-count class="hidden ml-2 text-secondary"></span>
+                  </span>
+                  <Icon name="lucide:chevron-down" class="h-4 w-4 text-muted transition-transform" data-chevron />
+                </button>
+                <ul class="hidden px-5 pb-4 space-y-1" data-group-list>
+                  {g.opts.map((o: any) => (
+                    <li>
+                      <label class="flex items-center gap-2.5 py-1.5 px-2 -mx-2 rounded cursor-pointer hover:bg-bgalt text-ink">
+                        <span
+                          data-checkbox
+                          class="h-4 w-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors bg-white border-line"
+                        ></span>
+                        <input
+                          type="checkbox"
+                          data-filter
+                          data-group-id={g.id}
+                          data-value={o.value}
+                          data-label={o.label}
+                          class="sr-only"
+                        />
+                        {o.flag && (
+                          <span
+                            aria-hidden="true"
+                            class={`fi fi-${o.flag} rounded-sm shadow-[0_0_0_0.5px_rgba(0,0,0,0.08)] shrink-0`}
+                            style="width:1.25em;height:0.95em"
+                          ></span>
+                        )}
+                        <span class="flex-1 text-[13px] font-medium">{o.label}</span>
+                        <span class="text-[11.5px] text-muted">
+                          {((g.counts as any)[o.value]) ?? 0}
+                        </span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <button
+            class="w-full mt-4 h-11 rounded-md bg-charcoal hover:bg-charcoal-800 text-white text-[13px] font-semibold inline-flex items-center justify-center gap-2 transition-colors"
+          >
+            <Icon name="lucide:bell" class="h-4 w-4" />
+            Save search & get email alerts
+          </button>
+        </aside>
+
+        {/* ─── RIGHT — title + sort + grid ──────────────────────── */}
+        <div class="space-y-5">
+          <div>
+            <h1 data-page-title class="font-display text-2xl lg:text-3xl font-bold text-ink leading-tight">
+              Used trucks, vans &amp; machinery
+            </h1>
+            <p class="mt-1.5 text-[13.5px] text-muted">
+              <span data-result-count class="font-semibold text-ink tabular-nums">{total}</span>
+              results · <span data-page-desc>Inspected by Volvo-certified technicians at TMH and ready for delivery across the GCC.</span>
+            </p>
+          </div>
+
+          {/* Sort bar */}
+          <div class="bg-white rounded-lg border border-line shadow-card px-4 py-3 flex items-center justify-between gap-3">
+            <div class="text-[12.5px] text-muted">
+              Showing
+              <span data-result-count-2 class="font-semibold text-ink tabular-nums">{total}</span>
+              vehicles
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <div class="relative" data-sort-wrap>
+                <button
+                  data-sort-toggle
+                  class="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-bgalt border border-line text-[12.5px] font-medium text-ink hover:border-secondary transition-colors"
+                >
+                  <span class="text-muted text-[11.5px] hidden sm:inline">Sort:</span>
+                  <span data-sort-current>Newest first</span>
+                  <Icon name="lucide:chevron-down" class="h-3.5 w-3.5 text-muted transition-transform" data-sort-chevron />
+                </button>
+                <ul
+                  data-sort-menu
+                  class="hidden absolute right-0 top-full mt-2 z-20 min-w-[220px] bg-white rounded-md border border-line shadow-lift py-1"
+                >
+                  {SORTS.map((s) => (
+                    <li>
+                      <button
+                        data-sort-option
+                        data-sort-key={s.key}
+                        class="w-full text-left px-3.5 py-2 text-[12.5px] hover:bg-bgalt text-ink"
+                      >{s.label}</button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Empty state */}
+          <div
+            data-empty
+            class="hidden bg-white rounded-xl border border-line shadow-card p-10 text-center"
+          >
+            <div class="text-[40px] mb-3">📭</div>
+            <h3 class="font-display text-xl font-bold text-ink mb-1.5">
+              No vehicles match this filter
+            </h3>
+            <p class="text-[13.5px] text-muted max-w-sm mx-auto">
+              Try a broader category, or save a search and we'll notify you the moment matching stock arrives.
+            </p>
+            <button
+              data-clear-all-empty
+              class="mt-5 inline-flex items-center justify-center h-11 px-5 rounded-md bg-secondary hover:bg-secondary-600 text-ink font-semibold text-[13px] transition-colors"
+            >Browse all stock</button>
+          </div>
+
+          {/* Grid */}
+          <div data-grid class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            {cards.map((v) => (
+              <article
+                data-card
+                data-id={v.id}
+                data-category={v.category}
+                data-country={v.country}
+                data-brand={v.brand.toLowerCase()}
+                data-year={v.year}
+                data-fuel={(v.fuel ?? "").toLowerCase()}
+                data-drive={v._drive}
+                data-price={v.price}
+                data-mileage={v._mileageOrHours}
+                data-badges={v._badges}
+                data-on-sale={v._onSale ? "1" : "0"}
+                data-haystack={[
+                  v.title, v.description, v.brand, v.category, v.country,
+                  v.dealer ?? "", v.transmission ?? "", v.fuel ?? "",
+                  v.euro ?? "", v.drive ?? "", String(v.year),
+                ].join(" ").toLowerCase()}
+                class="group relative bg-white rounded-xl overflow-hidden border border-line shadow-card hover:shadow-lift hover:-translate-y-0.5 hover:border-secondary transition-all duration-300"
+              >
+                <a
+                  href={link(v.href ?? "/stock")}
+                  class="block relative aspect-[4/3] overflow-hidden bg-bgalt rounded-t-xl"
+                  data-card-media
+                >
+                  <img
+                    src={asset(v.image)}
+                    alt={v.title}
+                    data-card-image
+                    class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 transition-opacity"
+                  />
+                  {(v.video || v.hasVideo) && (
+                    <video
+                      data-card-video
+                      data-src={asset(v.video ?? "/videos/volvo-fh-walkaround.mp4")}
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      aria-hidden="true"
+                      class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 pointer-events-none"
+                    />
+                  )}
+                  <span class="absolute top-3 left-3 inline-flex items-center gap-1 bg-white/95 backdrop-blur text-ink text-[10px] font-bold tracking-wider px-2 py-1 rounded shadow-card">
+                    <span class="h-3.5 w-3.5 rounded-full bg-secondary text-ink flex items-center justify-center text-[9px] leading-none">✓</span>
+                    FAMCO APPROVED
+                  </span>
+                  {v.badges && v.badges.filter((b) => b !== "NEW ARRIVAL" && b !== "0% FINANCE" && b !== "SALE").length > 0 && (
+                    <div class="absolute top-3 right-14 flex flex-col gap-1 items-end">
+                      {v.badges.filter((b) => b !== "NEW ARRIVAL" && b !== "0% FINANCE" && b !== "SALE").map((b) => (
+                        <span class={`text-[10px] font-bold tracking-wider px-2 py-1 rounded ${BADGE_STYLES[b] ?? "bg-charcoal text-white"}`}>{b}</span>
+                      ))}
+                    </div>
+                  )}
+                </a>
+
+                <button
+                  aria-label="Save"
+                  data-save
+                  class="absolute top-3 right-3 h-9 w-9 rounded-md bg-charcoal/80 hover:bg-charcoal text-white flex items-center justify-center backdrop-blur transition-colors"
+                >
+                  <Icon name="lucide:heart" class="h-4 w-4" />
+                </button>
+
+                <div class="p-5">
+                  <a href={link(v.href ?? "/stock")} class="block">
+                    <h3 class="font-display text-[16px] sm:text-[17px] font-bold text-ink leading-tight line-clamp-1">
+                      {v.title}
+                    </h3>
+                  </a>
+                  {v.description && (
+                    <p class="mt-1 text-[13px] text-muted line-clamp-1">{v.description}</p>
+                  )}
+
+                  <div class="mt-3 text-[12.5px] text-ink/85 leading-relaxed">
+                    {[
+                      v.brand,
+                      v.country,
+                      String(v.year),
+                      v.hours ? `${fmt(v.hours)} hrs` : v.km !== undefined ? `${fmt(v.km)} km` : "",
+                      v.transmission ?? "",
+                    ].filter(Boolean).map((s, i) => (
+                      <span>
+                        {i > 0 && <span class="text-line mx-2">|</span>}
+                        <span>{s}</span>
+                      </span>
+                    ))}
+                  </div>
+
+                  <div class="mt-3 flex items-center justify-between text-[12.5px] gap-3">
+                    <span class="inline-flex items-center gap-1.5 text-ink font-semibold">
+                      <Icon name="lucide:triangle" class="h-3 w-3 text-secondary fill-secondary" style="transform:rotate(90deg)" />
+                      {v.dealer ?? "FAMCO"}
+                    </span>
+                    {v.country && (
+                      <span class="inline-flex items-center gap-1.5 text-ink/85">
+                        {FLAG_ISO[v.country] && (
+                          <span
+                            aria-hidden="true"
+                            class={`fi fi-${FLAG_ISO[v.country]} rounded-sm shadow-[0_0_0_0.5px_rgba(0,0,0,0.08)]`}
+                            style="width:1.2em;height:0.9em"
+                          ></span>
+                        )}
+                        {v.country}
+                      </span>
+                    )}
+                  </div>
+
+                  <div class="mt-4 pt-3 border-t border-line text-center">
+                    <div class="text-[13px] text-muted">Buy</div>
+                    {v.oldPrice && v.oldPrice > v.price && (
+                      <div class="text-[12.5px] text-muted line-through tabular-nums">
+                        AED {fmt(v.oldPrice)}
+                      </div>
+                    )}
+                    <div class="font-display text-[20px] font-bold text-ink leading-none tabular-nums mt-0.5">
+                      AED {fmt(v.price)}
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+  <ThemePicker />
+</Layout>
+
+{/* ─── Client-side filtering, sorting, URL hydration ───────── */}
+<script>
+  const CATEGORY_SLUG_TO_LABEL: Record<string, string> = {
+    trucks: "Trucks",
+    buses: "Buses",
+    construction: "Construction",
+    "material-handling": "Material handling",
+    power: "Power",
+    trailers: "Trailers",
+  };
+  const CATEGORY_PAGE_TITLE: Record<string, { title: string; desc: string }> = {
+    trucks: {
+      title: "Used trucks",
+      desc: "Volvo FH, Scania R, MAN TGX and more — tractors, tippers and rigid box trucks in stock now.",
+    },
+    buses: {
+      title: "Used buses",
+      desc: "Volvo coaches, Eicher staff transport and city buses — passenger-ready after our 150-point inspection.",
+    },
+    construction: {
+      title: "Used construction equipment",
+      desc: "Volvo CE, Doosan and SDLG machinery serviced by Volvo-certified technicians at TMH.",
+    },
+    "material-handling": {
+      title: "Used forklifts & material handling",
+      desc: "Linde diesel, electric and LPG forklifts — full inspection report on every unit.",
+    },
+    power: {
+      title: "Used power & industrial",
+      desc: "Himoinsa, AGG and Ingersoll Rand gensets, lighting towers and air compressors.",
+    },
+    trailers: {
+      title: "Used trailers",
+      desc: "Drawbar trailers, container chassis and box trailers — inspected and documented.",
+    },
+  };
+  const COUNTRY_PARAM_TO_LABEL: Record<string, string> = {
+    UAE: "UAE",
+    SA: "Saudi Arabia",
+  };
+  const YEAR_RANGES: Record<string, [number, number]> = {
+    "2024": [2024, 9999],
+    "2020-2023": [2020, 2023],
+    "2015-2019": [2015, 2019],
+    "before-2015": [0, 2014],
+  };
+
+  type SortKey =
+    | "newest"
+    | "price-asc"
+    | "price-desc"
+    | "year-desc"
+    | "year-asc"
+    | "mileage-asc";
+
+  const params = new URLSearchParams(window.location.search);
+  const urlCategory = params.get("category") ?? "";
+  const urlQuery = (params.get("q") ?? "").trim();
+  const urlCountry = params.get("country") ?? "";
+
+  const grid = document.querySelector<HTMLDivElement>("[data-grid]");
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-card]"));
+  const empty = document.querySelector<HTMLDivElement>("[data-empty]");
+  const resultCountEls = document.querySelectorAll<HTMLElement>("[data-result-count], [data-result-count-2]");
+  const filterCountEl = document.querySelector<HTMLElement>("[data-filter-count]");
+  const clearAllBtn = document.querySelector<HTMLButtonElement>("[data-clear-all]");
+  const clearAllEmptyBtn = document.querySelector<HTMLButtonElement>("[data-clear-all-empty]");
+  const activeChipsEl = document.querySelector<HTMLDivElement>("[data-active-chips]");
+  const titleEl = document.querySelector<HTMLElement>("[data-page-title]");
+  const descEl = document.querySelector<HTMLElement>("[data-page-desc]");
+
+  const priceMinInput = document.querySelector<HTMLInputElement>("[data-price-min]")!;
+  const priceMaxInput = document.querySelector<HTMLInputElement>("[data-price-max]")!;
+  const priceRangeInput = document.querySelector<HTMLInputElement>("[data-price-range]")!;
+
+  const filterInputs = Array.from(
+    document.querySelectorAll<HTMLInputElement>("input[data-filter]"),
+  );
+
+  /* Adjust card title + description for category-driven URLs. */
+  if (urlQuery) {
+    titleEl!.textContent = `Search results for "${urlQuery}"`;
+  } else if (CATEGORY_PAGE_TITLE[urlCategory]) {
+    titleEl!.textContent = CATEGORY_PAGE_TITLE[urlCategory].title;
+    descEl!.textContent = CATEGORY_PAGE_TITLE[urlCategory].desc;
+  }
+
+  /* Pre-check sidebar based on URL params so the UI reflects state. */
+  if (urlCategory && CATEGORY_SLUG_TO_LABEL[urlCategory]) {
+    const cb = filterInputs.find(
+      (i) => i.dataset.groupId === "category" && i.dataset.value === urlCategory,
+    );
+    if (cb) cb.checked = true;
+  }
+  if (urlCountry && COUNTRY_PARAM_TO_LABEL[urlCountry]) {
+    const slug = urlCountry === "UAE" ? "uae" : urlCountry === "SA" ? "saudi" : "";
+    const cb = filterInputs.find(
+      (i) => i.dataset.groupId === "country" && i.dataset.value === slug,
+    );
+    if (cb) cb.checked = true;
+  }
+
+  /* Sort dropdown */
+  let sortKey: SortKey = "newest";
+  const sortToggle = document.querySelector<HTMLButtonElement>("[data-sort-toggle]")!;
+  const sortMenu = document.querySelector<HTMLUListElement>("[data-sort-menu]")!;
+  const sortCurrent = document.querySelector<HTMLElement>("[data-sort-current]")!;
+  const sortChevron = document.querySelector<HTMLElement>("[data-sort-chevron]")!;
+  sortToggle.addEventListener("click", () => {
+    sortMenu.classList.toggle("hidden");
+    sortChevron.classList.toggle("rotate-180");
+  });
+  document.addEventListener("mousedown", (e) => {
+    const wrap = document.querySelector<HTMLElement>("[data-sort-wrap]");
+    if (wrap && !wrap.contains(e.target as Node)) {
+      sortMenu.classList.add("hidden");
+      sortChevron.classList.remove("rotate-180");
+    }
+  });
+  document.querySelectorAll<HTMLButtonElement>("[data-sort-option]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      sortKey = (btn.dataset.sortKey as SortKey) ?? "newest";
+      sortCurrent.textContent = btn.textContent ?? "";
+      sortMenu.classList.add("hidden");
+      sortChevron.classList.remove("rotate-180");
+      apply();
+    });
+  });
+
+  /* Sidebar group accordion + checkbox styling */
+  document.querySelectorAll<HTMLDivElement>("[data-group]").forEach((group) => {
+    const toggle = group.querySelector<HTMLButtonElement>("[data-group-toggle]")!;
+    const list = group.querySelector<HTMLUListElement>("[data-group-list]")!;
+    const chevron = toggle.querySelector<HTMLElement>("[data-chevron]")!;
+    toggle.addEventListener("click", () => {
+      list.classList.toggle("hidden");
+      chevron.classList.toggle("rotate-180");
+    });
+    /* Open by default if any of its inputs are pre-checked from URL. */
+    const anyChecked = Array.from(group.querySelectorAll<HTMLInputElement>("input[data-filter]")).some(
+      (i) => i.checked,
+    );
+    if (anyChecked) {
+      list.classList.remove("hidden");
+      chevron.classList.add("rotate-180");
+    }
+  });
+
+  function paintCheckbox(input: HTMLInputElement) {
+    const box = input.previousElementSibling as HTMLElement | null;
+    if (!box) return;
+    if (input.checked) {
+      box.className =
+        "h-4 w-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors bg-secondary border-secondary";
+      box.innerHTML =
+        '<svg viewBox="0 0 12 12" class="h-2.5 w-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3"><path d="M2 6 L5 9 L10 3" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+    } else {
+      box.className =
+        "h-4 w-4 rounded border-2 flex items-center justify-center shrink-0 transition-colors bg-white border-line";
+      box.innerHTML = "";
+    }
+  }
+
+  filterInputs.forEach((input) => {
+    paintCheckbox(input);
+    input.addEventListener("change", () => {
+      paintCheckbox(input);
+      apply();
+    });
+  });
+
+  /* Price wiring: range slider drives max input; both apply on change */
+  priceRangeInput.addEventListener("input", () => {
+    priceMaxInput.value = priceRangeInput.value;
+    apply();
+  });
+  priceMinInput.addEventListener("change", apply);
+  priceMaxInput.addEventListener("change", () => {
+    priceRangeInput.value = priceMaxInput.value;
+    apply();
+  });
+
+  /* Clear all */
+  function clearAll() {
+    filterInputs.forEach((i) => {
+      i.checked = false;
+      paintCheckbox(i);
+    });
+    priceMinInput.value = "0";
+    priceMaxInput.value = "500000";
+    priceRangeInput.value = "500000";
+    apply();
+  }
+  clearAllBtn?.addEventListener("click", clearAll);
+  clearAllEmptyBtn?.addEventListener("click", clearAll);
+
+  /* Active chips */
+  function renderChips(active: { groupId: string; value: string; label: string }[]) {
+    if (!activeChipsEl) return;
+    if (active.length === 0) {
+      activeChipsEl.classList.add("hidden");
+      activeChipsEl.innerHTML = "";
+      return;
+    }
+    activeChipsEl.classList.remove("hidden");
+    activeChipsEl.innerHTML = active
+      .map(
+        (a) =>
+          `<button data-chip data-group-id="${a.groupId}" data-value="${a.value}" class="inline-flex items-center gap-1 bg-secondary/10 text-secondary text-[11.5px] font-semibold px-2 py-1 rounded hover:bg-secondary/20">${a.label}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="h-3 w-3"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`,
+      )
+      .join("");
+    activeChipsEl.querySelectorAll<HTMLButtonElement>("[data-chip]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cb = filterInputs.find(
+          (i) => i.dataset.groupId === btn.dataset.groupId && i.dataset.value === btn.dataset.value,
+        );
+        if (cb) {
+          cb.checked = false;
+          paintCheckbox(cb);
+          apply();
+        }
+      });
+    });
+  }
+
+  /* Per-group selected count next to label */
+  function updateGroupCounts() {
+    document.querySelectorAll<HTMLDivElement>("[data-group]").forEach((group) => {
+      const id = group.dataset.group!;
+      const checked = group.querySelectorAll<HTMLInputElement>("input[data-filter]:checked").length;
+      const el = group.querySelector<HTMLElement>("[data-group-count]");
+      if (!el) return;
+      if (checked > 0) {
+        el.textContent = `(${checked})`;
+        el.classList.remove("hidden");
+      } else {
+        el.classList.add("hidden");
+      }
+    });
+  }
+
+  /* Sort — id "1" is the detail-page product and is always pinned first
+     (when it's visible under the current filter) so users can click
+     straight through to the only fully-built PDP. */
+  const PINNED_ID = "1";
+  function sortCards(list: HTMLElement[]): HTMLElement[] {
+    const out = [...list];
+    switch (sortKey) {
+      case "price-asc":
+        out.sort((a, b) => Number(a.dataset.price) - Number(b.dataset.price));
+        break;
+      case "price-desc":
+        out.sort((a, b) => Number(b.dataset.price) - Number(a.dataset.price));
+        break;
+      case "year-desc":
+        out.sort((a, b) => Number(b.dataset.year) - Number(a.dataset.year));
+        break;
+      case "year-asc":
+        out.sort((a, b) => Number(a.dataset.year) - Number(b.dataset.year));
+        break;
+      case "mileage-asc":
+        out.sort((a, b) => Number(a.dataset.mileage) - Number(b.dataset.mileage));
+        break;
+      case "newest":
+      default:
+        out.sort((a, b) => Number(b.dataset.id) - Number(a.dataset.id));
+        break;
+    }
+    const pinnedIdx = out.findIndex((c) => c.dataset.id === PINNED_ID);
+    if (pinnedIdx > 0) {
+      const [pinned] = out.splice(pinnedIdx, 1);
+      out.unshift(pinned);
+    }
+    return out;
+  }
+
+  /* Main filter pipeline */
+  function apply() {
+    const selected: Record<string, string[]> = {};
+    const activeForChips: { groupId: string; value: string; label: string }[] = [];
+    filterInputs.forEach((i) => {
+      if (!i.checked) return;
+      const g = i.dataset.groupId!;
+      (selected[g] ??= []).push(i.dataset.value!);
+      activeForChips.push({ groupId: g, value: i.dataset.value!, label: i.dataset.label! });
+    });
+
+    const priceMin = Number(priceMinInput.value) || 0;
+    const priceMax = Number(priceMaxInput.value) || 500000;
+
+    let visible = 0;
+    cards.forEach((card) => {
+      let show = true;
+
+      // Free-text query (URL ?q=)
+      if (urlQuery) {
+        const tokens = urlQuery.toLowerCase().split(/\s+/).filter(Boolean);
+        const hay = card.dataset.haystack ?? "";
+        if (!tokens.every((t) => hay.includes(t))) show = false;
+      }
+
+      // URL country fallback when sidebar country isn't set
+      if (show && !selected.country?.length && urlCountry) {
+        const want = COUNTRY_PARAM_TO_LABEL[urlCountry];
+        if (want && card.dataset.country !== want) show = false;
+      }
+
+      // Sidebar checkboxes
+      if (show && selected.category?.length) {
+        const labels = selected.category.map((s) => CATEGORY_SLUG_TO_LABEL[s] ?? s);
+        if (!labels.includes(card.dataset.category ?? "")) show = false;
+      }
+      if (show && selected.country?.length) {
+        const want = selected.country.map((s) => (s === "uae" ? "UAE" : s === "saudi" ? "Saudi Arabia" : s));
+        if (!want.includes(card.dataset.country ?? "")) show = false;
+      }
+      if (show && selected.brand?.length) {
+        const brand = card.dataset.brand ?? "";
+        if (!selected.brand.some((b) => brand.includes(b))) show = false;
+      }
+      if (show && selected.year?.length) {
+        const y = Number(card.dataset.year);
+        const ok = selected.year.some((slug) => {
+          const r = YEAR_RANGES[slug];
+          return r && y >= r[0] && y <= r[1];
+        });
+        if (!ok) show = false;
+      }
+      if (show && selected.fuel?.length) {
+        if (!selected.fuel.includes(card.dataset.fuel ?? "")) show = false;
+      }
+      if (show && selected.drive?.length) {
+        if (!selected.drive.includes(card.dataset.drive ?? "")) show = false;
+      }
+      if (show && selected.condition?.length) {
+        const badges = (card.dataset.badges ?? "").split(",");
+        const onSale = card.dataset.onSale === "1";
+        const ok = selected.condition.some((c) => {
+          if (c === "inspected") return badges.includes("INSPECTED");
+          if (c === "new-arrival") return badges.includes("NEW ARRIVAL");
+          if (c === "sale") return onSale;
+          return false;
+        });
+        if (!ok) show = false;
+      }
+
+      // Price range — only narrow when user has moved off defaults
+      if (show && (priceMin > 0 || priceMax < 500000)) {
+        const p = Number(card.dataset.price);
+        if (p < priceMin || p > priceMax) show = false;
+      }
+
+      card.style.display = show ? "" : "none";
+      if (show) visible++;
+    });
+
+    // Re-order DOM by current sort, only among visible cards
+    const visibleCards = cards.filter((c) => c.style.display !== "none");
+    const ordered = sortCards(visibleCards);
+    if (grid) {
+      ordered.forEach((c) => grid.appendChild(c));
+    }
+
+    // Result counts
+    resultCountEls.forEach((el) => {
+      el.textContent = String(visible);
+    });
+
+    // Empty state
+    if (empty) empty.classList.toggle("hidden", visible !== 0);
+    if (grid) grid.classList.toggle("hidden", visible === 0);
+
+    // Filter chip + count UI
+    renderChips(activeForChips);
+    const totalSelected = activeForChips.length;
+    if (filterCountEl) {
+      if (totalSelected > 0) {
+        filterCountEl.textContent = String(totalSelected);
+        filterCountEl.classList.remove("hidden");
+      } else {
+        filterCountEl.classList.add("hidden");
+      }
+    }
+    if (clearAllBtn) clearAllBtn.classList.toggle("hidden", totalSelected === 0);
+    updateGroupCounts();
+  }
+
+  apply();
+
+  // ─── Hover-video preview on each card (mirrors PDP video tab) ───
+  // Lazy-mounts the video src on first hover so the listing stays light.
+  document.querySelectorAll<HTMLAnchorElement>("[data-card-media]").forEach((media) => {
+    const video = media.querySelector<HTMLVideoElement>("[data-card-video]");
+    const img = media.querySelector<HTMLImageElement>("[data-card-image]");
+    if (!video || !img) return;
+    let loaded = false;
+
+    const enter = () => {
+      if (!loaded) {
+        const src = video.getAttribute("data-src");
+        if (src) video.src = src;
+        loaded = true;
+      }
+      try { video.currentTime = 0; } catch {}
+      video.play().catch(() => { /* autoplay may be blocked */ });
+      video.style.opacity = "1";
+      img.style.opacity = "0";
+    };
+    const leave = () => {
+      video.pause();
+      video.style.opacity = "0";
+      img.style.opacity = "1";
+    };
+
+    media.addEventListener("mouseenter", enter);
+    media.addEventListener("mouseleave", leave);
+    media.addEventListener("focusin", enter);
+    media.addEventListener("focusout", leave);
+  });
+</script>

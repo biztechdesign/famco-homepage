@@ -1,0 +1,43 @@
+---
+import { asset, link } from "@/lib/asset";
+
+const CATEGORIES = [
+  { label: "Trucks", count: 531, href: "/stock?category=trucks", src: "/icons/category/_truck.svg" },
+  { label: "Vans", count: 853, href: "/stock?category=vans", src: "/icons/category/_light-commercial-vehicle.svg" },
+  { label: "Tractor", count: 418, href: "/stock?category=tractor", src: "/icons/category/_tractorhead.svg" },
+  { label: "Semi", count: 263, href: "/stock?category=semi", src: "/icons/category/_semi-trailer.svg" },
+  { label: "Construction", count: 262, href: "/stock?category=construction", src: "/icons/category/_construction-equipment.svg" },
+  { label: "Trailers", count: 29, href: "/stock?category=trailers", src: "/icons/category/_trailer.svg" },
+  { label: "Combo", count: 25, href: "/stock?category=combo", src: "/icons/category/_combination.svg" },
+  { label: "Various", count: 10, href: "/stock?category=various", src: "/icons/category/_various.svg" },
+];
+---
+
+<div class="border-t border-line bg-white">
+  <div class="container">
+    <ul class="flex items-stretch justify-between gap-2 sm:gap-3 overflow-x-auto scrollbar-hide py-1.5">
+      {CATEGORIES.map((c) => (
+        <li class="shrink-0">
+          <a
+            href={link(c.href)}
+            class="group relative flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-md border border-transparent transition-all duration-200 ease-out hover:bg-bgalt hover:border-line hover:-translate-y-0.5"
+          >
+            <span
+              aria-hidden
+              class="block h-9 w-14 bg-ink transition-all duration-200 ease-out group-hover:bg-primary group-hover:scale-110"
+              style={`-webkit-mask: url(${asset(c.src)}) center/contain no-repeat; mask: url(${asset(c.src)}) center/contain no-repeat;`}
+            />
+            <span class="text-[12px] font-semibold text-ink group-hover:text-primary whitespace-nowrap transition-colors leading-tight">
+              {c.label}{" "}
+              <span class="text-muted group-hover:text-primary/70 font-normal">({c.count})</span>
+            </span>
+            <span
+              aria-hidden
+              class="absolute left-3 right-3 -bottom-px h-[2px] rounded-full bg-secondary-500 opacity-0 scale-x-50 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:scale-x-100"
+            />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>

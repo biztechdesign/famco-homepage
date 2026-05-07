@@ -47,7 +47,7 @@ export default function SellShowcase() {
           <div>
             <h2 className="font-display text-3xl lg:text-4xl font-bold text-ink">
               Sell your current vehicle or{" "}
-              <span className="text-secondary-300">machine</span>
+              <span className="text-secondary-600">machine</span>
             </h2>
           </div>
 

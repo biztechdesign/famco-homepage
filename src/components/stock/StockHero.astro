@@ -1,0 +1,24 @@
+---
+interface Props {
+  title: string;
+  count: number;
+  description?: string;
+}
+const { title, count, description } = Astro.props;
+---
+
+<header class="bg-white rounded-xl border border-line shadow-card px-5 py-4 lg:px-6 lg:py-5">
+  <h1 class="font-display text-2xl lg:text-3xl font-bold text-ink leading-tight">
+    {title}
+  </h1>
+  <p class="mt-2 text-[13.5px] text-muted">
+    <span data-stock-count class="font-semibold text-ink tabular-nums">{count.toLocaleString("en-AE")}</span>
+    results
+    {description && (
+      <>
+        <span class="mx-2 text-line">·</span>
+        <span>{description}</span>
+      </>
+    )}
+  </p>
+</header>

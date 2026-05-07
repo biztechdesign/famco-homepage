@@ -81,7 +81,7 @@ export default function PopularCategories() {
         {/* Header */}
         <div className="text-center mb-10 lg:mb-14">
           <h2 className="font-display text-3xl lg:text-4xl font-bold text-ink">
-            Popular <span className="text-secondary-300">categories</span>
+            Popular <span className="text-secondary-600">categories</span>
           </h2>
         </div>
 

@@ -15,7 +15,7 @@ export default function SplitFlag() {
                 Best <span className="text-secondary-300">buy</span>.
               </>
             }
-            cta="View new stock"
+            cta="View stock"
             href={link("/stock")}
             tone="secondary"
             iconClass="fi-rr-gift"

@@ -231,11 +231,9 @@ function ThumbnailRail({
     if (!el) return;
     const measure = () => {
       const w = el.clientWidth;
-      // tile + gap pairs, then add one tile worth of width
-      const fits = Math.max(
-        images.length,
-        Math.floor((w + GAP) / (TILE_W + GAP)),
-      );
+      // Two-row rail: how many tiles fit in one row, doubled
+      const perRow = Math.max(1, Math.floor((w + GAP) / (TILE_W + GAP)));
+      const fits = Math.max(images.length, perRow * 2);
       setCount(fits);
     };
     measure();
@@ -246,7 +244,7 @@ function ThumbnailRail({
 
   return (
     <div className="px-3 sm:px-4 py-3 border-t border-line">
-      <div ref={railRef} className="flex gap-2 overflow-hidden">
+      <div ref={railRef} className="flex flex-wrap gap-2 overflow-hidden">
         {Array.from({ length: count }).map((_, i) => {
           const sourceIdx = i % images.length;
           const m = images[sourceIdx];

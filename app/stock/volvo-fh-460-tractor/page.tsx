@@ -202,7 +202,9 @@ export default function VolvoFH500Page() {
                   shape so they read as a paired action row. */}
               <div className="grid grid-cols-2 gap-3">
                 <a
-                  href="#inspection-report"
+                  href={link("/reports/famco-inspection-fa-2024-7821.html")}
+                  target="_blank"
+                  rel="noopener"
                   className="
                     group flex items-center gap-3
                     h-14 px-4 rounded-xl
@@ -238,7 +240,7 @@ export default function VolvoFH500Page() {
               <div>
                 <div className="eyebrow mb-1">More like this</div>
                 <h2 className="font-display text-2xl lg:text-3xl font-bold text-ink">
-                  Similar <span className="text-secondary-300">vehicles</span>
+                  Similar <span className="text-secondary-600">vehicles</span>
                 </h2>
               </div>
               <a

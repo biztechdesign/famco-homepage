@@ -1,0 +1,106 @@
+---
+import { Icon } from "astro-icon/components";
+import { asset, link } from "@/lib/asset";
+---
+
+<section class="bg-white">
+  <div class="container py-6 lg:py-8">
+    <div class="grid gap-4 lg:gap-5 lg:grid-cols-[1.6fr_1fr]">
+      {/* LEFT — big hero card */}
+      <a
+        href={link("/stock")}
+        class="group relative overflow-hidden rounded-2xl bg-charcoal text-white min-h-[360px] lg:min-h-[440px] flex"
+      >
+        <video
+          src={asset("/placeholders/famco-marketplace3.1-compressed.mp4")}
+          poster={asset("/placeholders/hero.svg")}
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          aria-hidden="true"
+          class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        ></video>
+        <div class="absolute inset-0 bg-gradient-to-r from-charcoal-900 via-charcoal-800/70 to-transparent"></div>
+
+        <div class="relative z-10 flex flex-col justify-between p-7 lg:p-10 w-full">
+          <div>
+            <h1 class="font-display font-bold uppercase tracking-tight leading-[0.95] text-3xl sm:text-5xl lg:text-6xl text-white">
+              Buy <span class="text-secondary-300">used trucks</span>
+              <br />
+              <span class="text-secondary-300">&amp; machinery</span>
+            </h1>
+          </div>
+
+          <div class="mt-8">
+            <span class="inline-flex items-center gap-2 btn btn-primary h-12 px-6 text-[15px] shadow-lift">
+              View stock
+              <Icon name="lucide:arrow-right" class="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </div>
+        </div>
+      </a>
+
+      {/* RIGHT — two stacked bento cards */}
+      <div class="grid gap-4 lg:gap-5">
+        <a
+          href={link("/stock/volvo-fh-460-tractor#finance")}
+          class="group relative overflow-hidden rounded-2xl bg-charcoal text-white p-7 lg:p-8 min-h-[170px] lg:min-h-[210px] flex flex-col justify-between transition-all duration-300 hover:shadow-lift hover:-translate-y-0.5"
+        >
+          <img
+            src={asset("/hero/finance-banner.jpg")}
+            alt=""
+            aria-hidden="true"
+            class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div class="absolute inset-0 bg-gradient-to-r from-charcoal-900 via-charcoal-800/70 to-transparent"></div>
+
+          <div class="relative">
+            <h2 class="font-display text-2xl lg:text-3xl font-bold uppercase tracking-tight leading-tight max-w-md">
+              Finance <span class="text-secondary-300">approved</span> &amp;<br />
+              ready to <span class="text-secondary-300">roll</span>.
+            </h2>
+          </div>
+
+          <div class="relative mt-5 flex items-center gap-3">
+            <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-secondary text-ink transition-all duration-200 group-hover:bg-white group-hover:text-primary group-hover:scale-110">
+              <Icon name="lucide:arrow-right" class="h-5 w-5" />
+            </span>
+            <span class="text-[15px] font-semibold text-white group-hover:text-secondary-300 transition-colors">
+              Apply for finance
+            </span>
+          </div>
+        </a>
+
+        <a
+          href={link("/stock?category=sell")}
+          class="group relative overflow-hidden rounded-2xl bg-charcoal-800 text-white p-7 lg:p-8 min-h-[170px] lg:min-h-[210px] flex flex-col justify-between transition-all duration-300 hover:shadow-lift hover:-translate-y-0.5"
+        >
+          <img
+            src={asset("/hero/sell-banner.png")}
+            alt=""
+            aria-hidden="true"
+            class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div class="absolute inset-0 bg-gradient-to-r from-charcoal-900 via-charcoal-800/70 to-transparent"></div>
+
+          <div class="relative">
+            <h2 class="font-display text-2xl lg:text-3xl font-bold uppercase tracking-tight leading-tight max-w-md">
+              <span class="text-secondary-300">Sell</span> to FAMCO.
+            </h2>
+          </div>
+
+          <div class="relative mt-5 flex items-center gap-3">
+            <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-secondary text-ink transition-all duration-200 group-hover:bg-white group-hover:text-primary group-hover:scale-110">
+              <Icon name="lucide:arrow-right" class="h-5 w-5" />
+            </span>
+            <span class="text-[15px] font-semibold text-white group-hover:text-secondary-300 transition-colors">
+              Get free valuation
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,336 @@
+---
+import { Icon } from "astro-icon/components";
+
+type Group = {
+  id: string;
+  label: string;
+  options: { value: string; label: string; flag?: string }[];
+};
+
+const GROUPS: Group[] = [
+  { id: "category", label: "Category", options: [
+    { value: "trucks", label: "Trucks" },
+    { value: "buses", label: "Buses" },
+    { value: "construction", label: "Construction" },
+    { value: "material-handling", label: "Material handling" },
+    { value: "power", label: "Power & industrial" },
+    { value: "trailers", label: "Trailers" },
+  ]},
+  { id: "country", label: "Country", options: [
+    { value: "uae", label: "United Arab Emirates", flag: "ae" },
+    { value: "saudi", label: "Saudi Arabia", flag: "sa" },
+    { value: "oman", label: "Oman", flag: "om" },
+    { value: "qatar", label: "Qatar", flag: "qa" },
+    { value: "bahrain", label: "Bahrain", flag: "bh" },
+    { value: "kuwait", label: "Kuwait", flag: "kw" },
+  ]},
+  { id: "brand", label: "Brand", options: [
+    { value: "volvo", label: "Volvo" },
+    { value: "scania", label: "Scania" },
+    { value: "man", label: "MAN" },
+    { value: "linde", label: "Linde" },
+    { value: "doosan", label: "Doosan" },
+    { value: "renault", label: "Renault" },
+    { value: "mercedes", label: "Mercedes-Benz" },
+    { value: "eicher", label: "Eicher" },
+  ]},
+  { id: "year-bucket", label: "Year", options: [
+    { value: "2024", label: "2024+" },
+    { value: "2020-2023", label: "2020 – 2023" },
+    { value: "2015-2019", label: "2015 – 2019" },
+    { value: "before-2015", label: "Before 2015" },
+  ]},
+  { id: "fuel", label: "Fuel type", options: [
+    { value: "diesel", label: "Diesel" },
+    { value: "electric", label: "Electric" },
+    { value: "lpg", label: "LPG" },
+  ]},
+  { id: "drive", label: "Drive configuration", options: [
+    { value: "4x2", label: "4×2" },
+    { value: "6x2", label: "6×2" },
+    { value: "6x4", label: "6×4" },
+    { value: "8x4", label: "8×4" },
+  ]},
+  { id: "condition", label: "Condition", options: [
+    { value: "inspected", label: "Inspected" },
+    { value: "new-arrival", label: "New arrival" },
+    { value: "sale", label: "On sale" },
+  ]},
+];
+---
+
+<aside class="lg:sticky lg:top-32" data-stock-filters>
+  <div class="bg-white rounded-xl border border-line shadow-card overflow-hidden">
+    <div class="flex items-center justify-between gap-2 px-5 py-4 border-b border-line">
+      <div class="flex items-center gap-2">
+        <Icon name="lucide:sliders-horizontal" class="h-4 w-4 text-secondary" />
+        <h3 class="font-display text-[15px] font-bold text-ink">Filters</h3>
+        <span data-filter-count class="hidden inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-secondary text-ink text-[10.5px] font-bold">0</span>
+      </div>
+      <button
+        type="button"
+        data-filter-clear
+        class="hidden text-[12px] text-muted hover:text-secondary transition-colors"
+      >
+        Clear all
+      </button>
+    </div>
+
+    {/* Active chips */}
+    <div data-filter-chips class="hidden px-5 pt-4 pb-1 flex-wrap gap-1.5"></div>
+
+    {/* Price */}
+    <div class="px-5 py-4 border-t border-line">
+      <h4 class="text-[12px] uppercase tracking-widest font-bold text-ink mb-3">Price (AED)</h4>
+      <div class="flex items-center gap-2 mb-3">
+        <input
+          type="number"
+          data-filter-price-min
+          value="0"
+          placeholder="Min"
+          class="w-full h-9 px-2.5 rounded-md border border-line text-[12.5px] text-ink outline-none focus:border-secondary"
+        />
+        <span class="text-muted text-[12px]">–</span>
+        <input
+          type="number"
+          data-filter-price-max
+          value="500000"
+          placeholder="Max"
+          class="w-full h-9 px-2.5 rounded-md border border-line text-[12.5px] text-ink outline-none focus:border-secondary"
+        />
+      </div>
+      <input
+        type="range"
+        min="0"
+        max="500000"
+        step="5000"
+        value="500000"
+        data-filter-price-slider
+        class="w-full accent-secondary"
+      />
+      <div class="flex justify-between text-[11px] text-muted mt-1.5">
+        <span>AED 0</span>
+        <span>AED 500k+</span>
+      </div>
+    </div>
+
+    {GROUPS.map((g) => (
+      <div class="border-t border-line" data-filter-group data-group-id={g.id}>
+        <button type="button" data-group-toggle class="w-full flex items-center justify-between gap-3 px-5 py-3.5 text-left">
+          <span class="text-[12px] uppercase tracking-widest font-bold text-ink">
+            {g.label}
+            <span data-group-count class="ml-2 text-secondary hidden"></span>
+          </span>
+          <Icon name="lucide:chevron-down" class="h-4 w-4 text-muted transition-transform" data-group-chevron />
+        </button>
+        <ul data-group-list class="hidden px-5 pb-4 space-y-1">
+          {g.options.map((o) => (
+            <li>
+              <label class="flex items-center gap-2.5 py-1.5 px-2 -mx-2 rounded cursor-pointer hover:bg-bgalt text-ink">
+                <span data-checkbox class="h-4 w-4 rounded border-2 border-line bg-white flex items-center justify-center shrink-0 transition-colors">
+                  <svg viewBox="0 0 12 12" class="h-2.5 w-2.5 text-white hidden" fill="none" stroke="currentColor" stroke-width="3" data-check-icon>
+                    <path d="M2 6 L5 9 L10 3" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+                <input
+                  type="checkbox"
+                  data-filter-input
+                  data-group-id={g.id}
+                  value={o.value}
+                  class="sr-only"
+                />
+                {o.flag && (
+                  <span aria-hidden="true" class={`fi fi-${o.flag} rounded-sm shadow-[0_0_0_0.5px_rgba(0,0,0,0.08)] shrink-0`} style="width:1.25em;height:0.95em"></span>
+                )}
+                <span class="flex-1 text-[13px] font-medium" data-option-label>{o.label}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</aside>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-stock-filters]");
+  if (!root) {
+    /* skip */
+  } else {
+    const chipsEl = root.querySelector<HTMLElement>("[data-filter-chips]");
+    const countEl = root.querySelector<HTMLElement>("[data-filter-count]");
+    const clearEl = root.querySelector<HTMLButtonElement>("[data-filter-clear]");
+    const minEl = root.querySelector<HTMLInputElement>("[data-filter-price-min]");
+    const maxEl = root.querySelector<HTMLInputElement>("[data-filter-price-max]");
+    const sliderEl = root.querySelector<HTMLInputElement>("[data-filter-price-slider]");
+
+    const inputs = Array.from(
+      root.querySelectorAll<HTMLInputElement>("[data-filter-input]"),
+    );
+
+    const state: Record<string, string[]> = {};
+    let priceMin = 0;
+    let priceMax = 500000;
+
+    function emit() {
+      window.dispatchEvent(
+        new CustomEvent("famco:filter-change", {
+          detail: {
+            selected: { ...state },
+            priceMin,
+            priceMax,
+          },
+        }),
+      );
+      renderChips();
+      renderTotals();
+    }
+
+    function totalSelected() {
+      return Object.values(state).reduce((s, arr) => s + arr.length, 0);
+    }
+
+    function renderTotals() {
+      const t = totalSelected();
+      if (t > 0) {
+        countEl?.classList.remove("hidden");
+        countEl?.classList.add("inline-flex");
+        if (countEl) countEl.textContent = String(t);
+        clearEl?.classList.remove("hidden");
+      } else {
+        countEl?.classList.add("hidden");
+        countEl?.classList.remove("inline-flex");
+        clearEl?.classList.add("hidden");
+      }
+
+      // Per-group counts
+      root.querySelectorAll<HTMLElement>("[data-filter-group]").forEach((g) => {
+        const id = g.dataset.groupId!;
+        const c = g.querySelector<HTMLElement>("[data-group-count]");
+        const n = state[id]?.length ?? 0;
+        if (n > 0 && c) {
+          c.textContent = `(${n})`;
+          c.classList.remove("hidden");
+        } else {
+          c?.classList.add("hidden");
+        }
+      });
+    }
+
+    function renderChips() {
+      if (!chipsEl) return;
+      const html: string[] = [];
+      Object.entries(state).forEach(([gid, vals]) => {
+        vals.forEach((v) => {
+          const inp = root.querySelector<HTMLInputElement>(
+            `[data-filter-input][data-group-id="${gid}"][value="${v}"]`,
+          );
+          const lbl = inp?.parentElement?.querySelector("[data-option-label]")?.textContent ?? v;
+          html.push(
+            `<button type="button" class="inline-flex items-center gap-1 bg-secondary/10 text-secondary text-[11.5px] font-semibold px-2 py-1 rounded hover:bg-secondary/20" data-chip data-group="${gid}" data-value="${v}">${lbl}<svg viewBox="0 0 12 12" class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 2 L10 10 M10 2 L2 10" stroke-linecap="round"/></svg></button>`,
+          );
+        });
+      });
+      chipsEl.innerHTML = html.join("");
+      if (html.length > 0) {
+        chipsEl.classList.remove("hidden");
+        chipsEl.classList.add("flex");
+      } else {
+        chipsEl.classList.add("hidden");
+        chipsEl.classList.remove("flex");
+      }
+      chipsEl.querySelectorAll<HTMLButtonElement>("[data-chip]").forEach((b) => {
+        b.addEventListener("click", () => {
+          const gid = b.dataset.group!;
+          const v = b.dataset.value!;
+          toggle(gid, v);
+        });
+      });
+    }
+
+    function toggle(gid: string, value: string) {
+      const arr = state[gid] ?? [];
+      const i = arr.indexOf(value);
+      if (i >= 0) arr.splice(i, 1);
+      else arr.push(value);
+      state[gid] = arr;
+      // sync the checkbox visual
+      const inp = root.querySelector<HTMLInputElement>(
+        `[data-filter-input][data-group-id="${gid}"][value="${value}"]`,
+      );
+      if (inp) {
+        inp.checked = arr.includes(value);
+        const box = inp.parentElement?.querySelector<HTMLElement>("[data-checkbox]");
+        const icon = box?.querySelector<SVGElement>("[data-check-icon]");
+        if (box) {
+          if (inp.checked) {
+            box.classList.add("bg-secondary", "border-secondary");
+            box.classList.remove("bg-white", "border-line");
+            icon?.classList.remove("hidden");
+          } else {
+            box.classList.remove("bg-secondary", "border-secondary");
+            box.classList.add("bg-white", "border-line");
+            icon?.classList.add("hidden");
+          }
+        }
+      }
+      emit();
+    }
+
+    inputs.forEach((inp) => {
+      inp.addEventListener("change", () => {
+        toggle(inp.dataset.groupId!, inp.value);
+      });
+    });
+
+    // Group accordions
+    root.querySelectorAll<HTMLElement>("[data-filter-group]").forEach((g) => {
+      const tog = g.querySelector<HTMLButtonElement>("[data-group-toggle]");
+      const list = g.querySelector<HTMLElement>("[data-group-list]");
+      const chev = g.querySelector<SVGElement>("[data-group-chevron]");
+      tog?.addEventListener("click", () => {
+        list?.classList.toggle("hidden");
+        chev?.classList.toggle("rotate-180");
+      });
+    });
+
+    // Price
+    const onMin = () => {
+      priceMin = Number(minEl?.value || 0);
+      emit();
+    };
+    const onMax = () => {
+      const v = Number(maxEl?.value || 500000);
+      priceMax = v;
+      if (sliderEl) sliderEl.value = String(v);
+      emit();
+    };
+    const onSlide = () => {
+      const v = Number(sliderEl?.value || 500000);
+      priceMax = v;
+      if (maxEl) maxEl.value = String(v);
+      emit();
+    };
+    minEl?.addEventListener("input", onMin);
+    maxEl?.addEventListener("input", onMax);
+    sliderEl?.addEventListener("input", onSlide);
+
+    clearEl?.addEventListener("click", () => {
+      Object.keys(state).forEach((k) => (state[k] = []));
+      inputs.forEach((i) => {
+        i.checked = false;
+        const box = i.parentElement?.querySelector<HTMLElement>("[data-checkbox]");
+        const icon = box?.querySelector<SVGElement>("[data-check-icon]");
+        box?.classList.remove("bg-secondary", "border-secondary");
+        box?.classList.add("bg-white", "border-line");
+        icon?.classList.add("hidden");
+      });
+      priceMin = 0;
+      priceMax = 500000;
+      if (minEl) minEl.value = "0";
+      if (maxEl) maxEl.value = "500000";
+      if (sliderEl) sliderEl.value = "500000";
+      emit();
+    });
+  }
+</script>

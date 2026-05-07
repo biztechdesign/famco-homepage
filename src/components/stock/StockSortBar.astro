@@ -1,0 +1,101 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  count: number;
+}
+const { count } = Astro.props;
+
+const SORTS = [
+  { key: "newest", label: "Newest first" },
+  { key: "price-asc", label: "Price: low to high" },
+  { key: "price-desc", label: "Price: high to low" },
+  { key: "year-desc", label: "Year: newest" },
+  { key: "year-asc", label: "Year: oldest" },
+  { key: "mileage-asc", label: "Mileage: low to high" },
+];
+---
+
+<div class="bg-white rounded-lg border border-line shadow-card px-4 py-3 flex items-center justify-between gap-3" data-sort-bar>
+  <div class="text-[12.5px] text-muted">
+    Showing
+    <span data-sort-count class="font-semibold text-ink tabular-nums">{count.toLocaleString("en-AE")}</span>
+    vehicles
+  </div>
+
+  <div class="flex items-center gap-2 shrink-0">
+    <div class="relative" data-sort-root>
+      <button
+        type="button"
+        data-sort-trigger
+        class="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-bgalt border border-line text-[12.5px] font-medium text-ink hover:border-secondary transition-colors"
+      >
+        <span class="text-muted text-[11.5px] hidden sm:inline">Sort:</span>
+        <span data-sort-label>Newest first</span>
+        <Icon name="lucide:chevron-down" class="h-3.5 w-3.5 text-muted transition-transform" data-sort-chevron />
+      </button>
+
+      <ul
+        data-sort-menu
+        role="listbox"
+        class="hidden absolute right-0 top-full mt-2 z-20 min-w-[220px] bg-white rounded-md border border-line shadow-lift py-1"
+      >
+        {SORTS.map((s) => (
+          <li>
+            <button
+              type="button"
+              role="option"
+              data-sort-option
+              data-key={s.key}
+              data-label={s.label}
+              class="w-full text-left px-3.5 py-2 text-[12.5px] hover:bg-bgalt text-ink"
+            >
+              {s.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="hidden sm:flex items-center gap-0.5 bg-bgalt rounded-md p-0.5 border border-line">
+      <button class="h-8 w-8 rounded flex items-center justify-center bg-white text-secondary shadow-card" aria-label="Grid view">
+        <Icon name="lucide:layout-grid" class="h-4 w-4" />
+      </button>
+      <button class="h-8 w-8 rounded flex items-center justify-center text-muted hover:text-ink" aria-label="List view">
+        <Icon name="lucide:list" class="h-4 w-4" />
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-sort-root]");
+  if (root) {
+    const trigger = root.querySelector<HTMLButtonElement>("[data-sort-trigger]");
+    const menu = root.querySelector<HTMLElement>("[data-sort-menu]");
+    const labelEl = root.querySelector<HTMLElement>("[data-sort-label]");
+    const chev = root.querySelector<SVGElement>("[data-sort-chevron]");
+    const close = () => {
+      menu?.classList.add("hidden");
+      chev?.classList.remove("rotate-180");
+    };
+    trigger?.addEventListener("click", () => {
+      const opening = menu?.classList.contains("hidden");
+      menu?.classList.toggle("hidden");
+      if (opening) chev?.classList.add("rotate-180");
+      else chev?.classList.remove("rotate-180");
+    });
+    document.addEventListener("mousedown", (e) => {
+      if (!root.contains(e.target as Node)) close();
+    });
+    root.querySelectorAll<HTMLButtonElement>("[data-sort-option]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.key!;
+        const label = btn.dataset.label!;
+        if (labelEl) labelEl.textContent = label;
+        close();
+        window.dispatchEvent(new CustomEvent("famco:sort-change", { detail: key }));
+      });
+    });
+  }
+</script>

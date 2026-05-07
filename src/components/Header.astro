@@ -1,0 +1,223 @@
+---
+import { Icon } from "astro-icon/components";
+import { asset, link } from "@/lib/asset";
+import { VEHICLES } from "@/lib/vehicles";
+
+// Server-render the initial "Featured equipment" suggestion list so
+// the dropdown has content before any JS runs. Filtering happens
+// client-side via vanilla JS as the user types.
+const featured = VEHICLES.slice(0, 6);
+
+const fmt = (n: number) => new Intl.NumberFormat("en-AE").format(n);
+---
+
+<header class="sticky top-0 z-40 bg-white border-b border-line shadow-sm">
+  <div class="container flex h-20 items-center gap-4 lg:gap-6">
+    <a href={link("/")} class="flex items-center shrink-0">
+      <img
+        src={asset("/brand/logo.png")}
+        alt="Al-Futtaim FAMCO Used Equipment"
+        class="h-10 sm:h-12 w-auto"
+      />
+    </a>
+
+    <div class="hidden md:flex flex-1 justify-center relative">
+      <form
+        data-search-form
+        action={link("/stock")}
+        method="get"
+        class="w-full max-w-[560px] relative"
+      >
+        <div class="flex items-stretch h-11 rounded-lg border border-line bg-white shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-secondary focus-within:border-secondary">
+          <button
+            type="button"
+            class="flex items-center gap-2 px-4 lg:px-5 text-[14px] font-semibold border-r border-line bg-white text-ink hover:bg-bgalt transition-colors"
+          >
+            <Icon name="lucide:layout-grid" class="h-4 w-4 text-secondary" />
+            <span class="hidden lg:inline">All categories</span>
+            <span class="lg:hidden">Categories</span>
+            <Icon name="lucide:chevron-down" class="h-4 w-4 transition-transform" />
+          </button>
+
+          <div class="flex-1 flex items-center px-4 min-w-0">
+            <Icon name="lucide:search" class="h-5 w-5 text-muted shrink-0" />
+            <input
+              data-search-input
+              type="search"
+              name="q"
+              placeholder="Search by make, model, or keyword"
+              class="w-full ml-3 bg-transparent text-[14px] text-ink placeholder:text-muted outline-none text-ellipsis"
+              aria-autocomplete="list"
+            />
+          </div>
+
+          <button
+            type="submit"
+            aria-label="Search"
+            class="bg-secondary hover:bg-secondary-600 text-ink px-4 flex items-center justify-center transition-colors"
+          >
+            <Icon name="lucide:search" class="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Suggestions dropdown — opens on focus, narrows on type */}
+        <div
+          data-search-dropdown
+          role="listbox"
+          class="hidden absolute left-0 right-0 top-full mt-2 bg-white border border-line rounded-lg shadow-lift z-50 overflow-hidden"
+        >
+          <div data-suggest-header class="px-4 py-2 border-b border-line bg-bgalt/60 text-[10.5px] uppercase tracking-widest font-bold text-muted">
+            Featured equipment
+          </div>
+
+          <ul data-suggest-list class="max-h-[70vh] overflow-y-auto divide-y divide-line">
+            {featured.map((v) => {
+              const usage = v.hours
+                ? `${fmt(v.hours)} hrs`
+                : v.km !== undefined
+                  ? `${fmt(v.km)} km`
+                  : "";
+              const specs = [v.brand, String(v.year), usage, v.transmission, v.fuel, v.drive, v.euro]
+                .filter(Boolean)
+                .join(" | ");
+              return (
+                <li role="option">
+                  <a
+                    href={link(v.href ?? "/stock")}
+                    class="flex gap-3 p-3 hover:bg-bgalt transition-colors"
+                  >
+                    <div class="relative h-20 w-28 shrink-0 overflow-hidden rounded-md bg-bgalt">
+                      <img src={asset(v.image)} alt={v.title} class="absolute inset-0 h-full w-full object-cover" />
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-start justify-between gap-3">
+                        <h4 class="text-[13.5px] font-semibold text-ink leading-tight line-clamp-1">{v.title}</h4>
+                        <div class="text-[14px] font-bold text-secondary tabular-nums leading-none">
+                          AED {fmt(v.price)}
+                        </div>
+                      </div>
+                      <p class="mt-1 text-[12px] text-muted line-clamp-1">{v.description}</p>
+                      <div class="mt-1.5 text-[11.5px] text-ink/80 leading-snug">{specs}</div>
+                    </div>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          <a
+            data-suggest-all
+            href={link("/stock")}
+            class="block px-4 py-2.5 text-center text-[12.5px] font-semibold text-secondary border-t border-line hover:bg-bgalt"
+          >
+            Browse all stock →
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <div class="flex items-center gap-1.5 shrink-0 ml-auto md:ml-0">
+      <button class="md:hidden h-10 w-10 inline-flex items-center justify-center rounded-md hover:bg-bgalt" aria-label="Search">
+        <Icon name="lucide:search" class="h-5 w-5 text-ink" />
+      </button>
+
+      <button class="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-bgalt relative">
+        <Icon name="lucide:heart" class="h-5 w-5 text-ink" />
+        <span class="absolute top-1 right-1 h-4 min-w-4 px-1 rounded-full bg-secondary text-ink text-[10px] flex items-center justify-center">3</span>
+      </button>
+      <button class="hidden sm:inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-bgalt">
+        <Icon name="lucide:user" class="h-5 w-5 text-ink" />
+      </button>
+      <a
+        href={link("/stock?category=sell")}
+        class="hidden lg:inline-flex btn btn-primary h-10 ml-2 whitespace-nowrap"
+      >
+        Sell your equipment
+      </a>
+    </div>
+  </div>
+</header>
+
+<script define:vars={{ vehicles: VEHICLES, base: import.meta.env.BASE_URL || "/" }}>
+  // Client-side filter mirrors the SSR matchVehicles haystack so a
+  // typed query like "2022 volvo" narrows by year + brand together.
+  function fmt(n) { return new Intl.NumberFormat("en-AE").format(n); }
+  function withBase(p) { return p.startsWith("/") ? base.replace(/\/$/, "") + p : p; }
+  function matchVehicles(query, limit) {
+    var q = (query || "").trim().toLowerCase();
+    if (!q) return vehicles.slice(0, limit);
+    var tokens = q.split(/\s+/).filter(Boolean);
+    return vehicles.filter(function (v) {
+      var hay = [v.title, v.description, v.brand, v.category, v.country, v.dealer || "",
+        v.transmission || "", v.fuel || "", v.euro || "", v.drive || "", String(v.year)]
+        .join(" ").toLowerCase();
+      return tokens.every(function (t) { return hay.indexOf(t) !== -1; });
+    }).slice(0, limit);
+  }
+
+  function renderResults(matches, q) {
+    return matches.map(function (v) {
+      var usage = v.hours ? fmt(v.hours) + " hrs" : (v.km !== undefined ? fmt(v.km) + " km" : "");
+      var specs = [v.brand, String(v.year), usage, v.transmission, v.fuel, v.drive, v.euro]
+        .filter(Boolean).join(" | ");
+      var price = "AED " + fmt(v.price);
+      return '<li role="option"><a href="' + withBase(v.href || "/stock") + '" class="flex gap-3 p-3 hover:bg-bgalt transition-colors">' +
+        '<div class="relative h-20 w-28 shrink-0 overflow-hidden rounded-md bg-bgalt">' +
+        '<img src="' + withBase(v.image) + '" alt="' + v.title + '" class="absolute inset-0 h-full w-full object-cover" /></div>' +
+        '<div class="min-w-0 flex-1">' +
+        '<div class="flex items-start justify-between gap-3">' +
+        '<h4 class="text-[13.5px] font-semibold text-ink leading-tight line-clamp-1">' + v.title + '</h4>' +
+        '<div class="text-[14px] font-bold text-secondary tabular-nums leading-none">' + price + '</div></div>' +
+        '<p class="mt-1 text-[12px] text-muted line-clamp-1">' + v.description + '</p>' +
+        '<div class="mt-1.5 text-[11.5px] text-ink/80 leading-snug">' + specs + '</div></div></a></li>';
+    }).join("");
+  }
+
+  var form = document.querySelector("[data-search-form]");
+  if (!form) return;
+  var input = form.querySelector("[data-search-input]");
+  var dropdown = form.querySelector("[data-search-dropdown]");
+  var header = form.querySelector("[data-suggest-header]");
+  var list = form.querySelector("[data-suggest-list]");
+  var allLink = form.querySelector("[data-suggest-all]");
+
+  // Pre-fill from ?q= if present (server doesn't render this so client needs it).
+  var initial = new URLSearchParams(location.search).get("q") || "";
+  if (initial) input.value = initial;
+
+  function update() {
+    var q = input.value;
+    var matches = matchVehicles(q, 6);
+    if (q.trim()) {
+      header.textContent = "Search results";
+    } else {
+      header.textContent = "Featured equipment";
+    }
+    if (matches.length === 0) {
+      list.innerHTML = '<li class="px-4 py-6 text-center text-[13px] text-muted">No matching equipment for ' +
+        '<span class="font-semibold text-ink">"' + q.trim() + '"</span></li>';
+    } else {
+      list.innerHTML = renderResults(matches, q);
+    }
+    if (q.trim()) {
+      allLink.textContent = 'See all results for "' + q.trim() + '" →';
+      allLink.href = withBase("/stock?q=" + encodeURIComponent(q.trim()));
+    } else {
+      allLink.textContent = "Browse all stock →";
+      allLink.href = withBase("/stock");
+    }
+  }
+
+  input.addEventListener("focus", function () {
+    update();
+    dropdown.classList.remove("hidden");
+  });
+  input.addEventListener("input", update);
+
+  document.addEventListener("mousedown", function (e) {
+    if (!form.contains(e.target)) dropdown.classList.add("hidden");
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") dropdown.classList.add("hidden");
+  });
+</script>

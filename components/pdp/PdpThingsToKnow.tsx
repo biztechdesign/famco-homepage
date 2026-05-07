@@ -17,12 +17,12 @@ type Item = {
 
 const ITEMS: Item[] = [
   {
-    title: "Choose brand-new at FAMCO",
-    body: "Prefer a brand-new unit? FAMCO offers factory-fresh trucks, buses and machinery with full manufacturer warranty, finance options and in-house customisation.",
-    cta: "More about brand-new",
+    title: "Finance & warranty at FAMCO",
+    body: "Flexible finance plans and warranty cover on every used vehicle, plus in-house workshop service and customisation by FAMCO experts.",
+    cta: "Explore options",
     href: link("/stock"),
     image: asset("/hero/brand-new.jpg"),
-    alt: "Brand-new FAMCO truck on the showroom floor",
+    alt: "FAMCO workshop technician servicing a truck",
   },
   {
     title: "Sell your current vehicle",

@@ -26,7 +26,7 @@ const POSTS: Post[] = [
     href: "/stock",
   },
   {
-    title: "Used vs. new trucks in the UAE — which one is right for you?",
+    title: "Buying a used truck in the UAE — what to check before you commit",
     image: "/hero/brand-new.jpg",
     href: "/stock",
   },
@@ -40,7 +40,7 @@ export default function LatestNews() {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 lg:mb-10">
           <div>
             <h2 className="font-display text-3xl lg:text-4xl font-bold text-ink">
-              Latest from <span className="text-secondary-300">FAMCO</span>
+              Latest from <span className="text-secondary-600">FAMCO</span>
             </h2>
           </div>
           <a

@@ -1,9 +1,8 @@
-import type { Config } from "tailwindcss";
-
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+export default {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{astro,html,js,mjs,ts,md,mdx}",
+    "./public/**/*.html",
   ],
   theme: {
     extend: {
@@ -24,7 +23,7 @@ const config: Config = {
         },
         // SECONDARY — driven by CSS variables so a runtime theme picker
         // can swap the whole site's accent color in one click.
-        // Defaults (cyan-blue #00A0E0) are set on :root in globals.css.
+        // Defaults are set on :root in globals.css.
         secondary: {
           DEFAULT: "rgb(var(--secondary-500) / <alpha-value>)",
           50: "rgb(var(--secondary-50) / <alpha-value>)",
@@ -38,12 +37,10 @@ const config: Config = {
           800: "rgb(var(--secondary-800) / <alpha-value>)",
           900: "rgb(var(--secondary-900) / <alpha-value>)",
         },
-        // Black & white-grayscale only for typography / surfaces
-        ink: "#0F172A",          // body text on light
-        muted: "#6B7280",        // secondary body text (neutral gray)
-        line: "#E5E7EB",         // borders / dividers
-        bgalt: "#F5F6F7",        // subtle off-white section bg
-        // Charcoal black — BAS-style, never pure #000
+        ink: "#0F172A",
+        muted: "#6B7280",
+        line: "#E5E7EB",
+        bgalt: "#F5F6F7",
         charcoal: {
           DEFAULT: "#1A1A1F",
           50: "#F4F4F5",
@@ -81,5 +78,3 @@ const config: Config = {
   },
   plugins: [],
 };
-
-export default config;

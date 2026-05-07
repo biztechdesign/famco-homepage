@@ -19,12 +19,12 @@ type Side = {
 
 const SIDES: Side[] = [
   {
-    title: "Choose brand-new at FAMCO",
-    body: "Factory-fresh trucks, buses and machinery — full warranty, finance and customisation in-house.",
-    cta: "More about brand-new",
+    title: "Finance & warranty at FAMCO",
+    body: "Flexible finance, warranty cover and in-house workshop service on every used vehicle.",
+    cta: "Explore options",
     href: link("/stock"),
     image: asset("/hero/brand-new.jpg"),
-    alt: "Brand-new FAMCO truck on the showroom floor",
+    alt: "FAMCO workshop technician servicing a truck",
   },
   {
     title: "Sell your current vehicle",

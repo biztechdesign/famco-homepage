@@ -1,0 +1,76 @@
+---
+import StockCard from "./StockCard.astro";
+import type { Vehicle } from "@/lib/vehicles";
+
+interface Props {
+  vehicles: Vehicle[];
+}
+const { vehicles } = Astro.props;
+
+// Slug-form fields the client-side filter reads from data-attributes.
+function categorySlug(category: string): string {
+  const map: Record<string, string> = {
+    Trucks: "trucks",
+    Buses: "buses",
+    Construction: "construction",
+    "Material handling": "material-handling",
+    Power: "power",
+    Trailers: "trailers",
+    Vans: "vans",
+  };
+  return map[category] ?? category.toLowerCase();
+}
+
+function countrySlug(country: string): string {
+  const map: Record<string, string> = {
+    UAE: "uae",
+    "Saudi Arabia": "saudi",
+    Oman: "oman",
+    Qatar: "qatar",
+    Bahrain: "bahrain",
+    Kuwait: "kuwait",
+  };
+  return map[country] ?? country.toLowerCase();
+}
+
+function yearBucket(y: number): string {
+  if (y >= 2024) return "2024";
+  if (y >= 2020) return "2020-2023";
+  if (y >= 2015) return "2015-2019";
+  return "before-2015";
+}
+
+function conditionTags(v: Vehicle): string {
+  const t: string[] = [];
+  if (v.badges?.includes("INSPECTED")) t.push("inspected");
+  if (v.badges?.includes("NEW ARRIVAL")) t.push("new-arrival");
+  if (v.badges?.includes("SALE") || (v.oldPrice && v.oldPrice > v.price)) t.push("sale");
+  return t.join(",");
+}
+---
+
+<div data-stock-grid class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+  {vehicles.map((v) => (
+    <div
+      data-stock-tile
+      data-id={v.id}
+      data-category={categorySlug(v.category)}
+      data-country={countrySlug(v.country)}
+      data-brand={v.brand.toLowerCase()}
+      data-year={String(v.year)}
+      data-year-bucket={yearBucket(v.year)}
+      data-fuel={(v.fuel ?? "").toLowerCase()}
+      data-drive={(v.drive ?? "").toLowerCase().replace("×", "x")}
+      data-condition={conditionTags(v)}
+      data-price={String(v.price)}
+      data-mileage={String(v.km ?? v.hours ?? 0)}
+    >
+      <StockCard v={v} />
+    </div>
+  ))}
+</div>
+
+<div data-stock-empty class="hidden text-center py-16 px-6 bg-white rounded-xl border border-line shadow-card">
+  <p class="text-[16px] font-semibold text-ink mb-1">No vehicles match your filters</p>
+  <p class="text-[13px] text-muted">Try clearing a couple of filters or expanding the price range.</p>
+</div>

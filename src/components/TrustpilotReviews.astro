@@ -1,0 +1,155 @@
+---
+import { Icon } from "astro-icon/components";
+
+// Star path that respects fill="currentColor" — Lucide's outline star
+// can't show a partial fill cleanly, so we render the filled-star path
+// inline. The empty layer just sets a muted color; the clipped overlay
+// switches to a stronger amber so the rating reads at a glance.
+const STAR_PATH =
+  "M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z";
+
+const REVIEWS = [
+  {
+    rating: 5,
+    title: "Best truck-buying experience in the UAE",
+    body: "Inspection was thorough, paperwork was sorted in 48 hours, and the truck was delivered to our yard in Sharjah on the same week. Khalid kept us updated through the whole process.",
+    name: "Ahmed Al-Mansoori",
+    role: "Fleet Manager, Emirates Logistics",
+    location: "Sharjah, UAE",
+    date: "May 2026",
+    verified: true,
+  },
+  {
+    rating: 5,
+    title: "Genuine 0% finance — no hidden fees",
+    body: "I'd been quoted high rates everywhere else for a used Volvo FH. FAMCO actually delivered on their 0% interest offer with zero processing tricks. The live video inspection sealed the deal.",
+    name: "Vikram Iyer",
+    role: "Site Director, Al-Futtaim Construction",
+    location: "Dubai, UAE",
+    date: "Apr 2026",
+    verified: true,
+  },
+  {
+    rating: 4.5,
+    title: "Used Linde forklifts in great shape",
+    body: "Bought 3 Linde forklifts. Inspection report was honest about minor wear, and the team threw in a service to fix the small issues before delivery. Two months in, all running daily.",
+    name: "Sana Hassan",
+    role: "Operations, Sharjah Transport",
+    location: "Sharjah, UAE",
+    date: "Apr 2026",
+    verified: true,
+  },
+];
+
+function starFills(rating: number) {
+  // Returns 5 percentages (0–100) — one per star.
+  return Array.from({ length: 5 }, (_, i) => Math.max(0, Math.min(1, rating - i)) * 100);
+}
+---
+
+<section class="bg-bgalt">
+  <div class="container py-12 lg:py-16">
+    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-8">
+      <div>
+        <h2 class="font-display text-3xl lg:text-4xl font-bold text-ink">
+          What our <span class="text-secondary">customers</span> say
+        </h2>
+      </div>
+
+      <a
+        href="#"
+        class="inline-flex items-center gap-3 self-start lg:self-auto bg-white rounded-lg border border-line px-4 py-3 shadow-card hover:shadow-lift transition-shadow"
+      >
+        <div class="flex items-center gap-2">
+          <span class="h-7 w-7 rounded-sm bg-secondary flex items-center justify-center">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" style="fill:#0F172A">
+              <path d={STAR_PATH} />
+            </svg>
+          </span>
+          <span class="font-semibold text-ink text-[15px] tracking-tight">Trustpilot</span>
+        </div>
+
+        <span class="h-7 w-px bg-line"></span>
+
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-0.5">
+            {starFills(4.7).map((pct) => (
+              <span class="relative inline-block h-4 w-4">
+                <svg viewBox="0 0 24 24" class="absolute inset-0 h-4 w-4" style="fill:#E5E7EB">
+                  <path d={STAR_PATH} />
+                </svg>
+                <span class="absolute inset-0 overflow-hidden" style={`width: ${pct}%`}>
+                  <svg viewBox="0 0 24 24" class="h-4 w-4" style="fill:#F59E0B">
+                    <path d={STAR_PATH} />
+                  </svg>
+                </span>
+              </span>
+            ))}
+          </span>
+          <span class="text-[13px] text-ink">
+            <span class="font-bold">4.7</span>
+            <span class="text-muted"> · 2,184 reviews</span>
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5">
+      {REVIEWS.map((r) => (
+        <article class="bg-white rounded-xl border border-line shadow-card p-6 flex flex-col">
+          <div class="mb-3">
+            <span class="inline-flex items-center gap-0.5">
+              {starFills(r.rating).map((pct) => (
+                <span class="relative inline-block h-5 w-5">
+                  <svg viewBox="0 0 24 24" class="absolute inset-0 h-5 w-5" style="fill:#E5E7EB">
+                    <path d={STAR_PATH} />
+                  </svg>
+                  <span class="absolute inset-0 overflow-hidden" style={`width: ${pct}%`}>
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" style="fill:#F59E0B">
+                      <path d={STAR_PATH} />
+                    </svg>
+                  </span>
+                </span>
+              ))}
+            </span>
+          </div>
+
+          <h3 class="font-display text-lg lg:text-xl font-bold text-ink leading-tight mb-2">
+            {r.title}
+          </h3>
+
+          <p class="text-[14px] text-ink/80 leading-relaxed mb-5 flex-1">
+            "{r.body}"
+          </p>
+
+          <div class="pt-4 border-t border-line">
+            <div class="flex items-center justify-between gap-3">
+              <div class="min-w-0">
+                <div class="font-semibold text-ink text-[14px] truncate">{r.name}</div>
+                <div class="text-[12px] text-muted truncate">{r.role}</div>
+              </div>
+              {r.verified && (
+                <span class="inline-flex items-center gap-1 text-[10.5px] font-bold uppercase tracking-wider text-secondary shrink-0">
+                  <span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
+                  Verified
+                </span>
+              )}
+            </div>
+            <div class="flex items-center gap-2 mt-2 text-[12px] text-muted">
+              <span>{r.location}</span>
+              <span class="text-line">·</span>
+              <span>{r.date}</span>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="text-center mt-8">
+      <a href="#" class="inline-flex items-center gap-2 text-secondary font-semibold hover:underline">
+        Read all 2,184 reviews on Trustpilot
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>FAMCO Inspection Report — FA-2024-7821 · Volvo FH 500</title>
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #6b7280;
+        --line: #e5e7eb;
+        --brand: #ffd100;
+        --primary: #0d4f8b;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Public Sans", system-ui, -apple-system, sans-serif;
+        color: var(--ink);
+        background: #f5f6f7;
+        line-height: 1.5;
+      }
+      .page {
+        max-width: 880px;
+        margin: 24px auto;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 40px 56px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      }
+      header.brand {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 24px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--ink);
+        margin-bottom: 24px;
+      }
+      .logo {
+        font-family: "Asta Sans", "Manrope", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 22px;
+        letter-spacing: -0.01em;
+        color: var(--primary);
+      }
+      .logo span { color: var(--ink); }
+      .meta {
+        text-align: right;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .meta strong { color: var(--ink); }
+      h1 {
+        font-family: "Asta Sans", system-ui, sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        margin: 4px 0 4px;
+      }
+      .subtitle {
+        font-size: 14px;
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+      .grade {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #ecfdf5;
+        color: #065f46;
+        font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 6px 12px;
+        border-radius: 999px;
+      }
+      h2 {
+        font-family: "Asta Sans", system-ui, sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        margin: 28px 0 8px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--line);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+      }
+      td {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      td.label { color: var(--muted); width: 40%; }
+      td.value { font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+      td.value.highlight { color: var(--primary); }
+      .checks {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 32px;
+        margin-top: 8px;
+      }
+      .check {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        padding: 6px 0;
+        border-bottom: 1px dashed var(--line);
+      }
+      .ok { color: #059669; font-weight: 700; }
+      .note { color: #b45309; font-weight: 700; }
+      .signoff {
+        margin-top: 36px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 24px;
+      }
+      .signoff .name {
+        font-weight: 700;
+      }
+      .signoff .role {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .stamp {
+        font-family: "Asta Sans", system-ui, sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--brand);
+        background: var(--ink);
+        padding: 8px 14px;
+        border-radius: 6px;
+      }
+      .footer {
+        margin-top: 32px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+        font-size: 11px;
+        color: var(--muted);
+        text-align: center;
+      }
+      .actions {
+        max-width: 880px;
+        margin: 0 auto 12px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+      .actions button {
+        font: 600 13px "Public Sans", sans-serif;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: #fff;
+        cursor: pointer;
+      }
+      .actions button.outline {
+        background: #fff;
+        color: var(--ink);
+      }
+      @media print {
+        body { background: #fff; }
+        .actions { display: none; }
+        .page { border: none; box-shadow: none; margin: 0; padding: 24px 32px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="actions">
+      <button class="outline" onclick="window.close()">Close</button>
+      <button onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <main class="page">
+      <header class="brand">
+        <div>
+          <div class="logo">FAMCO <span>· Used Equipment</span></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">
+            Al-Futtaim Auto &amp; Machinery Co. LLC · Dubai, UAE
+          </div>
+        </div>
+        <div class="meta">
+          <div>Reference</div>
+          <strong>FA-2024-7821</strong>
+          <div style="margin-top:6px">Inspected on</div>
+          <strong>06 May 2026</strong>
+        </div>
+      </header>
+
+      <h1>Volvo FH 500 6×4 Tractor Head — Globetrotter XL</h1>
+      <p class="subtitle">2022 · 210,000 km · Diesel · Euro 5 · I-Shift 12-speed</p>
+      <span class="grade">✓ FAMCO Approved · Grade A — Excellent</span>
+
+      <h2>Vehicle</h2>
+      <table>
+        <tr><td class="label">Brand / Model</td><td class="value">Volvo FH 500</td></tr>
+        <tr><td class="label">Year</td><td class="value">2022</td></tr>
+        <tr><td class="label">Mileage</td><td class="value">210,000 km</td></tr>
+        <tr><td class="label">Engine</td><td class="value">Volvo D13 · 13 L</td></tr>
+        <tr><td class="label">Transmission</td><td class="value">I-Shift 12-speed AMT</td></tr>
+        <tr><td class="label">Drive</td><td class="value">6×4</td></tr>
+        <tr><td class="label">Cab</td><td class="value">Globetrotter XL · Double bunk</td></tr>
+        <tr><td class="label">FAMCO Grade</td><td class="value highlight">A — Excellent</td></tr>
+      </table>
+
+      <h2>150-point inspection summary</h2>
+      <div class="checks">
+        <div class="check"><span>Engine</span><span class="ok">Pass</span></div>
+        <div class="check"><span>Transmission &amp; clutch</span><span class="ok">Pass</span></div>
+        <div class="check"><span>Drive axles</span><span class="ok">Pass</span></div>
+        <div class="check"><span>Brakes &amp; ABS / EBS</span><span class="ok">Pass</span></div>
+        <div class="check"><span>Cooling system</span><span class="ok">Pass</span></div>
+        <div class="check"><span>Steering &amp; suspension</span><span class="ok">Pass</span></div>
+        <div class="check"><span>Cab interior &amp; AC</span><span class="ok">Pass</span></div>
+        <div class="check"><span>Lights &amp; electrical</span><span class="ok">Pass</span></div>
+        <div class="check"><span>Tyres (avg. tread)</span><span class="note">75% remaining</span></div>
+        <div class="check"><span>Body &amp; frame</span><span class="ok">Pass</span></div>
+        <div class="check"><span>Chassis &amp; 5th wheel</span><span class="ok">Pass</span></div>
+        <div class="check"><span>VIN / odometer match</span><span class="ok">Verified</span></div>
+      </div>
+
+      <h2>Documents</h2>
+      <table>
+        <tr><td class="label">Registration date</td><td class="value">06-2022</td></tr>
+        <tr><td class="label">Mulkiya</td><td class="value">Transferable</td></tr>
+        <tr><td class="label">Customs paperwork</td><td class="value">Available</td></tr>
+        <tr><td class="label">Service history</td><td class="value">Full digital records — TMH workshop</td></tr>
+      </table>
+
+      <div class="signoff">
+        <div>
+          <div class="name">Khalid Al-Mansoori</div>
+          <div class="role">Volvo-certified Technician · TMH Umm Ramool</div>
+        </div>
+        <span class="stamp">FAMCO Approved</span>
+      </div>
+
+      <p class="footer">
+        This report represents the condition of the vehicle on the date of inspection. FAMCO
+        Approved units come with a 3-month drivetrain warranty. Issued by Al-Futtaim Auto &amp;
+        Machinery Co. LLC.
+      </p>
+    </main>
+  </body>
+</html>

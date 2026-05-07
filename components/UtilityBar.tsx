@@ -14,7 +14,7 @@ import { link } from "@/lib/asset";
 const ANNOUNCEMENTS = [
   "Eid Al Adha offers — save up to AED 25,000 on selected Volvo FH tractors",
   "Free GCC delivery on all inspected used trucks this month",
-  "New: Volvo FH Aero now available at FAMCO DIP showroom",
+  "Just arrived: low-mileage Volvo FH Aero at FAMCO DIP showroom",
   "TMH Umm Ramool workshop — book a service slot online in 60 seconds",
 ];
 

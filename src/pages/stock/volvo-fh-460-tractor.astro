@@ -1,0 +1,1071 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import UtilityBar from "@/components/UtilityBar.astro";
+import Header from "@/components/Header.astro";
+import CategoryStrip from "@/components/CategoryStrip.astro";
+import Footer from "@/components/Footer.astro";
+import ThemePicker from "@/components/ThemePicker.astro";
+import { Icon } from "astro-icon/components";
+import { asset, link } from "@/lib/asset";
+import { VEHICLES } from "@/lib/vehicles";
+
+const v = VEHICLES.find((x) => x.id === "1")!;
+const similar = VEHICLES.filter((x) => x.id !== v.id).slice(0, 3);
+
+const fmt = (n: number) => new Intl.NumberFormat("en-AE").format(n);
+
+const images = [
+  { src: "/products/detail-1.jpg", alt: "Volvo FH 500 — front three-quarter view" },
+  { src: "/products/detail-2.jpg", alt: "Volvo FH 500 — side view" },
+  { src: "/products/detail-3.jpg", alt: "Volvo FH 500 — rear / driver detail" },
+];
+const glbModel = "/models/volvo-fh-tractor.glb";
+const videoSrc = "/videos/volvo-fh-walkaround.mp4";
+const refId = "FA-2024-7821";
+const grade = "A";
+
+type SpecRow = { label: string; value: string; tick?: boolean; emphasis?: boolean };
+type SpecGroup = { title: string; rows: SpecRow[] };
+const SPEC_GROUPS: SpecGroup[] = [
+  {
+    title: "General",
+    rows: [
+      { label: "Product Group", value: "Tractor Head" },
+      { label: "Brand", value: "Volvo" },
+      { label: "Model", value: "FH 500" },
+      { label: "Colour", value: "White" },
+      { label: "Gross Vehicle Weight (GVW)", value: "26,000 kg" },
+      { label: "Power", value: "500 HP" },
+      { label: "Year", value: "2022" },
+      { label: "Mileage", value: "210,000 km" },
+    ],
+  },
+  {
+    title: "Engine & Drivetrain",
+    rows: [
+      { label: "Engine", value: "Volvo D13 · 13L" },
+      { label: "Transmission", value: "I-Shift 12-speed AMT" },
+      { label: "Drive", value: "6×4" },
+      { label: "Fuel", value: "Diesel" },
+      { label: "Emissions", value: "Euro 5" },
+      { label: "Axle ratio", value: "2.79" },
+    ],
+  },
+  {
+    title: "Cab",
+    rows: [
+      { label: "Cab type", value: "Globetrotter XL" },
+      { label: "Beds", value: "Double bunk" },
+      { label: "Air conditioning", value: "", tick: true },
+      { label: "Cruise control", value: "", tick: true },
+      { label: "Leather interior", value: "", tick: true },
+      { label: "Refrigerator", value: "", tick: true },
+    ],
+  },
+  {
+    title: "Safety",
+    rows: [
+      { label: "ABS", value: "", tick: true },
+      { label: "EBS", value: "", tick: true },
+      { label: "Lane departure warning", value: "", tick: true },
+      { label: "Driver airbag", value: "", tick: true },
+    ],
+  },
+  {
+    title: "Vehicle dimensions",
+    rows: [
+      { label: "Vehicle height", value: "380 cm" },
+      { label: "Vehicle length", value: "580 cm" },
+      { label: "Vehicle width", value: "250 cm" },
+      { label: "Wheelbase", value: "380 cm" },
+    ],
+  },
+  {
+    title: "Axle 1 — Steering",
+    rows: [
+      { label: "Axle capacity", value: "7,500 kg" },
+      { label: "Brakes Axle 1", value: "Disc" },
+      { label: "Type of suspension axle 1", value: "Air" },
+      { label: "Type of tyres axle 1", value: "Single" },
+      { label: "Tyre brand Axle 1", value: "Michelin" },
+      { label: "Tyre size Axle 1", value: "315/80R22.5" },
+    ],
+  },
+  {
+    title: "Axle 2 — Drive",
+    rows: [
+      { label: "Axle capacity", value: "11,500 kg" },
+      { label: "Brakes Axle 2", value: "Disc" },
+      { label: "Type of suspension axle 2", value: "Air" },
+      { label: "Type of tyres axle 2", value: "Twin" },
+      { label: "Tyre brand Axle 2", value: "Michelin" },
+      { label: "Tyre size Axle 2", value: "315/80R22.5" },
+    ],
+  },
+  {
+    title: "Axle 3 — Drive",
+    rows: [
+      { label: "Axle capacity", value: "11,500 kg" },
+      { label: "Brakes Axle 3", value: "Disc" },
+      { label: "Type of suspension axle 3", value: "Air" },
+      { label: "Type of tyres axle 3", value: "Twin" },
+      { label: "Tyre brand Axle 3", value: "Michelin" },
+      { label: "Tyre size Axle 3", value: "315/80R22.5" },
+    ],
+  },
+  {
+    title: "Documents",
+    rows: [
+      { label: "Registration date", value: "06-2022" },
+      { label: "Mulkiya", value: "Transferable" },
+      { label: "Customs paperwork", value: "", tick: true },
+      { label: "FAMCO Grade", value: "A — Excellent", emphasis: true },
+    ],
+  },
+];
+
+const FLAG_ISO: Record<string, string> = {
+  UAE: "ae",
+  "Saudi Arabia": "sa",
+  Oman: "om",
+  Qatar: "qa",
+  Bahrain: "bh",
+  Kuwait: "kw",
+};
+
+const DELIVERY_OPTIONS = [
+  { code: "ae", label: "United Arab Emirates", price: 0 },
+  { code: "sa", label: "Saudi Arabia", price: 4200 },
+  { code: "om", label: "Oman", price: 2400 },
+  { code: "qa", label: "Qatar", price: 3800 },
+  { code: "bh", label: "Bahrain", price: 4600 },
+  { code: "kw", label: "Kuwait", price: 5200 },
+];
+
+const BADGE_STYLES: Record<string, string> = {
+  INSPECTED: "bg-primary text-white",
+  "NEW ARRIVAL": "bg-secondary text-ink",
+  SALE: "bg-secondary text-ink",
+  "0% FINANCE": "bg-charcoal text-white",
+};
+
+const pdpTitle = `${v.title} — Used | FAMCO`;
+---
+
+<Layout title={pdpTitle}>
+  <UtilityBar />
+  <Header />
+  <CategoryStrip />
+
+  <main class="bg-bgalt min-h-screen">
+    <section class="container py-6 lg:py-8">
+      {/* Breadcrumb */}
+      <nav class="flex items-center gap-1.5 text-[12.5px] text-muted mb-5 flex-wrap">
+        <a href={link("/")} class="hover:text-secondary">Home</a>
+        <Icon name="lucide:chevron-right" class="h-3 w-3" />
+        <a href={link("/stock")} class="hover:text-secondary">Stock</a>
+        <Icon name="lucide:chevron-right" class="h-3 w-3" />
+        <a href={link("/stock?category=trucks")} class="hover:text-secondary">Trucks</a>
+        <Icon name="lucide:chevron-right" class="h-3 w-3" />
+        <span class="text-ink font-medium truncate">{v.title}</span>
+      </nav>
+
+      {/* ─── Gallery + sticky sidebar ─── */}
+      <div class="grid lg:grid-cols-[70fr_30fr] gap-6 lg:gap-7 items-start">
+        {/* LEFT */}
+        <div class="space-y-5">
+          {/* Gallery card */}
+          <div class="bg-white rounded-xl border border-line shadow-card overflow-hidden">
+            <div class="border-b border-line bg-bgalt/60 px-3 sm:px-4 pt-2.5">
+              <div class="flex items-center gap-1 overflow-x-auto scrollbar-hide">
+                <button data-tab="gallery" class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold whitespace-nowrap border-b-2 -mb-px transition-colors text-ink border-secondary">
+                  <Icon name="lucide:image" class="h-3.5 w-3.5" />
+                  Gallery <span class="text-muted font-normal">({images.length})</span>
+                </button>
+                <button data-tab="360" class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold whitespace-nowrap border-b-2 -mb-px transition-colors text-muted border-transparent hover:text-ink">
+                  <Icon name="lucide:box" class="h-3.5 w-3.5" />
+                  360° View
+                </button>
+                <button data-tab="video" class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-semibold whitespace-nowrap border-b-2 -mb-px transition-colors text-muted border-transparent hover:text-ink">
+                  <Icon name="lucide:video" class="h-3.5 w-3.5" />
+                  Video
+                </button>
+              </div>
+            </div>
+
+            {/* Stage */}
+            <div class="relative aspect-[16/9] max-h-[55vh] bg-bgalt overflow-hidden">
+              {/* Gallery stage */}
+              <div data-stage="gallery" class="absolute inset-0">
+                {images.map((img, i) => (
+                  <img
+                    src={asset(img.src)}
+                    alt={img.alt}
+                    data-stage-img
+                    data-idx={i}
+                    class={`absolute inset-0 h-full w-full object-cover transition-opacity duration-200 ${
+                      i === 0 ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                ))}
+
+                {/* Overlay UI */}
+                <div class="absolute top-3 left-3 flex flex-col gap-1.5 pointer-events-none">
+                  <span class="inline-flex items-center text-[10.5px] font-bold tracking-wider uppercase px-2.5 py-1 rounded bg-secondary text-ink">
+                    FAMCO Approved
+                  </span>
+                  <span class="inline-flex items-center text-[10.5px] font-bold tracking-wider uppercase px-2.5 py-1 rounded bg-charcoal-900/85 text-white backdrop-blur">
+                    Grade {grade}
+                  </span>
+                </div>
+                <span class="absolute top-3 right-3 inline-flex items-center text-[11px] font-semibold px-2.5 py-1 rounded bg-charcoal-900/85 text-white backdrop-blur tabular-nums pointer-events-none">
+                  Ref: {refId}
+                </span>
+
+                {images.length > 1 && (
+                  <>
+                    <button
+                      data-stage-prev
+                      aria-label="Previous photo"
+                      class="absolute left-3 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white/95 hover:bg-white text-ink shadow-card flex items-center justify-center transition-colors"
+                    >
+                      <Icon name="lucide:chevron-left" class="h-4 w-4" />
+                    </button>
+                    <button
+                      data-stage-next
+                      aria-label="Next photo"
+                      class="absolute right-3 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white/95 hover:bg-white text-ink shadow-card flex items-center justify-center transition-colors"
+                    >
+                      <Icon name="lucide:chevron-right" class="h-4 w-4" />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* 360 stage — model-viewer (custom element loaded in Layout) */}
+              <div data-stage="360" class="absolute inset-0 hidden" set:html={`
+                <model-viewer
+                  src="${asset(glbModel)}"
+                  camera-controls
+                  auto-rotate
+                  auto-rotate-delay="0"
+                  rotation-per-second="20deg"
+                  interaction-prompt="auto"
+                  exposure="1"
+                  shadow-intensity="0.7"
+                  style="position:absolute;inset:0;width:100%;height:100%;background:#1A1A1F"
+                ></model-viewer>
+              `} />
+
+              {/* Video stage */}
+              <div data-stage="video" class="absolute inset-0 hidden">
+                <video
+                  data-stage-video
+                  src={asset(videoSrc)}
+                  poster={asset(images[0].src)}
+                  controls
+                  playsinline
+                  preload="metadata"
+                  class="absolute inset-0 h-full w-full object-cover bg-charcoal"
+                ></video>
+              </div>
+            </div>
+
+            {/* Thumbnail rail — 3 photo tiles + 1 video tile spanning full row */}
+            <div data-thumb-rail class="px-3 sm:px-4 py-3 border-t border-line">
+              <div class="grid grid-cols-4 gap-3" data-thumb-list>
+                {images.map((img, i) => (
+                  <button
+                    data-thumb
+                    data-idx={i}
+                    aria-label={`Show photo ${i + 1}`}
+                    class={`aspect-[4/3] rounded-lg overflow-hidden border-2 transition-all ${
+                      i === 0 ? "border-secondary ring-2 ring-secondary/30" : "border-line hover:border-secondary/50"
+                    }`}
+                  >
+                    <img src={asset(img.src)} alt="" aria-hidden="true" class="h-full w-full object-cover" />
+                  </button>
+                ))}
+                <button
+                  data-thumb-video
+                  aria-label="Play walk-around video"
+                  class="relative aspect-[4/3] rounded-lg overflow-hidden border-2 border-line hover:border-secondary/50 transition-all group"
+                >
+                  <img
+                    src={asset(images[0].src)}
+                    alt=""
+                    aria-hidden="true"
+                    class="h-full w-full object-cover"
+                  />
+                  <span class="absolute inset-0 bg-charcoal-900/45 group-hover:bg-charcoal-900/35 transition-colors"></span>
+                  <span class="absolute inset-0 flex items-center justify-center">
+                    <span class="h-9 w-9 rounded-full bg-white/95 text-ink shadow-card flex items-center justify-center group-hover:bg-white">
+                      <Icon name="lucide:play" class="h-4 w-4 translate-x-[1px]" />
+                    </span>
+                  </span>
+                  <span class="absolute bottom-1.5 left-1.5 text-[9.5px] font-bold uppercase tracking-wider text-white bg-charcoal-900/70 px-1.5 py-0.5 rounded">
+                    Video
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Spec tabs */}
+          <div class="bg-white rounded-xl border border-line shadow-card p-5 lg:p-7">
+            <header class="flex items-center justify-between gap-3 mb-6">
+              <h2 class="font-display text-[20px] lg:text-[22px] font-bold text-ink">
+                About this <span class="text-secondary">vehicle</span>
+              </h2>
+            </header>
+
+            <div class="space-y-7">
+              {SPEC_GROUPS.map((g, i) => {
+                const isDimensions = g.title === "Vehicle dimensions";
+                const isAxle = g.title.startsWith("Axle ");
+                const hasInfographic = isDimensions || isAxle;
+                return (
+                  <section data-spec-group data-extra={i >= 1 ? "1" : "0"} class={i >= 1 ? "hidden" : ""}>
+                    <h3 class="font-display text-[15px] font-bold text-ink mb-2">{g.title}</h3>
+                    {hasInfographic ? (
+                      <div class="grid sm:grid-cols-2 gap-6 lg:gap-10 items-center">
+                        <dl class="grid sm:grid-cols-1 gap-x-10">
+                          {g.rows.map((r) => (
+                            <div class="flex items-baseline justify-between gap-3 py-2.5 border-b border-line text-[13.5px]">
+                              <dt class="text-muted">{r.label}</dt>
+                              <dd class={r.emphasis ? "font-bold text-secondary tabular-nums text-right" : "font-semibold text-ink tabular-nums text-right"}>
+                                {r.tick ? (
+                                  <svg viewBox="0 0 16 16" class="inline-block h-4 w-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" aria-label="Yes">
+                                    <path d="M3 8 L7 12 L13 4" stroke-linecap="round" stroke-linejoin="round" />
+                                  </svg>
+                                ) : (
+                                  r.value
+                                )}
+                              </dd>
+                            </div>
+                          ))}
+                        </dl>
+
+                        {isDimensions ? (
+                          <svg
+                            viewBox="0 0 240 220"
+                            role="img"
+                            aria-label="Vehicle dimensions: 380 cm height, 580 cm length, 250 cm width"
+                            class="w-full max-w-[260px] mx-auto block"
+                          >
+                            <defs>
+                              <marker id="dimArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#0F172A" />
+                              </marker>
+                            </defs>
+                            <polygon points="160,90 200,65 200,145 160,170" fill="#15803D" />
+                            <polygon points="50,90 90,65 200,65 160,90" fill="#22C55E" />
+                            <polygon points="50,90 160,90 160,170 50,170" fill="#16A34A" />
+                            <polyline points="50,90 50,170 160,170 200,145 200,65 90,65 50,90 160,90 160,170" fill="none" stroke="#0F5132" stroke-width="0.6" stroke-linejoin="round" />
+                            <line x1="160" y1="90" x2="200" y2="65" stroke="#0F5132" stroke-width="0.6" />
+                            <line x1="35" y1="90" x2="35" y2="170" stroke="#0F172A" stroke-width="1" marker-start="url(#dimArrow)" marker-end="url(#dimArrow)" />
+                            <text x="30" y="134" font-size="11" font-weight="700" fill="#0F172A" text-anchor="end" font-family="sans-serif">380 cm</text>
+                            <line x1="50" y1="190" x2="160" y2="190" stroke="#0F172A" stroke-width="1" marker-start="url(#dimArrow)" marker-end="url(#dimArrow)" />
+                            <text x="105" y="208" font-size="11" font-weight="700" fill="#0F172A" text-anchor="middle" font-family="sans-serif">580 cm</text>
+                            <line x1="166" y1="184" x2="206" y2="159" stroke="#0F172A" stroke-width="1" marker-start="url(#dimArrow)" marker-end="url(#dimArrow)" />
+                            <text x="222" y="178" font-size="11" font-weight="700" fill="#0F172A" text-anchor="start" font-family="sans-serif">250 cm</text>
+                          </svg>
+                        ) : (
+                          <svg
+                            viewBox="0 0 360 180"
+                            role="img"
+                            aria-label="Both tyres at 100% tread depth"
+                            class="w-full max-w-[300px] mx-auto block"
+                          >
+                            <rect x="110" y="83" width="140" height="14" rx="3" fill="#94A3B8" />
+                            <rect x="110" y="83" width="140" height="4" rx="2" fill="#CBD5E1" />
+                            <circle cx="110" cy="90" r="9" fill="#64748B" />
+                            <circle cx="250" cy="90" r="9" fill="#64748B" />
+                            <circle cx="70" cy="90" r="60" fill="#0F172A" />
+                            <circle cx="70" cy="90" r="56" fill="none" stroke="#1F2937" stroke-width="2" stroke-dasharray="3 4" />
+                            <circle cx="70" cy="90" r="22" fill="#64748B" />
+                            <circle cx="70" cy="90" r="14" fill="#94A3B8" />
+                            <text x="70" y="95" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="sans-serif" style="paint-order:stroke;stroke:#0F172A;stroke-width:3px">100%</text>
+                            <circle cx="290" cy="90" r="60" fill="#0F172A" />
+                            <circle cx="290" cy="90" r="56" fill="none" stroke="#1F2937" stroke-width="2" stroke-dasharray="3 4" />
+                            <circle cx="290" cy="90" r="22" fill="#64748B" />
+                            <circle cx="290" cy="90" r="14" fill="#94A3B8" />
+                            <text x="290" y="95" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle" font-family="sans-serif" style="paint-order:stroke;stroke:#0F172A;stroke-width:3px">100%</text>
+                          </svg>
+                        )}
+                      </div>
+                    ) : (
+                      <dl class="grid sm:grid-cols-2 gap-x-10">
+                        {g.rows.map((r) => (
+                          <div class="flex items-baseline justify-between gap-3 py-2.5 border-b border-line text-[13.5px]">
+                            <dt class="text-muted">{r.label}</dt>
+                            <dd class={r.emphasis ? "font-bold text-secondary tabular-nums text-right" : "font-semibold text-ink tabular-nums text-right"}>
+                              {r.tick ? (
+                                <svg viewBox="0 0 16 16" class="inline-block h-4 w-4 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" aria-label="Yes">
+                                  <path d="M3 8 L7 12 L13 4" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                              ) : (
+                                r.value
+                              )}
+                            </dd>
+                          </div>
+                        ))}
+                      </dl>
+                    )}
+                  </section>
+                );
+              })}
+            </div>
+
+            <div class="mt-6 pt-5 border-t border-line flex justify-center">
+              <button
+                data-spec-toggle
+                aria-expanded="false"
+                class="inline-flex items-center gap-2 h-10 px-5 rounded-md border border-line bg-white text-ink text-[13px] font-semibold hover:border-charcoal hover:bg-bgalt transition-colors"
+              >
+                <span data-spec-toggle-label>Show all specifications</span>
+                <Icon name="lucide:chevron-down" class="h-4 w-4 transition-transform" data-spec-toggle-chevron />
+              </button>
+            </div>
+          </div>
+
+          {/* Transport costs */}
+          <div class="bg-white rounded-xl border border-line shadow-card p-4">
+            <header class="flex items-center gap-1.5 mb-3">
+              <Icon name="lucide:truck" class="h-4 w-4 text-secondary" />
+              <h2 class="font-display text-[14px] font-bold text-ink">Transport costs</h2>
+            </header>
+
+            <div class="flex items-center gap-2 text-[12.5px] flex-wrap">
+              <span class="flex items-center gap-1.5 shrink-0">
+                <span aria-hidden="true" class="fi fi-ae rounded-sm shadow-[0_0_0_0.5px_rgba(0,0,0,0.08)] shrink-0" style="width:1.25em;height:0.95em"></span>
+                <span class="font-semibold text-ink">Dubai, UAE</span>
+              </span>
+
+              <span aria-hidden="true" class="text-muted">→</span>
+
+              <div class="relative min-w-[150px]" data-transport-wrap>
+                <button
+                  type="button"
+                  data-transport-toggle
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  class="w-full flex items-center justify-between gap-1.5 h-9 px-2.5 rounded-md border border-line bg-bgalt/50 hover:border-charcoal transition-colors"
+                >
+                  <span class="flex items-center gap-1.5 min-w-0" data-transport-current>
+                    <span class="text-muted">Deliver to · TBD</span>
+                  </span>
+                  <Icon name="lucide:chevron-down" class="h-3.5 w-3.5 text-muted shrink-0 transition-transform" data-transport-chevron />
+                </button>
+
+                <ul
+                  role="listbox"
+                  data-transport-menu
+                  class="hidden absolute left-0 right-0 top-full mt-1 z-20 bg-white rounded-md border border-line shadow-lift py-1 max-h-56 overflow-y-auto"
+                >
+                  {DELIVERY_OPTIONS.map((o) => (
+                    <li>
+                      <button
+                        type="button"
+                        role="option"
+                        data-transport-option
+                        data-code={o.code}
+                        data-label={o.label}
+                        data-price={o.price}
+                        class="w-full flex items-center gap-2 px-2.5 py-1.5 text-left text-[12.5px] hover:bg-bgalt text-ink"
+                      >
+                        <span aria-hidden="true" class={`fi fi-${o.code} rounded-sm shadow-[0_0_0_0.5px_rgba(0,0,0,0.08)] shrink-0`} style="width:1.25em;height:0.95em"></span>
+                        {o.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <span data-transport-price class="font-display text-[14px] font-bold text-ink tabular-nums whitespace-nowrap">
+                AED ····
+              </span>
+            </div>
+
+            <p class="mt-2 text-[10.5px] text-muted">Estimates only — final price may vary.</p>
+          </div>
+        </div>
+
+        {/* RIGHT — sticky sidebar */}
+        <div class="lg:sticky lg:top-32 self-start space-y-3">
+          <aside class="space-y-3">
+            <div class="bg-white rounded-xl border border-line shadow-card p-5">
+              <div class="flex items-start justify-between gap-3">
+                <div class="text-[12px] text-muted leading-snug">
+                  <span class="text-muted">Ref: </span>
+                  <span class="text-ink font-semibold tabular-nums">{refId}</span>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button data-pdp-save aria-label="Save to favorites" class="h-8 w-8 rounded-md border border-line bg-white hover:bg-bgalt flex items-center justify-center transition-colors">
+                    <Icon name="lucide:heart" class="h-4 w-4 text-ink" />
+                  </button>
+                  <button aria-label="Share" class="h-8 w-8 rounded-md border border-line bg-white hover:bg-bgalt flex items-center justify-center transition-colors">
+                    <Icon name="lucide:share-2" class="h-4 w-4 text-ink" />
+                  </button>
+                </div>
+              </div>
+
+              <h1 class="font-display text-[19px] sm:text-[21px] font-bold text-ink leading-tight mt-3">
+                {v.title}
+              </h1>
+
+              <div class="mt-3 flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 bg-secondary/10 text-secondary text-[12px] font-bold px-2.5 py-1 rounded">
+                  <Icon name="lucide:shield-check" class="h-3.5 w-3.5" />
+                  FAMCO Approved
+                </span>
+                <span class="inline-flex items-center bg-bgalt border border-line text-ink text-[12px] font-semibold px-2.5 py-1 rounded">
+                  Grade A — Excellent
+                </span>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-line">
+                <div class="flex items-baseline gap-2 flex-wrap">
+                  <span class="font-display text-[28px] lg:text-[30px] font-bold text-ink leading-none tabular-nums">
+                    AED {fmt(v.price)}
+                  </span>
+                  <span class="text-[13px] text-muted">/ VAT Excl.</span>
+                </div>
+                <div class="mt-1 text-[12.5px] text-muted">
+                  ~USD {fmt(77600)}
+                  <span class="mx-1.5 text-line">·</span>
+                  Finance from AED {fmt(4200)}/mo
+                </div>
+              </div>
+
+              <a
+                href="#buy"
+                class="mt-5 inline-flex items-center justify-center gap-2 w-full h-12 rounded-md bg-secondary hover:bg-secondary-600 text-ink font-bold text-[14px] transition-colors shadow-[0_2px_0_rgba(0,0,0,0.05)]"
+              >
+                <Icon name="lucide:send" class="h-4 w-4" />
+                Buy Now
+              </a>
+
+              <div class="mt-4 pt-4 border-t border-line inline-flex items-center gap-1.5 text-[12.5px] text-secondary">
+                <Icon name="lucide:shield-check" class="h-4 w-4" />
+                3-Month FAMCO Drivetrain Warranty included
+              </div>
+            </div>
+          </aside>
+
+          {/* Two stacked CTAs — full-width so the Live Inspection title
+              fits on one line in the narrow 30% sidebar. */}
+          <div class="grid grid-cols-1 gap-3">
+            <button
+              type="button"
+              data-download-report
+              class="group flex items-center gap-3 min-h-14 py-2.5 px-4 rounded-xl bg-white border border-line shadow-card text-ink hover:border-charcoal hover:bg-bgalt transition-colors text-left w-full"
+            >
+              <span class="inline-flex h-9 w-9 rounded-lg bg-bgalt items-center justify-center shrink-0 group-hover:bg-white">
+                <Icon name="lucide:file-down" class="h-4 w-4 text-secondary-700" />
+              </span>
+              <span class="flex-1 text-left leading-snug min-w-0">
+                <span class="block text-[13.5px] font-bold" data-download-label>Download</span>
+                <span class="block text-[10.5px] font-bold uppercase tracking-wider opacity-70 mt-0.5">
+                  Inspection report
+                </span>
+              </span>
+            </button>
+
+            <a
+              href="#"
+              class="group relative flex items-center gap-3 w-full min-h-14 py-2.5 px-4 rounded-xl bg-secondary hover:bg-secondary-600 text-ink shadow-card transition-colors"
+            >
+              <span class="inline-flex h-9 w-9 rounded-lg bg-ink/10 items-center justify-center shrink-0">
+                <Icon name="lucide:video" class="h-4 w-4" />
+              </span>
+              <span class="flex-1 text-left leading-snug min-w-0">
+                <span class="block text-[13.5px] font-bold">Schedule Live Inspection</span>
+                <span class="block text-[10.5px] font-bold uppercase tracking-wider opacity-80 mt-0.5">
+                  Free · No commitment
+                </span>
+              </span>
+              <Icon name="lucide:arrow-right" class="h-4 w-4 shrink-0 group-hover:translate-x-1 transition-transform" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── State of vehicle + Things to know ─── */}
+      <section class="mt-14 lg:mt-20">
+        <div class="grid lg:grid-cols-[60fr_40fr] gap-4 lg:gap-5">
+          <article id="inspection-report" class="group relative overflow-hidden rounded-2xl bg-charcoal min-h-[420px] lg:min-h-[520px]">
+            <img
+              src={asset("/placeholders/get-car-inspected.jpg")}
+              alt="FAMCO technician inspecting the underside of a truck"
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-r from-charcoal-900 via-charcoal-800/70 to-transparent"></div>
+            <div class="relative h-full p-7 lg:p-10 flex flex-col justify-start text-white max-w-xl">
+              <span class="text-[11px] font-bold uppercase tracking-[0.18em] text-secondary-300 mb-3">
+                State of this vehicle
+              </span>
+              <h3 class="font-display text-2xl lg:text-3xl font-bold leading-tight mb-3">
+                Fully <span class="text-secondary-300">inspected</span>
+              </h3>
+              <p class="text-[14px] text-white/85 leading-relaxed mb-5">
+                Knowing the condition of a vehicle or machine is essential. Every vehicle on FAMCO is pre-inspected by our experts — what you see is truly what you get, giving you the confidence to make the right decision.
+              </p>
+              <a href="#inspection-report" class="inline-flex items-center gap-2 text-[14px] font-semibold text-secondary-300 hover:gap-3 transition-all w-fit">
+                See the full report
+                <Icon name="lucide:arrow-right" class="h-4 w-4" />
+              </a>
+            </div>
+          </article>
+
+          <div class="grid grid-rows-2 gap-4 lg:gap-5 min-h-[420px] lg:min-h-[520px]">
+            {[
+              { title: "Finance & warranty at FAMCO", body: "Flexible finance, warranty cover and in-house workshop service on every used vehicle.", cta: "Explore options", href: "/stock", image: "/placeholders/cat-construction.jpg" },
+              { title: "Sell your current vehicle", body: "Get a free price proposal — our experts handle valuation, paperwork and pickup for you.", cta: "Start selling", href: "/stock?category=sell", image: "/placeholders/sell-current-vehicle.png" },
+            ].map((s) => (
+              <a href={link(s.href)} class="group relative overflow-hidden rounded-2xl bg-charcoal block">
+                <img src={asset(s.image)} alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <div class="absolute inset-0 bg-gradient-to-r from-charcoal-900 via-charcoal-800/70 to-transparent"></div>
+                <div class="relative h-full p-5 lg:p-6 flex flex-col justify-start text-white">
+                  <h3 class="font-display text-lg lg:text-xl font-bold leading-tight mb-1.5">{s.title}</h3>
+                  <p class="text-[12.5px] text-white/80 leading-snug mb-3 max-w-md">{s.body}</p>
+                  <span class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary-300 group-hover:gap-2.5 transition-all w-fit">
+                    {s.cta}
+                    <Icon name="lucide:arrow-right" class="h-3.5 w-3.5" />
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Similar vehicles ─── */}
+      <div class="mt-14 lg:mt-20">
+        <div class="flex items-end justify-between gap-4 mb-6">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-[0.18em] text-secondary mb-1">More like this</div>
+            <h2 class="font-display text-2xl lg:text-3xl font-bold text-ink">
+              Similar <span class="text-secondary">vehicles</span>
+            </h2>
+          </div>
+          <a href={link("/stock")} class="text-[13px] font-semibold text-secondary hover:underline">
+            View all stock →
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {similar.map((s) => (
+            <article class="group relative bg-white rounded-xl overflow-hidden border border-line shadow-card hover:shadow-lift hover:-translate-y-0.5 hover:border-secondary transition-all duration-300">
+              <a href={link(s.href ?? "/stock")} class="block relative aspect-[4/3] overflow-hidden bg-bgalt rounded-t-xl">
+                <img src={asset(s.image)} alt={s.title} class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <span class="absolute top-3 left-3 inline-flex items-center gap-1 bg-white/95 backdrop-blur text-ink text-[10px] font-bold tracking-wider px-2 py-1 rounded shadow-card">
+                  <span class="h-3.5 w-3.5 rounded-full bg-secondary text-ink flex items-center justify-center text-[9px] leading-none">✓</span>
+                  FAMCO APPROVED
+                </span>
+                {s.badges && s.badges.filter((b) => b !== "NEW ARRIVAL" && b !== "0% FINANCE" && b !== "SALE").length > 0 && (
+                  <div class="absolute top-3 right-14 flex flex-col gap-1 items-end">
+                    {s.badges.filter((b) => b !== "NEW ARRIVAL" && b !== "0% FINANCE" && b !== "SALE").map((b) => (
+                      <span class={`text-[10px] font-bold tracking-wider px-2 py-1 rounded ${BADGE_STYLES[b] ?? "bg-charcoal text-white"}`}>{b}</span>
+                    ))}
+                  </div>
+                )}
+              </a>
+              <div class="p-5">
+                <a href={link(s.href ?? "/stock")} class="block">
+                  <h3 class="font-display text-[16px] sm:text-[17px] font-bold text-ink leading-tight line-clamp-1">
+                    {s.title}
+                  </h3>
+                </a>
+                {s.description && (
+                  <p class="mt-1 text-[13px] text-muted line-clamp-1">{s.description}</p>
+                )}
+                <div class="mt-3 text-[12.5px] text-ink/85 leading-relaxed">
+                  {[
+                    s.brand,
+                    s.country,
+                    String(s.year),
+                    s.hours ? `${fmt(s.hours)} hrs` : s.km !== undefined ? `${fmt(s.km)} km` : "",
+                    s.transmission ?? "",
+                  ].filter(Boolean).map((label, i) => (
+                    <span>
+                      {i > 0 && <span class="text-line mx-2">|</span>}
+                      <span>{label}</span>
+                    </span>
+                  ))}
+                </div>
+                <div class="mt-3 flex items-center justify-between text-[12.5px] gap-3">
+                  <span class="inline-flex items-center gap-1.5 text-ink font-semibold">
+                    <Icon name="lucide:triangle" class="h-3 w-3 text-secondary fill-secondary" style="transform:rotate(90deg)" />
+                    {s.dealer ?? "FAMCO"}
+                  </span>
+                  {s.country && (
+                    <span class="inline-flex items-center gap-1.5 text-ink/85">
+                      {FLAG_ISO[s.country] && (
+                        <span aria-hidden="true" class={`fi fi-${FLAG_ISO[s.country]} rounded-sm shadow-[0_0_0_0.5px_rgba(0,0,0,0.08)]`} style="width:1.2em;height:0.9em"></span>
+                      )}
+                      {s.country}
+                    </span>
+                  )}
+                </div>
+                <div class="mt-4 pt-3 border-t border-line text-center">
+                  <div class="text-[13px] text-muted">Buy</div>
+                  {s.oldPrice && s.oldPrice > s.price && (
+                    <div class="text-[12.5px] text-muted line-through tabular-nums">
+                      AED {fmt(s.oldPrice)}
+                    </div>
+                  )}
+                  <div class="font-display text-[20px] font-bold text-ink leading-none tabular-nums mt-0.5">
+                    AED {fmt(s.price)}
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+  <ThemePicker />
+</Layout>
+
+<script>
+  /* ─── Gallery — tab switching, prev/next, thumbnail click ─── */
+  const tabBtns = document.querySelectorAll<HTMLButtonElement>("[data-tab]");
+  const stages = document.querySelectorAll<HTMLDivElement>("[data-stage]");
+  function setTab(name: string) {
+    tabBtns.forEach((b) => {
+      const active = b.dataset.tab === name;
+      b.classList.toggle("text-ink", active);
+      b.classList.toggle("border-secondary", active);
+      b.classList.toggle("text-muted", !active);
+      b.classList.toggle("border-transparent", !active);
+    });
+    stages.forEach((s) => s.classList.toggle("hidden", s.dataset.stage !== name));
+  }
+  tabBtns.forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab!)));
+
+  const stageImgs = Array.from(document.querySelectorAll<HTMLImageElement>("[data-stage-img]"));
+  const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-thumb]"));
+  let idx = 0;
+  function showImage(i: number) {
+    if (stageImgs.length === 0) return;
+    idx = ((i % stageImgs.length) + stageImgs.length) % stageImgs.length;
+    stageImgs.forEach((img, j) => {
+      img.classList.toggle("opacity-100", j === idx);
+      img.classList.toggle("opacity-0", j !== idx);
+    });
+    thumbs.forEach((t, j) => {
+      const active = j === idx;
+      t.classList.toggle("border-secondary", active);
+      t.classList.toggle("ring-2", active);
+      t.classList.toggle("ring-secondary/30", active);
+      t.classList.toggle("border-line", !active);
+      t.classList.toggle("hover:border-secondary/50", !active);
+    });
+  }
+  document.querySelector<HTMLButtonElement>("[data-stage-prev]")?.addEventListener("click", () => showImage(idx - 1));
+  document.querySelector<HTMLButtonElement>("[data-stage-next]")?.addEventListener("click", () => showImage(idx + 1));
+  thumbs.forEach((t) => {
+    t.addEventListener("click", () => {
+      setTab("gallery");
+      showImage(Number(t.dataset.idx));
+    });
+  });
+  document.querySelector<HTMLButtonElement>("[data-thumb-video]")?.addEventListener("click", () => {
+    setTab("video");
+  });
+
+  /* ─── Spec accordion: show all / show less ─── */
+  const specToggle = document.querySelector<HTMLButtonElement>("[data-spec-toggle]");
+  const specToggleLabel = document.querySelector<HTMLElement>("[data-spec-toggle-label]");
+  const specToggleChevron = document.querySelector<HTMLElement>("[data-spec-toggle-chevron]");
+  const extraGroups = document.querySelectorAll<HTMLElement>('[data-spec-group][data-extra="1"]');
+  let expanded = false;
+  specToggle?.addEventListener("click", () => {
+    expanded = !expanded;
+    extraGroups.forEach((g) => g.classList.toggle("hidden", !expanded));
+    if (specToggleLabel) {
+      specToggleLabel.textContent = expanded ? "Show less specifications" : "Show all specifications";
+    }
+    specToggleChevron?.classList.toggle("rotate-180", expanded);
+    specToggle.setAttribute("aria-expanded", String(expanded));
+  });
+
+  /* ─── Transport costs dropdown ─── */
+  const transportToggle = document.querySelector<HTMLButtonElement>("[data-transport-toggle]");
+  const transportMenu = document.querySelector<HTMLUListElement>("[data-transport-menu]");
+  const transportChevron = document.querySelector<HTMLElement>("[data-transport-chevron]");
+  const transportCurrent = document.querySelector<HTMLElement>("[data-transport-current]");
+  const transportPrice = document.querySelector<HTMLElement>("[data-transport-price]");
+  const transportWrap = document.querySelector<HTMLElement>("[data-transport-wrap]");
+  function fmtNum(n: number) {
+    return new Intl.NumberFormat("en-AE").format(n);
+  }
+  transportToggle?.addEventListener("click", () => {
+    transportMenu?.classList.toggle("hidden");
+    transportChevron?.classList.toggle("rotate-180");
+  });
+  document.addEventListener("mousedown", (e) => {
+    if (transportWrap && !transportWrap.contains(e.target as Node)) {
+      transportMenu?.classList.add("hidden");
+      transportChevron?.classList.remove("rotate-180");
+    }
+  });
+  document.querySelectorAll<HTMLButtonElement>("[data-transport-option]").forEach((opt) => {
+    opt.addEventListener("click", () => {
+      const code = opt.dataset.code!;
+      const label = opt.dataset.label!;
+      const price = Number(opt.dataset.price);
+      if (transportCurrent) {
+        transportCurrent.innerHTML = `<span aria-hidden="true" class="fi fi-${code} rounded-sm shadow-[0_0_0_0.5px_rgba(0,0,0,0.08)] shrink-0" style="width:1.25em;height:0.95em"></span><span class="font-semibold text-ink truncate">${label}</span>`;
+      }
+      if (transportPrice) {
+        transportPrice.textContent = `AED ${fmtNum(price)}`;
+      }
+      transportMenu?.classList.add("hidden");
+      transportChevron?.classList.remove("rotate-180");
+    });
+  });
+
+  /* ─── Sidebar save toggle ─── */
+  const saveBtn = document.querySelector<HTMLButtonElement>("[data-pdp-save]");
+  let saved = false;
+  saveBtn?.addEventListener("click", () => {
+    saved = !saved;
+    const heart = saveBtn.querySelector("svg");
+    if (heart) {
+      heart.classList.toggle("fill-secondary", saved);
+      heart.classList.toggle("text-secondary", saved);
+    }
+    saveBtn.setAttribute("aria-label", saved ? "Remove from favorites" : "Save to favorites");
+  });
+</script>
+
+{/* ─── PDF download: lazy-load jsPDF on click and build an inspection
+     report from the same data SSR'd into the page. ─────────────────── */}
+<script
+  is:inline
+  define:vars={{
+    SPEC_GROUPS,
+    vehicleTitle: v.title,
+    refId,
+    grade,
+    year: v.year,
+    km: v.km,
+    dealer: v.dealer ?? "FAMCO",
+    country: v.country,
+    price: v.price,
+    oldPrice: v.oldPrice ?? null,
+    description: v.description,
+  }}
+>
+  (function () {
+    var btn = document.querySelector("[data-download-report]");
+    var labelEl = document.querySelector("[data-download-label]");
+    if (!btn) return;
+
+    function loadScript(src) {
+      return new Promise(function (resolve, reject) {
+        var s = document.createElement("script");
+        s.src = src;
+        s.onload = resolve;
+        s.onerror = function () { reject(new Error("Failed to load " + src)); };
+        document.head.appendChild(s);
+      });
+    }
+
+    function fmt(n) { return new Intl.NumberFormat("en-AE").format(n); }
+    function slugify(s) {
+      return String(s).toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)+/g, "");
+    }
+
+    var busy = false;
+    btn.addEventListener("click", async function () {
+      if (busy) return;
+      busy = true;
+      var originalLabel = labelEl ? labelEl.textContent : "Download";
+      if (labelEl) labelEl.textContent = "Preparing PDF…";
+      try {
+        if (!window.jspdf) {
+          await loadScript("https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js");
+        }
+        var jsPDF = window.jspdf.jsPDF;
+        var doc = new jsPDF({ unit: "pt", format: "a4" });
+
+        var PAGE_W = doc.internal.pageSize.getWidth();
+        var PAGE_H = doc.internal.pageSize.getHeight();
+        var MARGIN_X = 40;
+        var MARGIN_TOP = 56;
+        var MARGIN_BOTTOM = 50;
+        var y = MARGIN_TOP;
+
+        // Theme colours (RGB)
+        var INK = [15, 23, 42];
+        var MUTED = [107, 114, 128];
+        var SECONDARY = [255, 198, 25]; // FAMCO yellow
+        var LINE = [229, 231, 235];
+
+        function ensureSpace(needed) {
+          if (y + needed > PAGE_H - MARGIN_BOTTOM) {
+            doc.addPage();
+            y = MARGIN_TOP;
+          }
+        }
+        function setColor(rgb) { doc.setTextColor(rgb[0], rgb[1], rgb[2]); }
+        function setDraw(rgb) { doc.setDrawColor(rgb[0], rgb[1], rgb[2]); }
+        function setFill(rgb) { doc.setFillColor(rgb[0], rgb[1], rgb[2]); }
+
+        // ── Header band ──────────────────────────────────────────
+        setFill([26, 26, 31]); // charcoal
+        doc.rect(0, 0, PAGE_W, 38, "F");
+        setColor([255, 255, 255]);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text("AL-FUTTAIM FAMCO  ·  USED EQUIPMENT", MARGIN_X, 24);
+        setColor(SECONDARY);
+        doc.text("Inspection Report", PAGE_W - MARGIN_X, 24, { align: "right" });
+
+        y = 70;
+
+        // ── Title block ──────────────────────────────────────────
+        setColor(INK);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(18);
+        var titleLines = doc.splitTextToSize(vehicleTitle, PAGE_W - MARGIN_X * 2);
+        doc.text(titleLines, MARGIN_X, y);
+        y += titleLines.length * 22;
+
+        setColor(MUTED);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        var meta = "Ref: " + refId + "   ·   Grade " + grade + "   ·   FAMCO Approved";
+        doc.text(meta, MARGIN_X, y);
+        y += 18;
+
+        if (description) {
+          setColor(INK);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(10.5);
+          var descLines = doc.splitTextToSize(description, PAGE_W - MARGIN_X * 2);
+          doc.text(descLines, MARGIN_X, y);
+          y += descLines.length * 14 + 6;
+        }
+
+        // ── Key facts row ────────────────────────────────────────
+        setDraw(LINE);
+        doc.line(MARGIN_X, y, PAGE_W - MARGIN_X, y);
+        y += 18;
+
+        var facts = [
+          { k: "Year", v: String(year) },
+          { k: "Mileage", v: km != null ? fmt(km) + " km" : "—" },
+          { k: "Dealer", v: dealer },
+          { k: "Country", v: country },
+        ];
+        var colW = (PAGE_W - MARGIN_X * 2) / facts.length;
+        facts.forEach(function (f, i) {
+          var x = MARGIN_X + colW * i;
+          setColor(MUTED);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8.5);
+          doc.text(f.k.toUpperCase(), x, y);
+          setColor(INK);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(11);
+          doc.text(f.v, x, y + 14);
+        });
+        y += 36;
+
+        // ── Price block ──────────────────────────────────────────
+        setFill([245, 246, 247]); // bgalt
+        doc.rect(MARGIN_X, y, PAGE_W - MARGIN_X * 2, 46, "F");
+        setColor(MUTED);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.text("LIST PRICE / VAT EXCL.", MARGIN_X + 14, y + 18);
+        setColor(INK);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(20);
+        doc.text("AED " + fmt(price), MARGIN_X + 14, y + 38);
+        if (oldPrice && oldPrice > price) {
+          setColor(MUTED);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(10);
+          doc.text("Was AED " + fmt(oldPrice), PAGE_W - MARGIN_X - 14, y + 38, { align: "right" });
+        }
+        y += 60;
+
+        // ── Spec groups ──────────────────────────────────────────
+        SPEC_GROUPS.forEach(function (group) {
+          ensureSpace(40);
+          setColor(INK);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(12);
+          doc.text(group.title, MARGIN_X, y);
+          y += 6;
+          setDraw(SECONDARY);
+          doc.setLineWidth(1.5);
+          doc.line(MARGIN_X, y, MARGIN_X + 36, y);
+          doc.setLineWidth(0.5);
+          y += 14;
+
+          group.rows.forEach(function (row) {
+            ensureSpace(20);
+            setDraw(LINE);
+            doc.line(MARGIN_X, y + 14, PAGE_W - MARGIN_X, y + 14);
+            setColor(MUTED);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9.5);
+            doc.text(row.label, MARGIN_X, y + 9);
+            var val = row.tick ? "Yes" : (row.value || "—");
+            if (row.emphasis) {
+              setColor([214, 176, 0]); // secondary-600
+              doc.setFont("helvetica", "bold");
+            } else {
+              setColor(INK);
+              doc.setFont("helvetica", "bold");
+            }
+            doc.setFontSize(9.5);
+            doc.text(String(val), PAGE_W - MARGIN_X, y + 9, { align: "right" });
+            y += 18;
+          });
+          y += 12;
+        });
+
+        // ── Footer on each page ──────────────────────────────────
+        var pageCount = doc.getNumberOfPages();
+        for (var p = 1; p <= pageCount; p++) {
+          doc.setPage(p);
+          setColor(MUTED);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8);
+          doc.text(
+            "FAMCO@alfuttaim.ae  ·  800 32626  ·  www.famco.ae",
+            MARGIN_X,
+            PAGE_H - 24
+          );
+          doc.text(
+            "Page " + p + " of " + pageCount,
+            PAGE_W - MARGIN_X,
+            PAGE_H - 24,
+            { align: "right" }
+          );
+        }
+
+        doc.save("FAMCO-" + slugify(vehicleTitle) + "-inspection-report.pdf");
+      } catch (err) {
+        console.error("PDF generation failed:", err);
+        alert("Sorry — couldn't generate the PDF. Please try again.");
+      } finally {
+        if (labelEl) labelEl.textContent = originalLabel;
+        busy = false;
+      }
+    });
+  })();
+</script>

@@ -210,7 +210,7 @@ export default function Header() {
               ) : (
                 <ul className="max-h-[70vh] overflow-y-auto divide-y divide-line">
                   {matches.map((v) => {
-                    const currency = v.currency ?? "AED";
+                    const currency = "AED";
                     const usage = v.hours
                       ? `${fmtNum(v.hours)} hrs`
                       : v.km !== undefined

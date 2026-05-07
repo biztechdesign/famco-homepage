@@ -1,0 +1,323 @@
+---
+import { Icon } from "astro-icon/components";
+
+const ANNOUNCEMENTS = [
+  "Eid Al Adha offers — save up to AED 25,000 on selected Volvo FH tractors",
+  "Free GCC delivery on all inspected used trucks this month",
+  "Just arrived: low-mileage Volvo FH Aero at FAMCO DIP showroom",
+  "TMH Umm Ramool workshop — book a service slot online in 60 seconds",
+];
+
+const COUNTRIES = [
+  { code: "UAE", label: "UAE", flag: "ae" },
+  { code: "SA", label: "Saudi Arabia", flag: "sa" },
+];
+
+const LANGUAGES = [
+  { code: "EN", country: "United Arab Emirates", label: "English", flag: "ae" },
+  { code: "AR", country: "United Arab Emirates", label: "العربية", flag: "ae" },
+  { code: "EN-GB", country: "United Kingdom", label: "English", flag: "gb" },
+  { code: "EN-SA", country: "Saudi Arabia", label: "English", flag: "sa" },
+  { code: "AR-SA", country: "Saudi Arabia", label: "العربية", flag: "sa" },
+  { code: "EN-OM", country: "Oman", label: "English", flag: "om" },
+  { code: "EN-QA", country: "Qatar", label: "English", flag: "qa" },
+];
+
+// 5 stars, partial fill via clip — pre-render the percentages so we
+// don't need any JS for the rating widget.
+const ratingStars = Array.from({ length: 5 }, (_, i) =>
+  Math.max(0, Math.min(1, 4.7 - i)) * 100,
+);
+
+// Inline filled-star path so the fill="currentColor" actually paints.
+const STAR_PATH =
+  "M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z";
+---
+
+<div class="hidden md:block bg-primary text-white text-[13px]">
+  <div class="container flex h-9 items-center justify-between gap-6">
+    <a
+      href="#"
+      class="flex items-center gap-2 hover:opacity-90 shrink-0"
+      aria-label="Trustpilot rating 4.7 out of 5"
+    >
+      <span class="font-semibold tracking-wide">Trustpilot</span>
+      <span class="inline-flex items-center gap-0.5">
+        {ratingStars.map((pct) => (
+          <span class="relative inline-block h-3.5 w-3.5">
+            <svg viewBox="0 0 24 24" class="absolute inset-0 h-3.5 w-3.5" style="fill:rgba(255,255,255,0.25)">
+              <path d={STAR_PATH} />
+            </svg>
+            <span class="absolute inset-0 overflow-hidden" style={`width: ${pct}%`}>
+              <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" style="fill:#FFD100">
+                <path d={STAR_PATH} />
+              </svg>
+            </span>
+          </span>
+        ))}
+      </span>
+      <span class="text-white/85">
+        <span class="font-semibold text-white">4.7</span>
+        <span class="text-white/65"> · 2,184 reviews</span>
+      </span>
+    </a>
+
+    <div class="flex-1 flex items-center justify-center gap-2 min-w-0">
+      <button
+        data-ticker-prev
+        aria-label="Previous announcement"
+        class="h-6 w-6 rounded-md hover:bg-white/10 flex items-center justify-center shrink-0"
+      >
+        <Icon name="lucide:chevron-left" class="h-4 w-4" />
+      </button>
+
+      <div data-ticker class="relative h-5 max-w-[640px] w-full overflow-hidden">
+        {ANNOUNCEMENTS.map((msg, i) => (
+          <span
+            data-msg
+            data-index={i}
+            class={`absolute inset-0 flex items-center justify-center text-center truncate transition-transform duration-500 ease-out ${i === 0 ? "" : "translate-y-full"}`}
+          >
+            {msg}
+          </span>
+        ))}
+      </div>
+
+      <button
+        data-ticker-next
+        aria-label="Next announcement"
+        class="h-6 w-6 rounded-md hover:bg-white/10 flex items-center justify-center shrink-0"
+      >
+        <Icon name="lucide:chevron-right" class="h-4 w-4" />
+      </button>
+    </div>
+
+    <div class="flex items-center gap-5 shrink-0">
+      <a href="tel:80032626" class="flex items-center gap-1.5 hover:text-secondary-300">
+        <Icon name="lucide:phone" class="h-3.5 w-3.5" />
+        <span class="font-semibold">800 32626</span>
+      </a>
+
+      <div data-country-switcher class="relative">
+        <button
+          data-country-trigger
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          class="flex items-center gap-1.5 hover:text-secondary-300"
+        >
+          <span data-country-flag class="fi fi-ae rounded-sm shadow-[0_0_0_0.5px_rgba(255,255,255,0.18)]" style="width:1.25em;height:0.95em" aria-hidden="true"></span>
+          <span data-country-label class="font-semibold">UAE</span>
+          <Icon name="lucide:chevron-down" class="h-3.5 w-3.5 transition-transform" />
+        </button>
+
+        <div
+          data-country-menu
+          role="listbox"
+          class="hidden absolute right-0 top-full mt-2 w-56 bg-white text-ink rounded-lg shadow-lift border border-line py-2 z-50"
+        >
+          <div class="px-4 pb-1.5 text-[10px] uppercase tracking-widest font-bold text-muted">
+            Browse inventory in
+          </div>
+          {COUNTRIES.map((c) => (
+            <button
+              type="button"
+              role="option"
+              data-country-option
+              data-code={c.code}
+              data-flag={c.flag}
+              data-label={c.label}
+              class="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-bgalt"
+            >
+              <span class={`fi fi-${c.flag} rounded-sm shadow-[0_0_0_0.5px_rgba(0,0,0,0.08)]`} style="width:1.5em;height:1.1em" aria-hidden="true"></span>
+              <span class="flex-1 text-sm font-medium text-ink">{c.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div data-lang-switcher class="relative">
+        <button
+          data-lang-trigger
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          class="flex items-center gap-1.5 hover:text-secondary-300"
+        >
+          <span data-lang-flag class="fi fi-ae rounded-sm shadow-[0_0_0_0.5px_rgba(255,255,255,0.18)]" style="width:1.25em;height:0.95em" aria-hidden="true"></span>
+          <span data-lang-label class="font-semibold">English</span>
+          <Icon name="lucide:chevron-down" class="h-3.5 w-3.5 transition-transform" />
+        </button>
+
+        <div
+          data-lang-menu
+          role="listbox"
+          class="hidden absolute right-0 top-full mt-2 w-72 bg-white text-ink rounded-lg shadow-lift border border-line py-2 z-50"
+        >
+          {LANGUAGES.map((l) => (
+            <button
+              type="button"
+              role="option"
+              data-lang-option
+              data-flag={l.flag}
+              data-label={l.label}
+              class="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-bgalt"
+            >
+              <span class={`fi fi-${l.flag} rounded-sm shadow-[0_0_0_0.5px_rgba(0,0,0,0.08)]`} style="width:1.5em;height:1.1em" aria-hidden="true"></span>
+              <span class="flex-1">
+                <span class="block text-sm font-medium text-ink">{l.country}</span>
+                <span class="block text-xs text-muted">{l.label}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── Announcement ticker ────────────────────────────────────────
+  const ticker = document.querySelector<HTMLDivElement>("[data-ticker]");
+  if (ticker) {
+    const messages = Array.from(ticker.querySelectorAll<HTMLElement>("[data-msg]"));
+    let active = 0;
+    const total = messages.length;
+
+    const show = (next: number, dir: 1 | -1) => {
+      const prev = active;
+      const incoming = messages[next];
+      const outgoing = messages[prev];
+
+      // Position incoming off-screen on the appropriate side
+      incoming.style.transition = "none";
+      incoming.style.transform = `translateY(${dir === 1 ? "100%" : "-100%"})`;
+      // Force reflow so the next style change animates
+      void incoming.offsetWidth;
+      incoming.style.transition = "";
+      incoming.style.transform = "translateY(0)";
+
+      outgoing.style.transform = `translateY(${dir === 1 ? "-100%" : "100%"})`;
+
+      active = next;
+    };
+
+    const advance = (dir: 1 | -1) => {
+      const next = (active + dir + total) % total;
+      show(next, dir);
+    };
+
+    let timer = window.setInterval(() => advance(1), 5000);
+    const restart = () => {
+      window.clearInterval(timer);
+      timer = window.setInterval(() => advance(1), 5000);
+    };
+
+    document
+      .querySelector<HTMLButtonElement>("[data-ticker-prev]")
+      ?.addEventListener("click", () => { advance(-1); restart(); });
+    document
+      .querySelector<HTMLButtonElement>("[data-ticker-next]")
+      ?.addEventListener("click", () => { advance(1); restart(); });
+  }
+
+  // ─── Generic dropdown helper ────────────────────────────────────
+  function wireDropdown(rootSel: string, triggerSel: string, menuSel: string) {
+    const root = document.querySelector<HTMLElement>(rootSel);
+    if (!root) return;
+    const trigger = root.querySelector<HTMLButtonElement>(triggerSel);
+    const menu = root.querySelector<HTMLElement>(menuSel);
+    if (!trigger || !menu) return;
+
+    const close = () => {
+      menu.classList.add("hidden");
+      trigger.setAttribute("aria-expanded", "false");
+    };
+    const toggle = () => {
+      const opening = menu.classList.contains("hidden");
+      menu.classList.toggle("hidden");
+      trigger.setAttribute("aria-expanded", String(opening));
+    };
+
+    trigger.addEventListener("click", toggle);
+    document.addEventListener("mousedown", (e) => {
+      if (!root.contains(e.target as Node)) close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+    return { close };
+  }
+
+  // ─── Country switcher ───────────────────────────────────────────
+  const countryRoot = document.querySelector<HTMLElement>("[data-country-switcher]");
+  if (countryRoot) {
+    const ctl = wireDropdown(
+      "[data-country-switcher]",
+      "[data-country-trigger]",
+      "[data-country-menu]",
+    );
+    const flagEl = countryRoot.querySelector<HTMLElement>("[data-country-flag]");
+    const labelEl = countryRoot.querySelector<HTMLElement>("[data-country-label]");
+
+    const setFromUrl = () => {
+      const fromUrl = new URLSearchParams(location.search).get("country");
+      const saved = fromUrl ?? localStorage.getItem("famco-country");
+      if (!saved) return;
+      const opt = countryRoot.querySelector<HTMLElement>(
+        `[data-country-option][data-code="${saved}"]`,
+      );
+      if (opt && flagEl && labelEl) {
+        const flag = opt.dataset.flag!;
+        flagEl.className = `fi fi-${flag} rounded-sm shadow-[0_0_0_0.5px_rgba(255,255,255,0.18)]`;
+        labelEl.textContent = opt.dataset.label!;
+      }
+    };
+    setFromUrl();
+
+    countryRoot.querySelectorAll<HTMLButtonElement>("[data-country-option]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const code = btn.dataset.code!;
+        const flag = btn.dataset.flag!;
+        const label = btn.dataset.label!;
+        if (flagEl)
+          flagEl.className = `fi fi-${flag} rounded-sm shadow-[0_0_0_0.5px_rgba(255,255,255,0.18)]`;
+        if (labelEl) labelEl.textContent = label;
+        ctl?.close();
+        localStorage.setItem("famco-country", code);
+
+        const base = (window as any).__FAMCO_BASE__ || "/";
+        const onStock = location.pathname.includes("/stock");
+        if (onStock) {
+          const u = new URL(location.href);
+          u.searchParams.set("country", code);
+          history.replaceState({}, "", u.toString());
+          // Trigger a custom event so the listing page can re-filter
+          window.dispatchEvent(new CustomEvent("famco:country-change", { detail: code }));
+        } else {
+          location.href = `${base.replace(/\/$/, "")}/stock/?country=${code}`;
+        }
+      });
+    });
+  }
+
+  // ─── Language switcher ──────────────────────────────────────────
+  const langRoot = document.querySelector<HTMLElement>("[data-lang-switcher]");
+  if (langRoot) {
+    const ctl = wireDropdown(
+      "[data-lang-switcher]",
+      "[data-lang-trigger]",
+      "[data-lang-menu]",
+    );
+    const flagEl = langRoot.querySelector<HTMLElement>("[data-lang-flag]");
+    const labelEl = langRoot.querySelector<HTMLElement>("[data-lang-label]");
+    langRoot.querySelectorAll<HTMLButtonElement>("[data-lang-option]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const flag = btn.dataset.flag!;
+        const label = btn.dataset.label!;
+        if (flagEl)
+          flagEl.className = `fi fi-${flag} rounded-sm shadow-[0_0_0_0.5px_rgba(255,255,255,0.18)]`;
+        if (labelEl) labelEl.textContent = label;
+        ctl?.close();
+      });
+    });
+  }
+</script>
