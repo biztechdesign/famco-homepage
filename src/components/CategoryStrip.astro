@@ -8,7 +8,7 @@ const CATEGORIES = [
   { label: "Construction", count: 262, href: "/stock?category=construction", src: "/icons/category/_construction-equipment.svg" },
   { label: "Trailers", count: 29, href: "/stock?category=trailers", src: "/icons/category/_trailer.svg" },
   { label: "MHE", count: 25, href: "/stock?category=mhe", src: "/icons/category/loader.svg" },
-  { label: "Others", count: 10, href: "/stock?category=others", src: "/icons/category/056-bus.svg" },
+  { label: "Others", count: 10, href: "/stock?category=others", src: "/icons/category/generator.svg" },
 ];
 ---
 
@@ -23,8 +23,8 @@ const CATEGORIES = [
           >
             <span
               aria-hidden
-              class="block h-11 w-[68px] bg-ink transition-all duration-200 ease-out group-hover:bg-primary group-hover:scale-110"
-              style={`-webkit-mask: url(${asset(c.src)}) center/contain no-repeat; mask: url(${asset(c.src)}) center/contain no-repeat;`}
+              class="block h-11 w-[80px] bg-ink transition-all duration-200 ease-out group-hover:bg-primary group-hover:scale-110"
+              style={`-webkit-mask: url(${asset(c.src)}) center / auto 100% no-repeat; mask: url(${asset(c.src)}) center / auto 100% no-repeat;`}
             />
             <span class="text-[12px] font-semibold text-ink group-hover:text-primary whitespace-nowrap transition-colors leading-tight">
               {c.label}{" "}
