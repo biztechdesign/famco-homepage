@@ -208,7 +208,7 @@ export const VEHICLES: Vehicle[] = [
     category: "Buses",
     oldPrice: 348000,
     price: 325000,
-    image: "/products/coach-bus.jpg",
+    image: "/products/coach-bus.png",
     badges: ["0% FINANCE"],
     hasVideo: true,
     has3D: true,
