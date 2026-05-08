@@ -34,83 +34,88 @@ const COLS = [
   ]},
 ];
 
-// Country tabs — switching tabs swaps which yards are visible on the map.
+// Country list (used for the legend chip strip below the map).
 const COUNTRIES = [
-  { code: "UAE",     label: "UAE",     flag: "ae" },
-  { code: "KSA",     label: "Saudi",   flag: "sa" },
-  { code: "Qatar",   label: "Qatar",   flag: "qa" },
-  { code: "Bahrain", label: "Bahrain", flag: "bh" },
+  { code: "KSA",     label: "Saudi Arabia", flag: "sa" },
+  { code: "Bahrain", label: "Bahrain",      flag: "bh" },
+  { code: "Qatar",   label: "Qatar",        flag: "qa" },
+  { code: "UAE",     label: "United Arab Emirates", flag: "ae" },
 ] as const;
 
-// Three scattered pin positions per country (percentages within the right pane).
-// Tuned for a Persian-Gulf-centered map at zoom 5 — all four GCC countries visible.
-// Icons come from the same `/icons/category/` set used by the home-page CategoryStrip.
-const PIN_POSITIONS_3: Record<
-  string,
-  { left: string; top: string; icon: string }[]
-> = {
-  KSA: [
-    // Western mass: north-east, central (Riyadh), south
-    { left: "12%", top: "30%", icon: "/icons/category/big-truck.svg" },             // Tractor heads
-    { left: "22%", top: "50%", icon: "/icons/category/_construction-equipment.svg" },  // Construction
-    { left: "18%", top: "70%", icon: "/icons/category/loader.svg" },                   // MHE
-  ],
-  Qatar: [
-    // Peninsula extending north into the Gulf, just east of Bahrain
-    { left: "52%", top: "52%", icon: "/icons/category/tipper.svg" },                   // Truck rigid
-    { left: "56%", top: "56%", icon: "/icons/category/_construction-equipment.svg" },  // Construction
-    { left: "50%", top: "60%", icon: "/icons/category/van.svg" },                      // Vans
-  ],
-  Bahrain: [
-    // Small island just west of Persian Gulf centre
-    { left: "42%", top: "42%", icon: "/icons/category/_trailer.svg" },                 // Trailers
-    { left: "46%", top: "46%", icon: "/icons/category/van.svg" },                      // Vans
-    { left: "40%", top: "50%", icon: "/icons/category/loader.svg" },                   // MHE
-  ],
-  UAE: [
-    // Southeast end of the Gulf
-    { left: "68%", top: "64%", icon: "/icons/category/big-truck.svg" },             // Tractor heads
-    { left: "78%", top: "70%", icon: "/icons/category/tipper.svg" },                   // Truck rigid
-    { left: "72%", top: "80%", icon: "/icons/category/_construction-equipment.svg" },  // Construction
-  ],
-};
+// Pins are positioned by % of the FULL section width/height, tuned
+// against the Doha-centred zoom-6 iframe (which sits in the right
+// 58 % of the section). Each cluster is constrained to its country's
+// actual landmass so no pin floats over the Persian Gulf.
+const PINS = [
+  // ── Saudi Arabia (eastern part is visible — west edge of the iframe view)
+  { country: "KSA",     left: "50%", top: "32%", icon: "/icons/category/big-truck.svg" },
+  { country: "KSA",     left: "53%", top: "48%", icon: "/icons/category/_construction-equipment.svg" },
+  { country: "KSA",     left: "56%", top: "65%", icon: "/icons/category/loader.svg" },
+  // ── Bahrain (small island — single pin keeps it readable)
+  { country: "Bahrain", left: "63%", top: "40%", icon: "/icons/category/van.svg" },
+  // ── Qatar (peninsula immediately east of Bahrain)
+  { country: "Qatar",   left: "66%", top: "44%", icon: "/icons/category/tipper.svg" },
+  { country: "Qatar",   left: "65%", top: "50%", icon: "/icons/category/_construction-equipment.svg" },
+  // ── UAE (eastern Gulf coast — right portion of the map)
+  { country: "UAE",     left: "76%", top: "62%", icon: "/icons/category/big-truck.svg" },
+  { country: "UAE",     left: "82%", top: "65%", icon: "/icons/category/tipper.svg" },
+  { country: "UAE",     left: "88%", top: "62%", icon: "/icons/category/_construction-equipment.svg" },
+];
 
 const SOCIALS = ["lucide:linkedin", "lucide:facebook", "lucide:instagram", "lucide:youtube"] as const;
 ---
 
 <footer class="bg-charcoal text-white">
-  {/* ─── Branch network — full-bleed split background, container-aligned text ─── */}
-  <section class="relative border-b border-white/10">
-    {/* Full-bleed split background — charcoal left, gradient + map right */}
-    <div class="absolute inset-0 grid grid-cols-1 lg:grid-cols-2">
-      <div class="bg-charcoal-900"></div>
-      <div class="relative bg-secondary-600 overflow-hidden">
-        {/* Google Map base — grayscale so country names + outlines stay readable */}
-        <iframe
-          title="Al-Futtaim Famco yards across UAE, Saudi Arabia, Qatar and Bahrain"
-          src="https://maps.google.com/maps?q=Persian+Gulf&t=&z=5&ie=UTF8&iwloc=&output=embed"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          allowfullscreen
-          class="absolute inset-0 h-full w-full border-0 grayscale contrast-110 opacity-30"
-        ></iframe>
+  {/* ─── Branch network — full-bleed charcoal section, map on the right ─── */}
+  <section class="relative border-b border-white/10 bg-charcoal overflow-hidden">
+    {/* Map sits only on the right ~58% of the section. Its left edge is
+        masked into transparent so the dark charcoal seamlessly bleeds
+        into the map — no visible vertical seam. */}
+    <div class="absolute inset-y-0 right-0 left-0 lg:left-[42%] pointer-events-none">
+      <iframe
+        title="Al-Futtaim Famco yards across UAE, Saudi Arabia, Qatar and Bahrain"
+        src="https://maps.google.com/maps?q=Doha,Qatar&t=&z=6&ie=UTF8&iwloc=&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen
+        class="absolute inset-0 h-full w-full border-0 grayscale contrast-110 opacity-55"
+        style="mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,0.4) 25%,black 60%,black 100%);-webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,0.4) 25%,black 60%,black 100%);"
+      ></iframe>
 
-        {/* Yellow brand tint — multiply blend keeps map visible while on-brand */}
-        <div class="absolute inset-0 bg-gradient-to-br from-secondary-300 via-secondary to-secondary-700 mix-blend-multiply pointer-events-none"></div>
-        {/* Subtle vignette for depth — does NOT obscure the map */}
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_95%_95%,rgba(8,8,11,0.35),transparent_60%)] pointer-events-none"></div>
-      </div>
+      {/* Soft warm glow on the right side for brand colour */}
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_85%_45%,rgba(255,209,0,0.18),transparent_70%)]"></div>
+      {/* Bottom-right vignette for depth */}
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_95%_95%,rgba(8,8,11,0.40),transparent_60%)]"></div>
     </div>
 
-    {/* Container-aligned content layer */}
+    {/* Pin layer — full-bleed over the section so each pin's % position
+        is in section coords (left:50% = the visual centre). Pins are
+        clustered inside their country's landmass on the locked map view. */}
+    <div class="absolute inset-0 hidden lg:block pointer-events-none">
+      {PINS.map((p) => (
+        <span
+          aria-hidden="true"
+          class="pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 inline-flex h-12 w-12 rounded-2xl bg-white items-center justify-center ring-2 ring-secondary/55 shadow-[0_10px_24px_rgba(8,8,11,0.55)] transition-transform hover:scale-110"
+          style={`left:${p.left};top:${p.top};`}
+        >
+          <span
+            aria-hidden="true"
+            class="block h-7 w-7 bg-charcoal-900"
+            style={`-webkit-mask: url(${asset(p.icon)}) center / contain no-repeat; mask: url(${asset(p.icon)}) center / contain no-repeat;`}
+          />
+        </span>
+      ))}
+    </div>
+
+    {/* Container-aligned content layer — heading + CTAs on the left only */}
     <div class="relative container">
-      <div class="grid lg:grid-cols-2 min-h-[680px] lg:min-h-[760px]">
-        {/* LEFT — heading + CTAs (aligned to container's left edge) */}
-        <div class="py-16 lg:py-20 flex flex-col justify-center lg:pr-12 text-white">
+      <div class="grid lg:grid-cols-2 min-h-[640px] lg:min-h-[720px]">
+        <div class="py-16 lg:py-20 flex flex-col justify-center text-white">
           <h3 class="font-display text-3xl lg:text-5xl font-bold leading-[1.05] tracking-tight">
             Yards across the <span class="text-secondary-300">GCC</span>.
             <br />Picked by <span class="text-secondary-300">category</span>.
           </h3>
+
           <div class="mt-8 flex flex-wrap gap-3">
             <a
               href={link("/stock")}
@@ -127,61 +132,36 @@ const SOCIALS = ["lucide:linkedin", "lucide:facebook", "lucide:instagram", "luci
               800 32626
             </a>
           </div>
+
+          {/* Country legend — chips matching the 4 countries on the map */}
+          <ul class="mt-8 flex flex-wrap gap-2">
+            {COUNTRIES.map((c) => (
+              <li class="inline-flex items-center gap-2 h-8 px-3 rounded-full bg-white/5 border border-white/10 text-[12px] font-semibold">
+                <span aria-hidden="true" class={`fi fi-${c.flag} rounded-sm`} style="width:1.1em;height:0.85em"></span>
+                {c.label}
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {/* RIGHT — 3 circular icon pins per country, scattered across the gradient */}
-        <div class="relative hidden lg:block py-12 lg:py-14">
-          <div class="absolute inset-0">
-            {COUNTRIES.flatMap((c) =>
-              PIN_POSITIONS_3[c.code].map((p, i) => (
-                <span
-                  aria-hidden="true"
-                  class="absolute -translate-x-1/2 -translate-y-1/2 inline-flex h-12 w-12 rounded-2xl bg-white items-center justify-center ring-2 ring-charcoal/15 shadow-[0_10px_24px_rgba(8,8,11,0.35)] transition-transform hover:scale-110"
-                  style={`left:${p.left};top:${p.top};`}
-                >
-                  <span
-                    aria-hidden="true"
-                    class="block h-7 w-7 bg-charcoal-900"
-                    style={`-webkit-mask: url(${asset(p.icon)}) center / contain no-repeat; mask: url(${asset(p.icon)}) center / contain no-repeat;`}
-                  />
-                </span>
-              ))
-            )}
-          </div>
-        </div>
+        {/* Right cell intentionally empty — the map fills the right
+            side of the section through the absolute layer above. */}
+        <div class="hidden lg:block"></div>
       </div>
     </div>
 
-    {/* Mobile fallback — same minimal pin layout on a brand-tinted map */}
+    {/* Mobile fallback — map shown as a self-contained card under the heading */}
     <div class="lg:hidden relative z-10 container py-8">
-      <div class="relative h-[280px] rounded-2xl bg-secondary-600 overflow-hidden ring-1 ring-secondary-700/30">
+      <div class="relative h-[320px] rounded-2xl bg-charcoal-900 overflow-hidden ring-1 ring-white/10">
         <iframe
-          title="Al-Futtaim Famco yards across UAE, Saudi Arabia, Qatar and Bahrain"
-          src="https://maps.google.com/maps?q=Persian+Gulf&t=&z=5&ie=UTF8&iwloc=&output=embed"
+          title="Al-Futtaim Famco yards"
+          src="https://maps.google.com/maps?q=Doha,Qatar&t=&z=6&ie=UTF8&iwloc=&output=embed"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
           allowfullscreen
-          class="absolute inset-0 h-full w-full border-0 grayscale contrast-110 opacity-30"
+          class="absolute inset-0 h-full w-full border-0 grayscale contrast-110 opacity-60 pointer-events-none"
         ></iframe>
-        <div class="absolute inset-0 bg-gradient-to-br from-secondary-300 via-secondary to-secondary-700 mix-blend-multiply pointer-events-none"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_95%_95%,rgba(8,8,11,0.35),transparent_60%)] pointer-events-none"></div>
-        <div class="absolute inset-0">
-          {COUNTRIES.flatMap((c) =>
-            PIN_POSITIONS_3[c.code].map((p) => (
-              <span
-                aria-hidden="true"
-                class="absolute -translate-x-1/2 -translate-y-1/2 inline-flex h-10 w-10 rounded-2xl bg-white items-center justify-center ring-2 ring-charcoal/15 shadow-[0_8px_20px_rgba(8,8,11,0.35)]"
-                style={`left:${p.left};top:${p.top};`}
-              >
-                <span
-                  aria-hidden="true"
-                  class="block h-6 w-6 bg-charcoal-900"
-                  style={`-webkit-mask: url(${asset(p.icon)}) center / contain no-repeat; mask: url(${asset(p.icon)}) center / contain no-repeat;`}
-                />
-              </span>
-            ))
-          )}
-        </div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgba(255,209,0,0.15),transparent_70%)] pointer-events-none"></div>
       </div>
     </div>
   </section>

@@ -50,7 +50,7 @@ function conditionTags(v: Vehicle): string {
 ---
 
 <div data-stock-grid class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-  {vehicles.map((v) => (
+  {vehicles.map((v, i) => (
     <div
       data-stock-tile
       data-id={v.id}
@@ -65,7 +65,7 @@ function conditionTags(v: Vehicle): string {
       data-price={String(v.price)}
       data-mileage={String(v.km ?? v.hours ?? 0)}
     >
-      <StockCard v={v} />
+      <StockCard v={v} interactive={i === 0} />
     </div>
   ))}
 </div>
