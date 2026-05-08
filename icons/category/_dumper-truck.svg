@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="black">
+  <!-- Tipper bed: raised parallelogram (back of truck on the left), drawn as outline via evenodd -->
+  <path fill-rule="evenodd" d="M5 28 L14 19 L42 19 L42 47 L5 47 Z M9 30 L15 24 L40 24 L40 45 L9 45 Z"/>
+  <!-- Cab on the right -->
+  <path fill-rule="evenodd" d="M44 30 L53 30 L58 39 L58 47 L44 47 Z M46 32 L52 32 L56 39 L56 45 L46 45 Z"/>
+  <!-- Window in cab -->
+  <path d="M47.5 33.5 L51 33.5 L54 38 L47.5 38 Z"/>
+  <!-- Chassis line under both bodies -->
+  <path d="M5 48 L74 48 L74 50.5 L5 50.5 Z"/>
+  <!-- Hydraulic ram visual hint between cab and tipper -->
+  <path d="M42.5 36 L44 36 L44 47 L42.5 47 Z"/>
+  <!-- Front wheel (under cab) -->
+  <path fill-rule="evenodd" d="M51 56 a6 6 0 1 1 12 0 a6 6 0 1 1 -12 0 Z M54.5 56 a2.5 2.5 0 1 1 5 0 a2.5 2.5 0 1 1 -5 0 Z"/>
+  <!-- Back wheels (tandem under tipper) -->
+  <path fill-rule="evenodd" d="M14 56 a6 6 0 1 1 12 0 a6 6 0 1 1 -12 0 Z M17.5 56 a2.5 2.5 0 1 1 5 0 a2.5 2.5 0 1 1 -5 0 Z"/>
+  <path fill-rule="evenodd" d="M28 56 a6 6 0 1 1 12 0 a6 6 0 1 1 -12 0 Z M31.5 56 a2.5 2.5 0 1 1 5 0 a2.5 2.5 0 1 1 -5 0 Z"/>
+</svg>
