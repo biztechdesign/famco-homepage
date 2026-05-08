@@ -9,6 +9,18 @@ import { VEHICLES } from "@/lib/vehicles";
 const featured = VEHICLES.slice(0, 6);
 
 const fmt = (n: number) => new Intl.NumberFormat("en-AE").format(n);
+
+const HEADER_CATEGORIES = [
+  { label: "All categories", count: 2391, href: "/stock", icon: "lucide:layout-grid" },
+  { label: "Trucks", count: 531, href: "/stock?category=trucks", icon: "lucide:truck" },
+  { label: "Vans", count: 853, href: "/stock?category=vans", icon: "lucide:car-front" },
+  { label: "Tractor", count: 418, href: "/stock?category=tractor", icon: "lucide:caravan" },
+  { label: "Semi", count: 263, href: "/stock?category=semi", icon: "lucide:container" },
+  { label: "Construction", count: 262, href: "/stock?category=construction", icon: "lucide:construction" },
+  { label: "Trailers", count: 29, href: "/stock?category=trailers", icon: "lucide:package" },
+  { label: "Combo", count: 25, href: "/stock?category=combo", icon: "lucide:layers" },
+  { label: "Various", count: 10, href: "/stock?category=various", icon: "lucide:more-horizontal" },
+];
 ---
 
 <header class="sticky top-0 z-40 bg-white border-b border-line shadow-sm">
@@ -31,12 +43,15 @@ const fmt = (n: number) => new Intl.NumberFormat("en-AE").format(n);
         <div class="flex items-stretch h-11 rounded-lg border border-line bg-white shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-secondary focus-within:border-secondary">
           <button
             type="button"
+            data-cat-toggle
+            aria-haspopup="listbox"
+            aria-expanded="false"
             class="flex items-center gap-2 px-4 lg:px-5 text-[14px] font-semibold border-r border-line bg-white text-ink hover:bg-bgalt transition-colors"
           >
             <Icon name="lucide:layout-grid" class="h-4 w-4 text-secondary" />
-            <span class="hidden lg:inline">All categories</span>
+            <span class="hidden lg:inline" data-cat-label>All categories</span>
             <span class="lg:hidden">Categories</span>
-            <Icon name="lucide:chevron-down" class="h-4 w-4 transition-transform" />
+            <Icon name="lucide:chevron-down" class="h-4 w-4 transition-transform" data-cat-chevron />
           </button>
 
           <div class="flex-1 flex items-center px-4 min-w-0">
@@ -59,6 +74,31 @@ const fmt = (n: number) => new Intl.NumberFormat("en-AE").format(n);
             <Icon name="lucide:search" class="h-4 w-4" />
           </button>
         </div>
+
+        {/* Categories dropdown — anchored under the "All categories" button */}
+        <ul
+          role="listbox"
+          data-cat-menu
+          class="hidden absolute left-0 top-full mt-2 z-50 min-w-[240px] bg-white border border-line rounded-lg shadow-lift py-1 max-h-[70vh] overflow-y-auto"
+        >
+          {HEADER_CATEGORIES.map((c) => (
+            <li>
+              <a
+                href={link(c.href)}
+                role="option"
+                data-cat-option
+                data-label={c.label}
+                class="flex items-center justify-between gap-3 px-3 py-2 text-[13.5px] text-ink hover:bg-bgalt"
+              >
+                <span class="flex items-center gap-2.5 min-w-0">
+                  <Icon name={c.icon} class="h-4 w-4 text-secondary shrink-0" />
+                  <span class="font-semibold truncate">{c.label}</span>
+                </span>
+                <span class="text-[12px] text-muted tabular-nums">{c.count}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
 
         {/* Suggestions dropdown — opens on focus, narrows on type */}
         <div
@@ -220,4 +260,46 @@ const fmt = (n: number) => new Intl.NumberFormat("en-AE").format(n);
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape") dropdown.classList.add("hidden");
   });
+
+  // ── Categories dropdown ──────────────────────────────────────
+  var catToggle = document.querySelector("[data-cat-toggle]");
+  var catMenu = document.querySelector("[data-cat-menu]");
+  var catChevron = document.querySelector("[data-cat-chevron]");
+  var catLabel = document.querySelector("[data-cat-label]");
+
+  function closeCat() {
+    if (!catMenu) return;
+    catMenu.classList.add("hidden");
+    catChevron && catChevron.classList.remove("rotate-180");
+    catToggle && catToggle.setAttribute("aria-expanded", "false");
+  }
+
+  if (catToggle && catMenu) {
+    catToggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var isOpen = !catMenu.classList.contains("hidden");
+      if (isOpen) {
+        closeCat();
+      } else {
+        // close the search suggestions if open
+        dropdown && dropdown.classList.add("hidden");
+        catMenu.classList.remove("hidden");
+        catChevron && catChevron.classList.add("rotate-180");
+        catToggle.setAttribute("aria-expanded", "true");
+      }
+    });
+
+    document.querySelectorAll("[data-cat-option]").forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        if (catLabel) catLabel.textContent = opt.dataset.label || "All categories";
+      });
+    });
+
+    document.addEventListener("mousedown", function (e) {
+      if (!catToggle.contains(e.target) && !catMenu.contains(e.target)) closeCat();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeCat();
+    });
+  }
 </script>
