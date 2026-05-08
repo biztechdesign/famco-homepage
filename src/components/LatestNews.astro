@@ -2,16 +2,32 @@
 import { Icon } from "astro-icon/components";
 import { asset, link } from "@/lib/asset";
 
-const FEATURED = {
-  title: "Volvo FH Aero arrives in the UAE — what fleet operators need to know",
-  image: "/placeholders/Volvo-Aero-Range-2-1080x675.jpg",
-  href: "/stock",
-};
-
-const POSTS = [
-  { title: "Save AED 25,000 on selected Volvo FH tractors this quarter", image: "/placeholders/Volvo_Trucks_FH_Aero_range_2048x1045.avif", href: "/stock" },
-  { title: "FAMCO expands TMH workshop bays for heavy excavators", image: "/placeholders/excavators-lined-up-construction-3.webp", href: "/stock" },
-  { title: "Buying a used truck in the UAE — what to check before you commit", image: "/placeholders/a88df5746d543610_800x800ar.jpg", href: "/stock" },
+// Three tiles only — every entry must point to *used* inventory.
+const TILES = [
+  {
+    eyebrow: "New arrivals",
+    title: "Just landed this week",
+    blurb: "Fresh used trucks, vans and machinery added to the lot in the last 7 days.",
+    href: "/stock?sort=newest",
+    image: "/placeholders/news-new-arrivals.png",
+    cta: "Browse new arrivals",
+  },
+  {
+    eyebrow: "Featured units",
+    title: "Specialist-picked stock",
+    blurb: "Hand-selected used equipment our sales team trusts for fleet operators.",
+    href: "/stock?filter=featured",
+    image: "/placeholders/news-featured-units.png",
+    cta: "See featured units",
+  },
+  {
+    eyebrow: "Auctions ending soon",
+    title: "Last call this week",
+    blurb: "Live auction lots closing in the next 72 hours — bid before they're gone.",
+    href: "/stock?filter=auction-closing",
+    image: "/placeholders/news-auctions-ending.png",
+    cta: "View closing auctions",
+  },
 ];
 ---
 
@@ -20,66 +36,48 @@ const POSTS = [
     <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 lg:mb-10">
       <div>
         <h2 class="font-display text-3xl lg:text-4xl font-bold text-ink">
-          Latest from FAMCO
+          Latest from <span class="text-secondary">Al-Futtaim Famco</span> Used
         </h2>
+        <p class="mt-2 text-[14px] text-muted">Used inventory updates, only — no press releases.</p>
       </div>
       <a
         href={link("/stock")}
         class="inline-flex items-center gap-2 text-secondary font-semibold hover:gap-3 transition-all self-start sm:self-auto"
       >
-        View all articles <Icon name="lucide:arrow-right" class="h-4 w-4" />
+        View all stock <Icon name="lucide:arrow-right" class="h-4 w-4" />
       </a>
     </div>
 
-    <div class="grid lg:grid-cols-2 gap-5 lg:gap-6">
-      <a
-        href={link(FEATURED.href)}
-        class="img-skeleton group relative overflow-hidden rounded-2xl bg-charcoal text-white min-h-[360px] lg:min-h-[520px] flex flex-col justify-end transition-all duration-300 hover:shadow-lift"
-      >
-        <img
-          src={asset(FEATURED.image)}
-          alt=""
-          aria-hidden="true"
-          class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div class="absolute inset-0 bg-gradient-to-t from-charcoal-900 via-charcoal-900/55 to-transparent"></div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
+      {TILES.map((t) => (
+        <a
+          href={link(t.href)}
+          class="img-skeleton group relative overflow-hidden rounded-2xl bg-charcoal text-white min-h-[360px] lg:min-h-[440px] flex flex-col justify-end transition-all duration-300 hover:shadow-lift hover:-translate-y-0.5"
+        >
+          <img
+            src={asset(t.image)}
+            alt=""
+            aria-hidden="true"
+            class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-charcoal-900 via-charcoal-900/55 to-transparent"></div>
 
-        <div class="relative p-6 lg:p-8">
-          <h3 class="font-display text-2xl lg:text-3xl font-bold leading-tight max-w-xl mb-4">
-            {FEATURED.title}
-          </h3>
-          <span class="inline-flex items-center gap-2 text-[14px] font-semibold text-secondary-300 group-hover:gap-3 transition-all">
-            Read article <Icon name="lucide:arrow-right" class="h-4 w-4" />
-          </span>
-        </div>
-      </a>
-
-      <div class="grid gap-4 lg:gap-5">
-        {POSTS.map((p) => (
-          <a
-            href={link(p.href)}
-            class="group bg-white rounded-xl overflow-hidden border border-line shadow-card flex transition-all duration-300 hover:shadow-lift hover:-translate-y-0.5"
-          >
-            <div class="img-skeleton relative w-32 sm:w-40 lg:w-44 shrink-0 overflow-hidden bg-bgalt">
-              <img
-                src={asset(p.image)}
-                alt=""
-                aria-hidden="true"
-                class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-            <div class="flex-1 min-w-0 p-4 lg:p-5 flex flex-col justify-center gap-3">
-              <h3 class="font-display text-[15px] lg:text-base font-bold text-ink leading-snug line-clamp-2">
-                {p.title}
-              </h3>
-              <span class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-secondary group-hover:gap-2 transition-all">
-                Read article
-                <Icon name="lucide:arrow-right" class="h-3.5 w-3.5" />
-              </span>
-            </div>
-          </a>
-        ))}
-      </div>
+          <div class="relative p-5 lg:p-6">
+            <span class="inline-flex items-center text-[10.5px] font-bold tracking-[0.18em] uppercase text-secondary-300 mb-2">
+              {t.eyebrow}
+            </span>
+            <h3 class="font-display text-xl lg:text-2xl font-bold leading-tight mb-2">
+              {t.title}
+            </h3>
+            <p class="text-[13px] text-white/85 leading-snug mb-4 line-clamp-2">
+              {t.blurb}
+            </p>
+            <span class="inline-flex items-center gap-2 text-[13.5px] font-semibold text-secondary-300 group-hover:gap-3 transition-all">
+              {t.cta} <Icon name="lucide:arrow-right" class="h-4 w-4" />
+            </span>
+          </div>
+        </a>
+      ))}
     </div>
   </div>
 </section>
