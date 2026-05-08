@@ -26,7 +26,7 @@ const COLS = [
     { label: "Customer support", href: "#" },
   ]},
   { title: "Company", links: [
-    { label: "About FAMCO", href: "#" },
+    { label: "About Al-Futtaim Famco", href: "#" },
     { label: "Al-Futtaim Group", href: "#" },
     { label: "News & articles", href: "#" },
     { label: "Careers", href: "#" },
@@ -34,57 +34,157 @@ const COLS = [
   ]},
 ];
 
-const BRANCHES = [
-  { name: "FAMCO DIP", place: "Dubai Investment Park", address: "Dubai Investment Park 1, Sheikh Zayed Bin Hamdan Al Nahyan St, Dubai", phone: "800 32626" },
-  { name: "FAMCO Umm Ramool", place: "Umm Ramool", address: "Sheikh Rashid Rd, Umm Ramool, Dubai", phone: "800 32626" },
-  { name: "FAMCO Jebel Ali", place: "Jebel Ali", address: "Jebel Ali Free Zone, Jebel Ali, Dubai", phone: "800 32626" },
-  { name: "FAMCO Abu Dhabi", place: "Mussafah, Abu Dhabi", address: "Volvo Building, Near Emirates, Street #9, M-39, Mussafah, Abu Dhabi, UAE", phone: "800 32626" },
-  { name: "FAMCO Jeddah", place: "Mada'en Al-Fahd, Jeddah", address: "Old Mecca Al Moukarramah Rd, Mada'en Al-Fahd, Jeddah 22343, Saudi Arabia", phone: "800 32626" },
-];
+// Country tabs — switching tabs swaps which yards are visible on the map.
+const COUNTRIES = [
+  { code: "UAE",     label: "UAE",     flag: "ae" },
+  { code: "KSA",     label: "Saudi",   flag: "sa" },
+  { code: "Qatar",   label: "Qatar",   flag: "qa" },
+  { code: "Bahrain", label: "Bahrain", flag: "bh" },
+] as const;
+
+// Three scattered pin positions per country (percentages within the right pane).
+// Tuned for a Persian-Gulf-centered map at zoom 5 — all four GCC countries visible.
+// Icons come from the same `/icons/category/` set used by the home-page CategoryStrip.
+const PIN_POSITIONS_3: Record<
+  string,
+  { left: string; top: string; icon: string }[]
+> = {
+  KSA: [
+    // Western mass: north-east, central (Riyadh), south
+    { left: "12%", top: "30%", icon: "/icons/category/big-truck.svg" },             // Tractor heads
+    { left: "22%", top: "50%", icon: "/icons/category/_construction-equipment.svg" },  // Construction
+    { left: "18%", top: "70%", icon: "/icons/category/loader.svg" },                   // MHE
+  ],
+  Qatar: [
+    // Peninsula extending north into the Gulf, just east of Bahrain
+    { left: "52%", top: "52%", icon: "/icons/category/tipper.svg" },                   // Truck rigid
+    { left: "56%", top: "56%", icon: "/icons/category/_construction-equipment.svg" },  // Construction
+    { left: "50%", top: "60%", icon: "/icons/category/van.svg" },                      // Vans
+  ],
+  Bahrain: [
+    // Small island just west of Persian Gulf centre
+    { left: "42%", top: "42%", icon: "/icons/category/_trailer.svg" },                 // Trailers
+    { left: "46%", top: "46%", icon: "/icons/category/van.svg" },                      // Vans
+    { left: "40%", top: "50%", icon: "/icons/category/loader.svg" },                   // MHE
+  ],
+  UAE: [
+    // Southeast end of the Gulf
+    { left: "68%", top: "64%", icon: "/icons/category/big-truck.svg" },             // Tractor heads
+    { left: "78%", top: "70%", icon: "/icons/category/tipper.svg" },                   // Truck rigid
+    { left: "72%", top: "80%", icon: "/icons/category/_construction-equipment.svg" },  // Construction
+  ],
+};
 
 const SOCIALS = ["lucide:linkedin", "lucide:facebook", "lucide:instagram", "lucide:youtube"] as const;
 ---
 
 <footer class="bg-charcoal text-white">
-  <div class="border-b border-white/10 bg-charcoal-900">
-    <div class="container py-8">
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-        {BRANCHES.map((b) => (
-          <div class="flex items-start gap-3">
-            <span class="h-9 w-9 rounded-md bg-white/10 flex items-center justify-center shrink-0">
-              <Icon name="lucide:map-pin" class="h-4 w-4 text-secondary-300" />
-            </span>
-            <div class="min-w-0">
-              <div class="text-[10px] uppercase tracking-[0.14em] text-white/55">
-                Al Futtaim Famco
-              </div>
-              <div class="text-[14px] font-semibold text-white leading-tight mt-0.5">
-                {b.place}
-              </div>
-              <div class="text-[12.5px] text-white/60 mt-0.5">{b.address}</div>
-              <a
-                href={`tel:${b.phone.replace(/\s/g, "")}`}
-                class="text-[12.5px] text-white/80 hover:text-secondary-300 transition-colors"
-              >
-                {b.phone}
-              </a>
-            </div>
-          </div>
-        ))}
+  {/* ─── Branch network — full-bleed split background, container-aligned text ─── */}
+  <section class="relative border-b border-white/10">
+    {/* Full-bleed split background — charcoal left, gradient + map right */}
+    <div class="absolute inset-0 grid grid-cols-1 lg:grid-cols-2">
+      <div class="bg-charcoal-900"></div>
+      <div class="relative bg-secondary-600 overflow-hidden">
+        {/* Google Map base — grayscale so country names + outlines stay readable */}
+        <iframe
+          title="Al-Futtaim Famco yards across UAE, Saudi Arabia, Qatar and Bahrain"
+          src="https://maps.google.com/maps?q=Persian+Gulf&t=&z=5&ie=UTF8&iwloc=&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+          class="absolute inset-0 h-full w-full border-0 grayscale contrast-110 opacity-30"
+        ></iframe>
+
+        {/* Yellow brand tint — multiply blend keeps map visible while on-brand */}
+        <div class="absolute inset-0 bg-gradient-to-br from-secondary-300 via-secondary to-secondary-700 mix-blend-multiply pointer-events-none"></div>
+        {/* Subtle vignette for depth — does NOT obscure the map */}
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_95%_95%,rgba(8,8,11,0.35),transparent_60%)] pointer-events-none"></div>
       </div>
     </div>
 
-    <div class="relative w-full aspect-[21/10] sm:aspect-[21/8] lg:aspect-[3/1] bg-charcoal-800 border-t border-white/10 overflow-hidden">
-      <iframe
-        title="FAMCO branches in Dubai — Google Map"
-        src="https://maps.google.com/maps?q=Al-Futtaim+FAMCO+branches+Dubai&t=&z=10&ie=UTF8&iwloc=&output=embed"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        allowfullscreen
-        class="absolute inset-0 h-full w-full border-0"
-      ></iframe>
+    {/* Container-aligned content layer */}
+    <div class="relative container">
+      <div class="grid lg:grid-cols-2 min-h-[680px] lg:min-h-[760px]">
+        {/* LEFT — heading + CTAs (aligned to container's left edge) */}
+        <div class="py-16 lg:py-20 flex flex-col justify-center lg:pr-12 text-white">
+          <h3 class="font-display text-3xl lg:text-5xl font-bold leading-[1.05] tracking-tight">
+            Yards across the <span class="text-secondary-300">GCC</span>.
+            <br />Picked by <span class="text-secondary-300">category</span>.
+          </h3>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a
+              href={link("/stock")}
+              class="inline-flex items-center gap-2 btn btn-primary h-12 px-5 text-[14px] rounded-md"
+            >
+              View all stock
+              <Icon name="lucide:arrow-right" class="h-4 w-4" />
+            </a>
+            <a
+              href="tel:80032626"
+              class="inline-flex items-center gap-2 h-12 px-5 rounded-md border border-white/15 bg-white/5 hover:bg-white/10 text-white text-[14px] font-semibold transition-colors"
+            >
+              <Icon name="lucide:phone" class="h-4 w-4 text-secondary-300" />
+              800 32626
+            </a>
+          </div>
+        </div>
+
+        {/* RIGHT — 3 circular icon pins per country, scattered across the gradient */}
+        <div class="relative hidden lg:block py-12 lg:py-14">
+          <div class="absolute inset-0">
+            {COUNTRIES.flatMap((c) =>
+              PIN_POSITIONS_3[c.code].map((p, i) => (
+                <span
+                  aria-hidden="true"
+                  class="absolute -translate-x-1/2 -translate-y-1/2 inline-flex h-12 w-12 rounded-2xl bg-white items-center justify-center ring-2 ring-charcoal/15 shadow-[0_10px_24px_rgba(8,8,11,0.35)] transition-transform hover:scale-110"
+                  style={`left:${p.left};top:${p.top};`}
+                >
+                  <span
+                    aria-hidden="true"
+                    class="block h-7 w-7 bg-charcoal-900"
+                    style={`-webkit-mask: url(${asset(p.icon)}) center / contain no-repeat; mask: url(${asset(p.icon)}) center / contain no-repeat;`}
+                  />
+                </span>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+
+    {/* Mobile fallback — same minimal pin layout on a brand-tinted map */}
+    <div class="lg:hidden relative z-10 container py-8">
+      <div class="relative h-[280px] rounded-2xl bg-secondary-600 overflow-hidden ring-1 ring-secondary-700/30">
+        <iframe
+          title="Al-Futtaim Famco yards across UAE, Saudi Arabia, Qatar and Bahrain"
+          src="https://maps.google.com/maps?q=Persian+Gulf&t=&z=5&ie=UTF8&iwloc=&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+          class="absolute inset-0 h-full w-full border-0 grayscale contrast-110 opacity-30"
+        ></iframe>
+        <div class="absolute inset-0 bg-gradient-to-br from-secondary-300 via-secondary to-secondary-700 mix-blend-multiply pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_95%_95%,rgba(8,8,11,0.35),transparent_60%)] pointer-events-none"></div>
+        <div class="absolute inset-0">
+          {COUNTRIES.flatMap((c) =>
+            PIN_POSITIONS_3[c.code].map((p) => (
+              <span
+                aria-hidden="true"
+                class="absolute -translate-x-1/2 -translate-y-1/2 inline-flex h-10 w-10 rounded-2xl bg-white items-center justify-center ring-2 ring-charcoal/15 shadow-[0_8px_20px_rgba(8,8,11,0.35)]"
+                style={`left:${p.left};top:${p.top};`}
+              >
+                <span
+                  aria-hidden="true"
+                  class="block h-6 w-6 bg-charcoal-900"
+                  style={`-webkit-mask: url(${asset(p.icon)}) center / contain no-repeat; mask: url(${asset(p.icon)}) center / contain no-repeat;`}
+                />
+              </span>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="border-b border-white/10">
     <div class="container py-10 lg:py-12">

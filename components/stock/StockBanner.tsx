@@ -43,7 +43,7 @@ export default function StockBanner({
 
             {/* Bottom — trust pills */}
             <div className="mt-6 flex flex-wrap items-center gap-2">
-              <Pill icon={ShieldCheck}>150-point inspection</Pill>
+              <Pill icon={ShieldCheck}>Famco Approved</Pill>
               <Pill icon={FileCheck}>Paperwork handled</Pill>
               <Pill icon={Truck}>GCC-wide delivery</Pill>
               <Pill icon={Phone} href="tel:80032626">

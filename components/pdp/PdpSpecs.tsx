@@ -62,7 +62,7 @@ export function PdpInspection({
       <div className="flex items-center justify-between gap-3 px-5 py-4 bg-bgalt border-b border-line">
         <div>
           <h4 className="font-display text-[15px] font-bold text-ink">
-            150-point inspection
+            Famco Approved
           </h4>
           <p className="text-[12px] text-muted">
             Inspected by Volvo-certified technicians at TMH Umm Ramool.

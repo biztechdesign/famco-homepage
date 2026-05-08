@@ -86,7 +86,7 @@ export default function PdpConditionReport() {
         </span>
         <div className="text-[13px] text-ink/85 leading-relaxed">
           <span className="font-bold text-ink">
-            FAMCO 150-Point Inspection Passed.
+            Famco Approved.
           </span>{" "}
           This vehicle has been fully inspected by our certified FAMCO
           technicians. The full inspection report, including photographs of all

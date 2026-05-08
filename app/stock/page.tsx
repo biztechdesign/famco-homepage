@@ -76,7 +76,7 @@ const CATEGORY_MAP: Record<string, CategoryConfig> = {
   buses: {
     title: "Used buses",
     description:
-      "Volvo coaches, Eicher staff transport and city buses — passenger-ready after our 150-point inspection.",
+      "Volvo coaches, Eicher staff transport and city buses — passenger-ready, Famco Approved.",
     matches: ["Buses"],
   },
   various: {

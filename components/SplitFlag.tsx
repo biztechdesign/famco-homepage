@@ -26,17 +26,16 @@ export default function SplitFlag() {
           <FlagCard
             title={
               <>
-                <span className="text-secondary-300">150-point</span> check.
+                <span className="text-secondary-300">Famco</span> Approved.
                 <br />
                 Paperwork done.
               </>
             }
-            cta="View inspected stock"
+            cta="View Inspected"
             href={link("/stock")}
             tone="charcoal"
             iconClass="fi-rr-shield-check"
-            bgImage="/hero/truck-1.jpg"
-            flipBg
+            bgImage="/hero/famco-approved.png"
 
           />
         </div>

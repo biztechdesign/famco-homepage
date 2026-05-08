@@ -10,7 +10,7 @@ type DocItem = {
 
 const DOCS: DocItem[] = [
   {
-    label: "FAMCO 150-Point Inspection Report",
+    label: "Famco Approved Report",
     cta: "Download PDF",
     icon: "pdf",
     href: "#",
